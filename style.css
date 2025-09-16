@@ -1,11 +1,12 @@
-/* ====== 기본 페이지 스타일 ====== */
+/* ====== 전체 페이지 스타일 ====== */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: Georgia, serif;
+    line-height: 1.6;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
     background-color: #fdf6e3;
     color: #333;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
 }
 
 /* ====== 헤더 ====== */
@@ -19,7 +20,6 @@ header {
 header h1 {
     font-size: 3em;
     color: #6b4226;
-    margin-bottom: 10px;
 }
 
 header .subtitle {
@@ -27,10 +27,36 @@ header .subtitle {
     color: #d94f29;
 }
 
+/* ====== 네비게이션 ====== */
+nav {
+    background: #f0f0f0;
+    padding: 15px 20px;
+    margin: 30px 0;
+    border-radius: 8px;
+
+    display: flex;              /* 가로 정렬 */
+    justify-content: center;    /* 중앙 정렬 */
+    flex-wrap: wrap;            /* 화면이 좁으면 줄바꿈 */
+    gap: 20px;                  /* 링크 사이 간격 */
+}
+
+nav a {
+    text-decoration: none;
+    color: #3366cc;
+    font-weight: bold;
+    padding: 8px 12px;          /* 버튼처럼 보이게 */
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+nav a:hover {
+    color: #fff;
+    background: #3366cc;        /* 마우스 올리면 배경색 */
+}
+
 /* ====== 섹션 ====== */
 section {
-    max-width: 900px;
-    margin: 40px auto;
+    margin-bottom: 50px;
     padding: 20px;
     background-color: #fff8f0;
     border-left: 5px solid #f2c14e;
@@ -38,8 +64,9 @@ section {
 }
 
 section h2 {
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 5px;
     color: #6b4226;
-    margin-bottom: 15px;
 }
 
 /* ====== 단락 ====== */
@@ -47,38 +74,9 @@ p {
     font-size: 1.1em;
 }
 
-/* ====== 갤러리 ====== */
-.gallery .images {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.gallery .images img {
-    width: 250px;
-    height: auto;
-    border: 2px solid #f2c14e;
-    border-radius: 10px;
-}
-
-/* ====== 리스트 ====== */
-ul {
-    margin-left: 20px;
-}
-
-li {
-    margin-bottom: 10px;
-}
-
-/* ====== 링크 ====== */
-a {
+/* ====== 강조 텍스트 ====== */
+strong, em {
     color: #d94f29;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
 }
 
 /* ====== 푸터 ====== */
