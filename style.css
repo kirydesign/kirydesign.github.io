@@ -1,0 +1,56 @@
+/* 1. 전체 페이지 기본 스타일 */
+body {
+    font-family: Arial, sans-serif; /* 글꼴 */
+    background-color: #fdf6e3; /* 배경색 */
+    color: #333; /* 글자색 */
+    line-height: 1.6; /* 줄간격 */
+    margin: 0;
+    padding: 0;
+}
+
+/* 2. 제목 스타일 */
+h1, h2, h3 {
+    color: #6b4226; /* 갈색 느낌 */
+    text-align: center; /* 중앙 정렬 */
+}
+
+/* 3. 단락 스타일 */
+p {
+    max-width: 700px; /* 단락 최대 너비 */
+    margin: 20px auto; /* 위아래 20px, 좌우 중앙 정렬 */
+    padding: 10px;
+    background-color: #fff8f0; /* 단락 배경색 */
+    border-left: 5px solid #f2c14e; /* 왼쪽 강조선 */
+}
+
+/* 4. 링크 스타일 */
+a {
+    color: #d94f29;
+    text-decoration: none;
+}
+
+
+
+a:hover {
+    text-decoration: underline; /* 마우스 올리면 밑줄 */
+}
+.gallery {
+    display: flex; /* 가로로 나란히 */
+    justify-content: center; /* 중앙 정렬 */
+    gap: 20px; /* 이미지 사이 간격 */
+    margin: 20px 0;
+}
+
+.gallery img {
+    width: 200px; /* 이미지 크기 조절 */
+    height: auto;
+    border: 2px solid #f2c14e; /* 테두리 */
+    border-radius: 10px; /* 모서리 둥글게 */
+}
+
+
+
+img.left {
+    float: left;
+    margin-right: 20px;
+}
