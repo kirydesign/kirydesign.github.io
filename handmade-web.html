@@ -13,15 +13,32 @@
   </header>
 
   <!-- Navigation links -->
-  <nav>
-    <a href="#intro">Introduction</a>
-    <a href="#history">History</a>
-    <a href="#trace">trAce Community</a>
-    <a href="#media">Media Archaeology</a>
-    <a href="#revival">Revival & DIY</a>
-    <a href="#labour">Labour & Body</a>
-    <a href="#resistance">Resistance</a>
-  </nav>
+nav {
+    background: #f0f0f0;
+    padding: 15px 20px;
+    margin: 30px 0;
+    border-radius: 8px;
+
+    display: flex;              /* 가로 정렬 */
+    justify-content: center;    /* 중앙 정렬 */
+    flex-wrap: wrap;            /* 화면이 좁으면 줄바꿈 */
+    gap: 20px;                  /* 링크 사이 간격 */
+}
+
+nav a {
+    text-decoration: none;
+    color: #3366cc;
+    font-weight: bold;
+    padding: 8px 12px;          /* 클릭 영역 넓히기 */
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+nav a:hover {
+    color: #fff;
+    background: #3366cc;        /* 호버 시 배경색 */
+}
+
 
   <!-- Sections -->
   <section id="intro">
