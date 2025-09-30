@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Letter A Variations</title>
+  <style>
+    body {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: center;
+      align-items: flex-start;
+      background: #f9f9f9;
+      padding: 40px;
+      font-family: sans-serif;
+    }
+
+    .glyph {
+      width: 120px;
+      height: 150px;
+      position: relative;
+    }
+
+    /* --- Variation 1: Classic A --- */
+    .A1 .leg {
+      position: absolute;
+      width: 20px;
+      height: 150px;
+      background: black;
+      top: 0;
+    }
+    .A1 .leg.left { left: 20px; transform: skewX(-15deg); }
+    .A1 .leg.right { right: 20px; transform: skewX(15deg); }
+    .A1 .bar {
+      position: absolute;
+      width: 60px;
+      height: 15px;
+      background: black;
+      top: 70px; left: 30px;
+    }
+
+    /* --- Variation 2: Outline A with negative space --- */
+    .A2 {
+      width: 0; height: 0;
+      border-left: 60px solid transparent;
+      border-right: 60px solid transparent;
+      border-bottom: 150px solid black;
+      position: relative;
+    }
+    .A2::after {
+      content: "";
+      position: absolute;
+      top: 40px; left: -40px;
+      border-left: 40px solid transparent;
+      border-right: 40px solid transparent;
+      border-bottom: 100px solid white;
+    }
+
+    /* --- Variation 3: Pixel A (blocky look) --- */
+    .A3 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(6, 1fr);
+      gap: 3px;
+    }
+    .A3 div {
+      background: black;
+      width: 20px; height: 20px;
+    }
+    .A3 div.empty { background: transparent; }
+
+    /* --- Variation 4: Circle A --- */
+    .A4 {
+      width: 120px; height: 150px;
+      border-radius: 50%;
+      border: 10px solid black;
+      position: relative;
+      overflow: hidden;
+    }
+    .A4::before {
+      content: "";
+      position: absolute;
+      top: 60px; left: 20px;
+      width: 80px; height: 15px;
+      background: black;
+    }
+
+    /* --- Variation 5: Shadow A --- */
+    .A5 .leg {
+      position: absolute;
+      width: 20px;
+      height: 150px;
+      background: #333;
+      box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+      top: 0;
+    }
+    .A5 .leg.left { left: 20px; transform: skewX(-15deg); }
+    .A5 .leg.right { right: 20px; transform: skewX(15deg); }
+    .A5 .bar {
+      position: absolute;
+      width: 60px; height: 15px;
+      background: #333;
+      top: 70px; left: 30px;
+      box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+    }
+
+    /* --- Variation 6: Gradient Futuristic A --- */
+    .A6 .leg {
+      position: absolute;
+      width: 20px;
+      height: 150px;
+      background: linear-gradient(180deg, #ff6a00, #ff0084);
+      top: 0;
+      border-radius: 10px;
+    }
+    .A6 .leg.left { left: 20px; transform: skewX(-15deg); }
+    .A6 .leg.right { right: 20px; transform: skewX(15deg); }
+    .A6 .bar {
+      position: absolute;
+      width: 60px; height: 15px;
+      background: linear-gradient(90deg, #ff6a00, #ff0084);
+      top: 70px; left: 30px;
+      border-radius: 8px;
+    }
+
+    /* --- Title labels --- */
+    .label {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+  <!-- Variation 1 -->
+  <div>
+    <div class="glyph A1">
+      <div class="leg left"></div>
+      <div class="leg right"></div>
+      <div class="bar"></div>
+    </div>
+    <div class="label">Classic A</div>
+  </div>
+
+  <!-- Variation 2 -->
+  <div>
+    <div class="glyph A2"></div>
+    <div class="label">Outline A</div>
+  </div>
+
+  <!-- Variation 3 (Pixel A) -->
+  <div>
+    <div class="glyph A3">
+      <div></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div></div>
+      <div></div><div></div><div class="empty"></div><div></div><div></div>
+      <div></div><div></div><div></div><div></div><div></div>
+      <div></div><div></div><div></div><div></div><div></div>
+      <div></div><div class="empty"></div><div></div><div class="empty"></div><div></div>
+      <div></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div></div>
+    </div>
+    <div class="label">Pixel A</div>
+  </div>
+
+  <!-- Variation 4 -->
+  <div>
+    <div class="glyph A4"></div>
+    <div class="label">Circle A</div>
+  </div>
+
+  <!-- Variation 5 -->
+  <div>
+    <div class="glyph A5">
+      <div class="leg left"></div>
+      <div class="leg right"></div>
+      <div class="bar"></div>
+    </div>
+    <div class="label">Shadow A</div>
+  </div>
+
+  <!-- Variation 6 -->
+  <div>
+    <div class="glyph A6">
+      <div class="leg left"></div>
+      <div class="leg right"></div>
+      <div class="bar"></div>
+    </div>
+    <div class="label">Gradient A</div>
+  </div>
+</body>
+</html>
