@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Animated Gradient A</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #111;
+      transition: background 1s ease;
+    }
+    .glyph {
+      position: relative;
+      width: 120px;
+      height: 150px;
+      cursor: pointer;
+    }
+    .leg {
+      position: absolute;
+      width: 20px;
+      height: 150px;
+      background: linear-gradient(180deg, #ff6a00, #ff0084);
+      top: 0;
+      border-radius: 10px;
+      transition: transform 0.6s ease-in-out;
+    }
+    .leg.left { left: 20px; transform: skewX(-15deg); }
+    .leg.right { right: 20px; transform: skewX(15deg); }
+    .bar {
+      position: absolute;
+      width: 60px;
+      height: 15px;
+      background: linear-gradient(90deg, #ff6a00, #ff0084);
+      top: 70px;
+      left: 30px;
+      border-radius: 8px;
+      transition: transform 0.6s ease-in-out, width 0.6s ease-in-out;
+    }
+
+    /* Keyframes for wiggle */
+    @keyframes wiggle-left {
+      0%, 100% { transform: skewX(-15deg) rotate(0deg); }
+      25% { transform: skewX(-15deg) rotate(-5deg); }
+      50% { transform: skewX(-15deg) rotate(5deg); }
+      75% { transform: skewX(-15deg) rotate(-3deg); }
+    }
+    @keyframes wiggle-right {
+      0%, 100% { transform: skewX(15deg) rotate(0deg); }
+      25% { transform: skewX(15deg) rotate(5deg); }
+      50% { transform: skewX(15deg) rotate(-5deg); }
+      75% { transform: skewX(15deg) rotate(3deg); }
+    }
+
+    /* Hover Effects */
+    body:hover {
+      background: radial-gradient(circle at center, #222, #000);
+    }
+    .glyph:hover .leg.left {
+      animation: wiggle-left 0.8s ease-in-out infinite;
+    }
+    .glyph:hover .leg.right {
+      animation: wiggle-right 0.8s ease-in-out infinite;
+    }
+    .glyph:hover .bar {
+      transform: translateY(-20px);
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="glyph">
+    <div class="leg left"></div>
+    <div class="leg right"></div>
+    <div class="bar"></div>
+  </div>
+</body>
+</html>
