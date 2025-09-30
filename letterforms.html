@@ -1,111 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>KIRY Variations</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 60px;
-      height: 100vh;
-      background: #000;
-      font-family: sans-serif;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KIRYOUN — Letterforms (HTML/CSS only)</title>
+<style>
+  :root{
+    --bg:#000;           /* 배경 */
+    --mint:#00ffc6;      /* 메인 컬러 */
+    --mint-d:#009e8f;    /* 살짝 어두운 민트(음영용) */
+    --w:150px;           /* 글자 너비 */
+    --h:190px;           /* 글자 높이 */
+    --thick:20px;        /* 굵기(세로줄, 막대 기본 두께) */
+    --thin:14px;         /* 보조 굵기 */
+    --ring:14px;         /* 링(테두리) 굵기 */
+    --radius:10px;       /* 모서리 라운드 */
+    --gap:48px;          /* 글자 간격 */
+  }
 
-    .glyph {
-      width: 120px;
-      height: 150px;
-      position: relative;
-    }
+  /* 페이지 레이아웃 (글로벌 포지셔닝) */
+  body{
+    margin:0;
+    min-height:100vh;
+    background:var(--bg);
+    color:#b8fff0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", sans-serif;
+  }
+  .word{
+    display:flex;
+    gap:clamp(24px, 5vw, var(--gap));
+    padding:clamp(16px, 4vw, 48px);
+  }
+  .letter{
+    position:relative;      /* 로컬 포지셔닝 기준 */
+    width:var(--w);
+    height:var(--h);
+    /* 카드처럼 살짝 띄워 보이게 */
+    filter: drop-shadow(0 6px 18px rgba(0,255,198,.12));
+  }
 
-    /* ===== K ===== */
-    .K .stem, .K .arm {
-      position: absolute;
-      background: #00ffc6;
-    }
-    .K .stem { width: 20px; height: 150px; left: 20px; top: 0; }
-    .K .arm.top {
-      width: 90px; height: 15px; top: 40px; left: 30px;
-      transform: rotate(45deg);
-      transform-origin: left center;
-    }
-    .K .arm.bottom {
-      width: 90px; height: 15px; top: 90px; left: 30px;
-      transform: rotate(-45deg);
-      transform-origin: left center;
-    }
+  /* 공통 부품 */
+  .stroke{ position:absolute; background:var(--mint); border-radius:var(--radius); }
+  .stroke.thin{ height:var(--thin); }
+  .stroke.thick{ width:var(--thick); }
+  .ring{
+    position:absolute;
+    border:var(--ring) solid var(--mint);
+    border-radius:50%;
+    box-sizing:border-box;
+  }
 
-    /* ===== I ===== */
-    .I {
-      background: #00ffc6;
-      width: 20px; height: 150px;
-      margin: auto;
-      border-radius: 5px;
-    }
+  /* ========== K ========== */
+  .K .stem{ left:12px; top:0; width:var(--thick); height:100%; }
+  .K .arm-top{
+    left:38px; top:42px; width:calc(var(--w) - 50px); height:var(--thin);
+    transform:rotate(42deg); transform-origin:left center;
+  }
+  .K .arm-bottom{
+    left:38px; top:110px; width:calc(var(--w) - 50px); height:var(--thin);
+    transform:rotate(-42deg); transform-origin:left center;
+  }
 
-    /* ===== R ===== */
-    .R .stem, .R .bowl, .R .leg {
-      position: absolute;
-      background: #00ffc6;
-    }
-    .R .stem { width: 20px; height: 150px; left: 10px; top: 0; }
-    .R .bowl {
-      width: 70px; height: 70px;
-      border: 15px solid #00ffc6;
-      border-radius: 50%;
-      top: 0; left: 20px;
-      box-sizing: border-box;
-    }
-    .R .leg {
-      width: 80px; height: 15px;
-      top: 90px; left: 20px;
-      transform: rotate(45deg);
-      transform-origin: left center;
-    }
+  /* ========== I ========== */
+  .I .cap-top, .I .cap-btm{
+    left:calc((var(--w) - 78%) / 2); width:78%; height:var(--thin);
+  }
+  .I .cap-top{ top:0; }
+  .I .cap-btm{ bottom:0; }
+  .I .bar{
+    left:calc((var(--w) - var(--thick)) / 2);
+    top:calc(var(--thin) + 8px);
+    width:var(--thick);
+    height:calc(100% - (var(--thin) + 8px)*2);
+  }
 
-    /* ===== Y ===== */
-    .Y .arm {
-      position: absolute;
-      width: 80px; height: 15px;
-      background: #00ffc6;
-      top: 30px;
-      transform-origin: center;
-    }
-    .Y .arm.left { left: 0; transform: rotate(45deg); }
-    .Y .arm.right { right: 0; transform: rotate(-45deg); }
-    .Y .stem {
-      position: absolute;
-      width: 20px; height: 100px;
-      background: #00ffc6;
-      top: 50px; left: 50px;
-    }
-  </style>
+  /* ========== R ========== */
+  .R .stem{ left:10px; top:0; width:var(--thick); height:100%; }
+  .R .bowl{
+    top:6px; left:36px; width:calc(var(--w) - 52px); height:96px;
+    border:var(--ring) solid var(--mint); border-radius:72px;
+  }
+  .R .leg{
+    left:42px; top:120px; width:calc(var(--w) - 54px); height:var(--thin);
+    transform:rotate(42deg); transform-origin:left center;
+  }
+
+  /* ========== Y ========== */
+  .Y .arm-left{
+    left:6px; top:14px; width:calc(var(--w) - 40px); height:var(--thin);
+    transform:rotate(38deg); transform-origin:left center;
+  }
+  .Y .arm-right{
+    right:6px; top:14px; width:calc(var(--w) - 40px); height:var(--thin);
+    transform:rotate(-38deg); transform-origin:right center;
+  }
+  .Y .stem{
+    left:calc(50% - var(--thick)/2);
+    top:72px; width:var(--thick); height:calc(100% - 72px);
+  }
+
+  /* ========== O ========== */
+  .O .outer{
+    left:50%; top:50%;
+    width:calc(var(--w) - 22px); height:calc(var(--h) - 22px);
+    transform:translate(-50%, -50%);
+  }
+  .O .outer::after{ /* 네거티브 스페이스(속 빈 원) */
+    content:"";
+    position:absolute; inset:14%;
+    background:var(--bg);
+    border-radius:50%;
+  }
+
+  /* ========== U ========== */
+  .U .stem-left{ left:14px; top:0; width:var(--thick); height:75%; }
+  .U .stem-right{ right:14px; top:0; width:var(--thick); height:75%; }
+  .U .curve{
+    left:calc(14px + var(--thick)/2);
+    bottom:0;
+    width:calc(100% - (14px + var(--thick)/2)*2);
+    height:52px;
+    border:var(--ring) solid var(--mint);
+    border-top:none;
+    border-radius:0 0 40px 40px;
+    box-sizing:border-box;
+  }
+
+  /* ========== N ========== */
+  .N .stem-left{ left:10px; top:0; width:var(--thick); height:100%; }
+  .N .stem-right{ right:10px; top:0; width:var(--thick); height:100%; }
+  .N .diag{
+    left:28px; top:12px; width:calc(100% - 56px); height:var(--thin);
+    transform:rotate(62deg); transform-origin:left center;
+  }
+
+  /* 보조 디테일: 미묘한 하이라이트(민트 음영) */
+  .emboss::after{
+    content:""; position:absolute; inset:0; border-radius:inherit;
+    background:linear-gradient(180deg, rgba(255,255,255,.08), transparent 40%);
+    pointer-events:none;
+  }
+
+  /* 가벼운 인터랙션(선택사항·CSS만) */
+  .letter{ transition: transform .35s ease, filter .35s ease; }
+  .letter:hover{
+    transform: translateY(-6px);
+    filter: drop-shadow(0 10px 26px rgba(0,255,198,.2));
+  }
+</style>
 </head>
 <body>
-  <!-- K -->
-  <div class="glyph K">
-    <div class="stem"></div>
-    <div class="arm top"></div>
-    <div class="arm bottom"></div>
-  </div>
+  <div class="word" aria-label="KIRYOUN">
+    <!-- K -->
+    <div class="letter K" role="img" aria-label="K">
+      <div class="stroke stem emboss"></div>
+      <div class="stroke arm-top emboss"></div>
+      <div class="stroke arm-bottom emboss"></div>
+    </div>
 
-  <!-- I -->
-  <div class="glyph I"></div>
+    <!-- I -->
+    <div class="letter I" role="img" aria-label="I">
+      <div class="stroke cap-top emboss"></div>
+      <div class="stroke bar emboss"></div>
+      <div class="stroke cap-btm emboss"></div>
+    </div>
 
-  <!-- R -->
-  <div class="glyph R">
-    <div class="stem"></div>
-    <div class="bowl"></div>
-    <div class="leg"></div>
-  </div>
+    <!-- R -->
+    <div class="letter R" role="img" aria-label="R">
+      <div class="stroke stem emboss"></div>
+      <div class="bowl ring emboss"></div>
+      <div class="stroke leg emboss"></div>
+    </div>
 
-  <!-- Y -->
-  <div class="glyph Y">
-    <div class="arm left"></div>
-    <div class="arm right"></div>
-    <div class="stem"></div>
+    <!-- Y -->
+    <div class="letter Y" role="img" aria-label="Y">
+      <div class="stroke arm-left emboss"></div>
+      <div class="stroke arm-right emboss"></div>
+      <div class="stroke stem emboss"></div>
+    </div>
+
+    <!-- O -->
+    <div class="letter O" role="img" aria-label="O">
+      <div class="outer ring emboss"></div>
+    </div>
+
+    <!-- U -->
+    <div class="letter U" role="img" aria-label="U">
+      <div class="stroke stem-left emboss"></div>
+      <div class="stroke stem-right emboss"></div>
+      <div class="curve emboss"></div>
+    </div>
+
+    <!-- N -->
+    <div class="letter N" role="img" aria-label="N">
+      <div class="stroke stem-left emboss"></div>
+      <div class="stroke diag emboss"></div>
+      <div class="stroke stem-right emboss"></div>
+    </div>
   </div>
 </body>
 </html>
