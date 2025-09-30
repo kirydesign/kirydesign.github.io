@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>KIRYOUN Squid Game Shapes</title>
+<title>KIRYOUN Pixel Art Shapes</title>
 <style>
   body {
     margin: 0;
@@ -31,7 +31,7 @@
     opacity: 0.9;
   }
 
-  /* 기본 색 팔레트 */
+  /* 색상 팔레트 */
   .mint   { color: #00ffc6; }
   .sky    { color: #00d4ff; }
   .violet { color: #a566ff; }
@@ -39,7 +39,7 @@
   .yellow { color: #ffe600; }
   .red    { color: #ff2e63; }
 
-  /* 도형들 */
+  /* 도형 */
   .square {
     background: currentColor;
     width: 22px;
@@ -59,23 +59,8 @@
     border-bottom: 22px solid currentColor;
   }
   .star {
-    color: currentColor;
     font-size: 20px;
-  }
-  .umbrella {
-    position: relative;
-    width: 0; height: 0;
-    border-left: 12px solid transparent;
-    border-right: 12px solid transparent;
-    border-bottom: 14px solid currentColor;
-  }
-  .umbrella::after {
-    content: "";
-    position: absolute;
-    top: 6px; left: -12px;
-    width: 24px; height: 12px;
-    border-radius: 50% 50% 0 0;
-    background: currentColor;
+    color: currentColor;
   }
 
   .empty { opacity: 0; }
@@ -88,31 +73,31 @@
     <div class="letter K">
       <div class="shape square mint"></div><div class="empty"></div><div class="empty"></div><div class="shape circle sky"></div><div class="empty"></div>
       <div class="shape square mint"></div><div class="empty"></div><div class="shape triangle violet"></div><div class="empty"></div><div class="shape star orange">★</div>
-      <div class="shape square mint"></div><div class="empty"></div><div class="shape circle orange"></div><div class="empty"></div><div class="shape umbrella red"></div>
+      <div class="shape square mint"></div><div class="empty"></div><div class="shape circle orange"></div><div class="empty"></div><div class="shape star red">★</div>
       <div class="shape square mint"></div><div class="empty"></div><div class="empty"></div><div class="shape triangle violet"></div><div class="empty"></div>
       <div class="shape square mint"></div><div class="empty"></div><div class="shape circle sky"></div><div class="empty"></div><div class="shape star yellow">★</div>
-      <div class="shape square mint"></div><div class="empty"></div><div class="empty"></div><div class="shape umbrella red"></div><div class="empty"></div>
+      <div class="shape square mint"></div><div class="empty"></div><div class="empty"></div><div class="shape star red">★</div><div class="empty"></div>
       <div class="shape square mint"></div><div class="empty"></div><div class="shape star orange">★</div><div class="empty"></div><div class="shape circle red"></div>
     </div>
 
     <!-- I -->
     <div class="letter I">
-      <div class="shape square sky"></div><div class="shape circle sky"></div><div class="shape umbrella sky"></div><div class="shape star sky">★</div><div class="shape triangle sky"></div>
+      <div class="shape square sky"></div><div class="shape circle sky"></div><div class="shape star sky">★</div><div class="shape star sky">★</div><div class="shape triangle sky"></div>
       <div class="empty"></div><div class="empty"></div><div class="shape square sky"></div><div class="empty"></div><div class="empty"></div>
       <div class="empty"></div><div class="empty"></div><div class="shape circle sky"></div><div class="empty"></div><div class="empty"></div>
       <div class="empty"></div><div class="empty"></div><div class="shape star sky">★</div><div class="empty"></div><div class="empty"></div>
-      <div class="empty"></div><div class="empty"></div><div class="shape umbrella sky"></div><div class="empty"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="shape triangle sky"></div><div class="empty"></div><div class="empty"></div>
       <div class="empty"></div><div class="empty"></div><div class="shape square sky"></div><div class="empty"></div><div class="empty"></div>
-      <div class="shape circle sky"></div><div class="shape umbrella sky"></div><div class="shape square sky"></div><div class="shape triangle sky"></div><div class="shape star sky">★</div>
+      <div class="shape circle sky"></div><div class="shape triangle sky"></div><div class="shape square sky"></div><div class="shape triangle sky"></div><div class="shape star sky">★</div>
     </div>
 
     <!-- R -->
     <div class="letter R">
       <div class="shape square violet"></div><div class="shape triangle violet"></div><div class="shape circle violet"></div><div class="empty"></div><div class="empty"></div>
-      <div class="shape square violet"></div><div class="empty"></div><div class="shape umbrella violet"></div><div class="empty"></div><div class="empty"></div>
+      <div class="shape square violet"></div><div class="empty"></div><div class="shape star violet">★</div><div class="empty"></div><div class="empty"></div>
       <div class="shape square violet"></div><div class="empty"></div><div class="shape star violet">★</div><div class="empty"></div><div class="empty"></div>
       <div class="shape square violet"></div><div class="shape circle violet"></div><div class="shape triangle violet"></div><div class="empty"></div><div class="empty"></div>
-      <div class="shape square violet"></div><div class="empty"></div><div class="shape umbrella orange"></div><div class="empty"></div><div class="empty"></div>
+      <div class="shape square violet"></div><div class="empty"></div><div class="shape star orange">★</div><div class="empty"></div><div class="empty"></div>
       <div class="shape square violet"></div><div class="empty"></div><div class="empty"></div><div class="shape triangle red"></div><div class="empty"></div>
       <div class="shape square violet"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape star red">★</div>
     </div>
@@ -123,7 +108,7 @@
       <div class="empty"></div><div class="shape circle orange"></div><div class="empty"></div><div class="shape circle orange"></div><div class="empty"></div>
       <div class="empty"></div><div class="empty"></div><div class="shape square orange"></div><div class="empty"></div><div class="empty"></div>
       <div class="empty"></div><div class="empty"></div><div class="shape star orange">★</div><div class="empty"></div><div class="empty"></div>
-      <div class="empty"></div><div class="empty"></div><div class="shape umbrella orange"></div><div class="empty"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="shape triangle orange"></div><div class="empty"></div><div class="empty"></div>
       <div class="empty"></div><div class="empty"></div><div class="shape square orange"></div><div class="empty"></div><div class="empty"></div>
       <div class="shape triangle orange"></div><div class="shape triangle orange"></div><div class="shape triangle orange"></div><div class="shape triangle orange"></div><div class="shape triangle orange"></div>
     </div>
@@ -132,9 +117,9 @@
     <div class="letter O">
       <div class="shape circle yellow"></div><div class="shape circle yellow"></div><div class="shape circle yellow"></div><div class="shape circle yellow"></div><div class="shape circle yellow"></div>
       <div class="shape square yellow"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape star yellow">★</div>
-      <div class="shape umbrella yellow"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape triangle yellow"></div>
+      <div class="shape triangle yellow"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape triangle yellow"></div>
       <div class="shape circle yellow"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape square yellow"></div>
-      <div class="shape star yellow">★</div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape umbrella yellow"></div>
+      <div class="shape star yellow">★</div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape star yellow">★</div>
       <div class="shape circle yellow"></div><div class="shape circle yellow"></div><div class="shape circle yellow"></div><div class="shape circle yellow"></div><div class="shape circle yellow"></div>
       <div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div>
     </div>
@@ -142,21 +127,21 @@
     <!-- U -->
     <div class="letter U">
       <div class="shape square red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape square red"></div>
-      <div class="shape umbrella red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape star red">★</div>
+      <div class="shape star red">★</div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape star red">★</div>
       <div class="shape circle red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape triangle red"></div>
       <div class="shape square red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape circle red"></div>
-      <div class="shape star red">★</div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape umbrella red"></div>
-      <div class="shape square red"></div><div class="shape triangle red"></div><div class="shape star red">★</div><div class="shape umbrella red"></div><div class="shape circle red"></div>
+      <div class="shape star red">★</div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape star red">★</div>
+      <div class="shape square red"></div><div class="shape triangle red"></div><div class="shape star red">★</div><div class="shape triangle red"></div><div class="shape circle red"></div>
       <div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div>
     </div>
 
     <!-- N -->
     <div class="letter N">
       <div class="shape square mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape square mint"></div>
-      <div class="shape umbrella mint"></div><div class="shape triangle mint"></div><div class="empty"></div><div class="empty"></div><div class="shape star mint">★</div>
+      <div class="shape star mint">★</div><div class="shape triangle mint"></div><div class="empty"></div><div class="empty"></div><div class="shape star mint">★</div>
       <div class="shape circle mint"></div><div class="empty"></div><div class="shape square mint"></div><div class="empty"></div><div class="shape triangle mint"></div>
       <div class="shape square mint"></div><div class="empty"></div><div class="empty"></div><div class="shape circle mint"></div><div class="shape star mint">★</div>
-      <div class="shape umbrella mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape square mint"></div>
+      <div class="shape star mint">★</div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape square mint"></div>
       <div class="shape square mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape triangle mint"></div>
       <div class="shape circle mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape star mint">★</div>
     </div>
