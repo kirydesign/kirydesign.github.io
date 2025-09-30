@@ -1,189 +1,134 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>KIRYOUN — Geometric Letterforms</title>
+<meta charset="UTF-8">
+<title>KIRYOUN Pixel Art</title>
 <style>
   body {
-    margin:0;
-    background:#000;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+    margin: 0;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
   }
   .word {
-    display:flex;
-    gap:40px;
+    display: flex;
+    gap: 30px;
   }
   .letter {
-    position:relative;
-    width:120px;
-    height:160px;
+    display: grid;
+    grid-template-columns: repeat(5, 24px);
+    grid-template-rows: repeat(7, 24px);
+    gap: 4px;
   }
-  .stroke {position:absolute;}
+  /* 기본 픽셀 블록 */
+  .pixel {
+    width: 24px;
+    height: 24px;
+    background: #00ffc6;
+    opacity: 1;
+  }
+  /* 모양 변형 */
+  .circle { border-radius: 50%; }
+  .triangle {
+    width: 0; height: 0;
+    background: transparent;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 24px solid #ff7b00;
+  }
+  /* 색상 팔레트 */
+  .mint   { background: #00ffc6; }
+  .sky    { background: #00d4ff; }
+  .violet { background: #a566ff; }
+  .orange { background: #ff7b00; }
+  .yellow { background: #ffe600; }
+  .red    { background: #ff2e63; }
 
-  /* ===== K (민트) ===== */
-  .K .stem {
-    left:0; top:0; width:20px; height:100%;
-    background:#00ffc6;
-    box-shadow:4px 4px 10px rgba(0,255,198,.4);
-  }
-  .K .arm-top {
-    left:20px; top:40px; width:100px; height:16px;
-    background:#00ffc6;
-    transform:rotate(45deg);
-    transform-origin:left center;
-  }
-  .K .arm-bottom {
-    left:20px; top:100px; width:100px; height:16px;
-    background:#00ffc6;
-    transform:rotate(-45deg);
-    transform-origin:left center;
-  }
-
-  /* ===== I (하늘색, 투명도) ===== */
-  .I .bar {
-    left:50%; transform:translateX(-50%);
-    top:0; width:20px; height:100%;
-    background:#00d4ff;
-    opacity:0.8;
-  }
-  .I::before, .I::after {
-    content:""; position:absolute; left:10px;
-    width:100px; height:16px; background:#00d4ff;
-  }
-  .I::before { top:0; }
-  .I::after { bottom:0; }
-
-  /* ===== R (보라색) ===== */
-  .R .stem {
-    left:0; top:0; width:20px; height:100%;
-    background:#a566ff;
-  }
-  .R .bowl {
-    position:absolute;
-    top:0; left:20px;
-    width:80px; height:80px;
-    border:16px solid #a566ff;
-    border-radius:50%;
-    box-sizing:border-box;
-  }
-  .R .leg {
-    left:20px; top:90px;
-    width:100px; height:16px;
-    background:#a566ff;
-    transform:rotate(45deg);
-    transform-origin:left center;
-  }
-
-  /* ===== Y (오렌지) ===== */
-  .Y .arm-left, .Y .arm-right {
-    top:20px; width:100px; height:16px;
-    background:#ff7b00;
-  }
-  .Y .arm-left {
-    left:0; transform:rotate(45deg); transform-origin:left top;
-  }
-  .Y .arm-right {
-    right:0; transform:rotate(-45deg); transform-origin:right top;
-  }
-  .Y .stem {
-    left:50%; top:70px; width:20px; height:90px;
-    background:#ff7b00;
-    transform:translateX(-50%);
-  }
-
-  /* ===== O (옐로우, 네거티브 스페이스) ===== */
-  .O .outer {
-    position:absolute; left:50%; top:50%;
-    width:120px; height:120px;
-    border:16px solid #ffe600;
-    transform:translate(-50%,-50%);
-  }
-  .O .outer::after {
-    content:""; position:absolute; inset:20px;
-    background:#000;
-  }
-
-  /* ===== U (레드, 그림자) ===== */
-  .U .stem-left, .U .stem-right {
-    width:20px; height:120px; top:0; background:#ff2e63;
-  }
-  .U .stem-left { left:0; }
-  .U .stem-right { right:0; }
-  .U .bottom {
-    position:absolute; bottom:0; left:20px;
-    width:80px; height:20px;
-    background:#ff2e63;
-    box-shadow:0 -6px 12px rgba(255,46,99,.6) inset;
-  }
-
-  /* ===== N (픽셀 스타일, 민트) ===== */
-  .N {
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    grid-template-rows:repeat(8,1fr);
-    gap:2px;
-  }
-  .N div {
-    background:#00ffc6;
-  }
-  .N .empty { background:transparent; }
+  .empty { background: transparent !important; opacity: 0; }
 </style>
 </head>
 <body>
   <div class="word">
+
     <!-- K -->
     <div class="letter K">
-      <div class="stroke stem"></div>
-      <div class="stroke arm-top"></div>
-      <div class="stroke arm-bottom"></div>
+      <div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="sky circle" style="opacity:0.7"></div><div class="empty"></div>
+      <div class="pixel mint"></div><div class="empty"></div><div class="circle violet" style="opacity:0.8"></div><div class="empty"></div><div class="triangle"></div>
+      <div class="pixel mint"></div><div class="empty"></div><div class="pixel orange"></div><div class="empty"></div><div class="pixel red circle" style="opacity:0.6"></div>
+      <div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="violet circle"></div><div class="empty"></div>
+      <div class="pixel mint"></div><div class="empty"></div><div class="pixel sky"></div><div class="empty"></div><div class="triangle"></div>
+      <div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="yellow circle"></div><div class="empty"></div>
+      <div class="pixel mint"></div><div class="empty"></div><div class="pixel orange"></div><div class="empty"></div><div class="pixel red"></div>
     </div>
 
     <!-- I -->
     <div class="letter I">
-      <div class="stroke bar"></div>
+      <div class="circle sky"></div><div class="circle sky"></div><div class="circle sky"></div><div class="circle sky"></div><div class="circle sky"></div>
+      <div class="empty"></div><div class="empty"></div><div class="pixel sky"></div><div class="empty"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="circle sky" style="opacity:.7"></div><div class="empty"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="pixel sky"></div><div class="empty"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="circle sky"></div><div class="empty"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="pixel sky"></div><div class="empty"></div><div class="empty"></div>
+      <div class="circle sky"></div><div class="circle sky"></div><div class="circle sky"></div><div class="circle sky"></div><div class="circle sky"></div>
     </div>
 
     <!-- R -->
     <div class="letter R">
-      <div class="stroke stem"></div>
-      <div class="bowl"></div>
-      <div class="stroke leg"></div>
+      <div class="pixel violet"></div><div class="pixel violet"></div><div class="pixel violet"></div><div class="empty"></div><div class="empty"></div>
+      <div class="pixel violet"></div><div class="empty"></div><div class="circle violet"></div><div class="empty"></div><div class="empty"></div>
+      <div class="pixel violet"></div><div class="empty"></div><div class="pixel violet"></div><div class="empty"></div><div class="empty"></div>
+      <div class="pixel violet"></div><div class="pixel violet"></div><div class="pixel violet"></div><div class="empty"></div><div class="empty"></div>
+      <div class="pixel violet"></div><div class="empty"></div><div class="pixel orange"></div><div class="empty"></div><div class="empty"></div>
+      <div class="pixel violet"></div><div class="empty"></div><div class="empty"></div><div class="triangle"></div><div class="empty"></div>
+      <div class="pixel violet"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel red"></div>
     </div>
 
     <!-- Y -->
     <div class="letter Y">
-      <div class="stroke arm-left"></div>
-      <div class="stroke arm-right"></div>
-      <div class="stroke stem"></div>
+      <div class="triangle"></div><div class="empty"></div><div class="triangle"></div><div class="empty"></div><div class="triangle"></div>
+      <div class="empty"></div><div class="circle orange"></div><div class="empty"></div><div class="circle orange"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="pixel orange"></div><div class="empty"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="circle orange" style="opacity:.6"></div><div class="empty"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="pixel orange"></div><div class="empty"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="circle orange"></div><div class="empty"></div><div class="empty"></div>
+      <div class="triangle"></div><div class="triangle"></div><div class="triangle"></div><div class="triangle"></div><div class="triangle"></div>
     </div>
 
     <!-- O -->
     <div class="letter O">
-      <div class="outer"></div>
+      <div class="circle yellow"></div><div class="circle yellow"></div><div class="circle yellow"></div><div class="circle yellow"></div><div class="circle yellow"></div>
+      <div class="circle yellow"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="circle yellow"></div>
+      <div class="circle yellow"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="circle yellow"></div>
+      <div class="circle yellow"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="circle yellow"></div>
+      <div class="circle yellow"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="circle yellow"></div>
+      <div class="circle yellow"></div><div class="circle yellow"></div><div class="circle yellow"></div><div class="circle yellow"></div><div class="circle yellow"></div>
+      <div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div>
     </div>
 
     <!-- U -->
     <div class="letter U">
-      <div class="stem-left"></div>
-      <div class="stem-right"></div>
-      <div class="bottom"></div>
+      <div class="pixel red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel red"></div>
+      <div class="pixel red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel red"></div>
+      <div class="pixel red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel red"></div>
+      <div class="pixel red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel red"></div>
+      <div class="pixel red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel red"></div>
+      <div class="pixel red"></div><div class="pixel red"></div><div class="pixel red"></div><div class="pixel red"></div><div class="pixel red"></div>
+      <div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div>
     </div>
 
-    <!-- N (픽셀) -->
+    <!-- N -->
     <div class="letter N">
-      <div></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div></div>
-      <div></div><div></div><div class="empty"></div><div></div><div></div>
-      <div></div><div></div><div></div><div class="empty"></div><div></div>
-      <div></div><div class="empty"></div><div></div><div></div><div></div>
-      <div></div><div class="empty"></div><div></div><div></div><div></div>
-      <div></div><div class="empty"></div><div class="empty"></div><div></div><div></div>
-      <div></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div></div>
-      <div></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div></div>
+      <div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel mint"></div>
+      <div class="pixel mint"></div><div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="pixel mint"></div>
+      <div class="pixel mint"></div><div class="empty"></div><div class="pixel mint"></div><div class="empty"></div><div class="pixel mint"></div>
+      <div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="pixel mint"></div><div class="pixel mint"></div>
+      <div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel mint"></div>
+      <div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel mint"></div>
+      <div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel mint"></div>
     </div>
+
   </div>
 </body>
 </html>
