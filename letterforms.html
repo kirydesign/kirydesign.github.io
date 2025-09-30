@@ -3,194 +3,186 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>KIRYOUN — Clean Geometric</title>
+<title>KIRYOUN — Geometric Letterforms</title>
 <style>
-  :root{
-    /* 기하학 그리드 */
-    --unit: 10px;             /* 모듈 단위 */
-    --cap: calc(var(--unit) * 18);  /* 대문자 높이 = 180px */
-    --width: calc(var(--unit) * 14);/* 글자 폭 = 140px */
-    --thick: calc(var(--unit) * 2); /* 획 굵기 = 20px */
-    --thin:  calc(var(--unit) * 1.4); /* 보조 획 = 14px */
-    --ring:  calc(var(--unit) * 1.4); /* 링 두께 = 14px */
-    --gap:   calc(var(--unit) * 4.8); /* 글자 간격 */
-    --mint:  #00ffc6;
-    --bg:    #000;
-    --radius: 8px;
-  }
-
-  /* 페이지 (글로벌 배치) */
-  html,body{height:100%}
-  body{
+  body {
     margin:0;
-    background:var(--bg);
-    color:#b8fff0;
+    background:#000;
     display:flex;
-    align-items:center;
     justify-content:center;
-    font-family: ui-sans-serif, system-ui, -apple-system, "Noto Sans KR", Segoe UI, Roboto, sans-serif;
+    align-items:center;
+    height:100vh;
   }
-  .word{
+  .word {
     display:flex;
-    gap:var(--gap);
-    padding:calc(var(--unit) * 4);
+    gap:40px;
   }
-  .letter{
-    position:relative; /* 로컬 배치 기준 */
-    width:var(--width);
-    height:var(--cap);
-    /* 미세한 가독성 향상을 위한 동일한 그림자 */
-    filter: drop-shadow(0 6px 18px rgba(0,255,198,.12));
-    transition: transform .25s ease;
+  .letter {
+    position:relative;
+    width:120px;
+    height:160px;
   }
-  .letter:hover{ transform: translateY(-4px); }
+  .stroke {position:absolute;}
 
-  /* 공통 부품 */
-  .stroke{position:absolute; background:var(--mint); border-radius:var(--radius);}
-  .v      {width:var(--thick);}                 /* 세로획 */
-  .h      {height:var(--thick);}                /* 가로획 */
-  .diag   {height:var(--thin);}                 /* 대각선(45°만) */
-  .ring   {position:absolute; border:var(--ring) solid var(--mint); border-radius:50%; box-sizing:border-box;}
-
-  /* ===== K (수직 + 45° 두 팔) ===== */
-  .K .stem {left:calc(var(--unit) * 1.2); top:0; height:100%;}
-  .K .arm-top{
-    left:calc(var(--unit) * 4); top:calc(var(--unit) * 5);
-    width:calc(var(--width) - var(--unit) * 5); transform:rotate(45deg); transform-origin:left center;
+  /* ===== K (민트) ===== */
+  .K .stem {
+    left:0; top:0; width:20px; height:100%;
+    background:#00ffc6;
+    box-shadow:4px 4px 10px rgba(0,255,198,.4);
   }
-  .K .arm-btm{
-    left:calc(var(--unit) * 4); top:calc(var(--unit) * 11);
-    width:calc(var(--width) - var(--unit) * 5); transform:rotate(-45deg); transform-origin:left center;
+  .K .arm-top {
+    left:20px; top:40px; width:100px; height:16px;
+    background:#00ffc6;
+    transform:rotate(45deg);
+    transform-origin:left center;
+  }
+  .K .arm-bottom {
+    left:20px; top:100px; width:100px; height:16px;
+    background:#00ffc6;
+    transform:rotate(-45deg);
+    transform-origin:left center;
   }
 
-  /* ===== I (정중앙 수직 + 상하 캡) ===== */
-  .I .cap-top, .I .cap-btm{
-    left:calc((var(--width) - (var(--width) - var(--unit) * 2))/2);
-    width:calc(var(--width) - var(--unit) * 2);
+  /* ===== I (하늘색, 투명도) ===== */
+  .I .bar {
+    left:50%; transform:translateX(-50%);
+    top:0; width:20px; height:100%;
+    background:#00d4ff;
+    opacity:0.8;
   }
-  .I .cap-top{ top:0; }
-  .I .cap-btm{ bottom:0; }
-  .I .bar{
-    left:calc((var(--width) - var(--thick))/2);
-    top:calc(var(--thick) + var(--unit));
-    height:calc(100% - (var(--thick) + var(--unit)) * 2);
+  .I::before, .I::after {
+    content:""; position:absolute; left:10px;
+    width:100px; height:16px; background:#00d4ff;
   }
+  .I::before { top:0; }
+  .I::after { bottom:0; }
 
-  /* ===== R (수직 + 정원형 볼 + 45° 다리) ===== */
-  .R .stem {left:calc(var(--unit) * 1); top:0; height:100%;}
+  /* ===== R (보라색) ===== */
+  .R .stem {
+    left:0; top:0; width:20px; height:100%;
+    background:#a566ff;
+  }
   .R .bowl {
-    left:calc(var(--unit) * 3.6); top:calc(var(--unit) * 1.2);
-    width:calc(var(--width) - var(--unit) * 6); height:calc(var(--unit) * 9.2);
-    border-radius:999px; border-width:var(--ring);
+    position:absolute;
+    top:0; left:20px;
+    width:80px; height:80px;
+    border:16px solid #a566ff;
+    border-radius:50%;
+    box-sizing:border-box;
   }
   .R .leg {
-    left:calc(var(--unit) * 4); top:calc(var(--unit) * 12);
-    width:calc(var(--width) - var(--unit) * 5.4);
-    transform:rotate(45deg); transform-origin:left center;
+    left:20px; top:90px;
+    width:100px; height:16px;
+    background:#a566ff;
+    transform:rotate(45deg);
+    transform-origin:left center;
   }
 
-  /* ===== Y (윗팔 45°×2 + 중앙 수직 하강) ===== */
-  .Y .arm-left{
-    left:calc(var(--unit) * 1); top:calc(var(--unit) * 1.6);
-    width:calc(var(--width) - var(--unit) * 6); transform:rotate(45deg); transform-origin:left center;
+  /* ===== Y (오렌지) ===== */
+  .Y .arm-left, .Y .arm-right {
+    top:20px; width:100px; height:16px;
+    background:#ff7b00;
   }
-  .Y .arm-right{
-    right:calc(var(--unit) * 1); top:calc(var(--unit) * 1.6);
-    width:calc(var(--width) - var(--unit) * 6); transform:rotate(-45deg); transform-origin:right center;
+  .Y .arm-left {
+    left:0; transform:rotate(45deg); transform-origin:left top;
   }
-  .Y .stem{
-    left:calc(50% - var(--thick)/2);
-    top:calc(var(--unit) * 7.2);
-    height:calc(100% - var(--unit) * 7.2);
+  .Y .arm-right {
+    right:0; transform:rotate(-45deg); transform-origin:right top;
   }
-
-  /* ===== O (정원 링 + 내부 네거티브) ===== */
-  .O .outer{
-    left:50%; top:50%;
-    width:calc(var(--width) - var(--unit) * 2); height:calc(var(--cap) - var(--unit) * 2);
-    transform:translate(-50%, -50%);
-  }
-  .O .outer::after{
-    content:""; position:absolute; inset:16%; background:var(--bg); border-radius:50%;
+  .Y .stem {
+    left:50%; top:70px; width:20px; height:90px;
+    background:#ff7b00;
+    transform:translateX(-50%);
   }
 
-  /* ===== U (수직 2개 + 반원 바닥) ===== */
-  .U .stem-left {left:calc(var(--unit) * 1.2); top:0; height:calc(100% - var(--unit) * 5.2);}
-  .U .stem-right{right:calc(var(--unit) * 1.2); top:0; height:calc(100% - var(--unit) * 5.2);}
-  .U .curve{
-    left:calc(var(--unit) * 1.2 + var(--thick)/2);
-    bottom:0;
-    width:calc(var(--width) - (var(--unit) * 1.2 + var(--thick)/2) * 2);
-    height:calc(var(--unit) * 5.2);
-    border:var(--ring) solid var(--mint); border-top:none;
-    border-radius:0 0 48px 48px; box-sizing:border-box;
+  /* ===== O (옐로우, 네거티브 스페이스) ===== */
+  .O .outer {
+    position:absolute; left:50%; top:50%;
+    width:120px; height:120px;
+    border:16px solid #ffe600;
+    transform:translate(-50%,-50%);
+  }
+  .O .outer::after {
+    content:""; position:absolute; inset:20px;
+    background:#000;
   }
 
-  /* ===== N (수직 2개 + 45° 대각) ===== */
-  .N .stem-left {left:calc(var(--unit) * 1); top:0; height:100%;}
-  .N .stem-right{right:calc(var(--unit) * 1); top:0; height:100%;}
-  .N .diag{
-    left:calc(var(--unit) * 3.2); top:calc(var(--unit) * 1.2);
-    width:calc(var(--width) - var(--unit) * 6.4);
-    transform:rotate(62deg); transform-origin:left center;
-    height:var(--thin);
+  /* ===== U (레드, 그림자) ===== */
+  .U .stem-left, .U .stem-right {
+    width:20px; height:120px; top:0; background:#ff2e63;
+  }
+  .U .stem-left { left:0; }
+  .U .stem-right { right:0; }
+  .U .bottom {
+    position:absolute; bottom:0; left:20px;
+    width:80px; height:20px;
+    background:#ff2e63;
+    box-shadow:0 -6px 12px rgba(255,46,99,.6) inset;
   }
 
-  /* 공통 클래스 크기 적용 */
-  .v, .I .bar, .K .stem, .R .stem, .Y .stem, .U .stem-left, .U .stem-right, .N .stem-left, .N .stem-right {
-    width:var(--thick);
+  /* ===== N (픽셀 스타일, 민트) ===== */
+  .N {
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    grid-template-rows:repeat(8,1fr);
+    gap:2px;
   }
-  .h, .K .arm-top, .K .arm-btm, .R .leg, .Y .arm-left, .Y .arm-right, .N .diag { height:var(--thin); }
-  .stroke, .ring { background:var(--mint); border-color:var(--mint); }
+  .N div {
+    background:#00ffc6;
+  }
+  .N .empty { background:transparent; }
 </style>
 </head>
 <body>
-  <div class="word" aria-label="KIRYOUN">
+  <div class="word">
     <!-- K -->
-    <div class="letter K" aria-label="K">
-      <div class="stroke v stem"></div>
-      <div class="stroke diag arm-top"></div>
-      <div class="stroke diag arm-btm"></div>
+    <div class="letter K">
+      <div class="stroke stem"></div>
+      <div class="stroke arm-top"></div>
+      <div class="stroke arm-bottom"></div>
     </div>
 
     <!-- I -->
-    <div class="letter I" aria-label="I">
-      <div class="stroke h cap-top"></div>
-      <div class="stroke v bar"></div>
-      <div class="stroke h cap-btm"></div>
+    <div class="letter I">
+      <div class="stroke bar"></div>
     </div>
 
     <!-- R -->
-    <div class="letter R" aria-label="R">
-      <div class="stroke v stem"></div>
-      <div class="ring bowl"></div>
-      <div class="stroke diag leg"></div>
+    <div class="letter R">
+      <div class="stroke stem"></div>
+      <div class="bowl"></div>
+      <div class="stroke leg"></div>
     </div>
 
     <!-- Y -->
-    <div class="letter Y" aria-label="Y">
-      <div class="stroke diag arm-left"></div>
-      <div class="stroke diag arm-right"></div>
-      <div class="stroke v stem"></div>
+    <div class="letter Y">
+      <div class="stroke arm-left"></div>
+      <div class="stroke arm-right"></div>
+      <div class="stroke stem"></div>
     </div>
 
     <!-- O -->
-    <div class="letter O" aria-label="O">
-      <div class="ring outer"></div>
+    <div class="letter O">
+      <div class="outer"></div>
     </div>
 
     <!-- U -->
-    <div class="letter U" aria-label="U">
-      <div class="stroke v stem-left"></div>
-      <div class="stroke v stem-right"></div>
-      <div class="curve"></div>
+    <div class="letter U">
+      <div class="stem-left"></div>
+      <div class="stem-right"></div>
+      <div class="bottom"></div>
     </div>
 
-    <!-- N -->
-    <div class="letter N" aria-label="N">
-      <div class="stroke v stem-left"></div>
-      <div class="stroke diag diag"></div>
-      <div class="stroke v stem-right"></div>
+    <!-- N (픽셀) -->
+    <div class="letter N">
+      <div></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div></div>
+      <div></div><div></div><div class="empty"></div><div></div><div></div>
+      <div></div><div></div><div></div><div class="empty"></div><div></div>
+      <div></div><div class="empty"></div><div></div><div></div><div></div>
+      <div></div><div class="empty"></div><div></div><div></div><div></div>
+      <div></div><div class="empty"></div><div class="empty"></div><div></div><div></div>
+      <div></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div></div>
+      <div></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div></div>
     </div>
   </div>
 </body>
