@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>KIRYOUN Pixel Art</title>
+<title>KIRYOUN Squid Game Shapes</title>
 <style>
   body {
     margin: 0;
@@ -18,35 +18,67 @@
   }
   .letter {
     display: grid;
-    grid-template-columns: repeat(5, 24px);
-    grid-template-rows: repeat(7, 24px);
+    grid-template-columns: repeat(5, 28px);
+    grid-template-rows: repeat(7, 28px);
     gap: 4px;
   }
-  /* 기본 픽셀 블록 */
-  .pixel {
-    width: 24px;
-    height: 24px;
-    background: #00ffc6;
-    opacity: 1;
+  .shape {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.9;
   }
-  /* 모양 변형 */
-  .circle { border-radius: 50%; }
+
+  /* 기본 색 팔레트 */
+  .mint   { color: #00ffc6; }
+  .sky    { color: #00d4ff; }
+  .violet { color: #a566ff; }
+  .orange { color: #ff7b00; }
+  .yellow { color: #ffe600; }
+  .red    { color: #ff2e63; }
+
+  /* 도형들 */
+  .square {
+    background: currentColor;
+    width: 22px;
+    height: 22px;
+  }
+  .circle {
+    background: currentColor;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+  }
   .triangle {
+    width: 0;
+    height: 0;
+    border-left: 11px solid transparent;
+    border-right: 11px solid transparent;
+    border-bottom: 22px solid currentColor;
+  }
+  .star {
+    color: currentColor;
+    font-size: 20px;
+  }
+  .umbrella {
+    position: relative;
     width: 0; height: 0;
-    background: transparent;
     border-left: 12px solid transparent;
     border-right: 12px solid transparent;
-    border-bottom: 24px solid #ff7b00;
+    border-bottom: 14px solid currentColor;
   }
-  /* 색상 팔레트 */
-  .mint   { background: #00ffc6; }
-  .sky    { background: #00d4ff; }
-  .violet { background: #a566ff; }
-  .orange { background: #ff7b00; }
-  .yellow { background: #ffe600; }
-  .red    { background: #ff2e63; }
+  .umbrella::after {
+    content: "";
+    position: absolute;
+    top: 6px; left: -12px;
+    width: 24px; height: 12px;
+    border-radius: 50% 50% 0 0;
+    background: currentColor;
+  }
 
-  .empty { background: transparent !important; opacity: 0; }
+  .empty { opacity: 0; }
 </style>
 </head>
 <body>
@@ -54,79 +86,79 @@
 
     <!-- K -->
     <div class="letter K">
-      <div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="sky circle" style="opacity:0.7"></div><div class="empty"></div>
-      <div class="pixel mint"></div><div class="empty"></div><div class="circle violet" style="opacity:0.8"></div><div class="empty"></div><div class="triangle"></div>
-      <div class="pixel mint"></div><div class="empty"></div><div class="pixel orange"></div><div class="empty"></div><div class="pixel red circle" style="opacity:0.6"></div>
-      <div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="violet circle"></div><div class="empty"></div>
-      <div class="pixel mint"></div><div class="empty"></div><div class="pixel sky"></div><div class="empty"></div><div class="triangle"></div>
-      <div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="yellow circle"></div><div class="empty"></div>
-      <div class="pixel mint"></div><div class="empty"></div><div class="pixel orange"></div><div class="empty"></div><div class="pixel red"></div>
+      <div class="shape square mint"></div><div class="empty"></div><div class="empty"></div><div class="shape circle sky"></div><div class="empty"></div>
+      <div class="shape square mint"></div><div class="empty"></div><div class="shape triangle violet"></div><div class="empty"></div><div class="shape star orange">★</div>
+      <div class="shape square mint"></div><div class="empty"></div><div class="shape circle orange"></div><div class="empty"></div><div class="shape umbrella red"></div>
+      <div class="shape square mint"></div><div class="empty"></div><div class="empty"></div><div class="shape triangle violet"></div><div class="empty"></div>
+      <div class="shape square mint"></div><div class="empty"></div><div class="shape circle sky"></div><div class="empty"></div><div class="shape star yellow">★</div>
+      <div class="shape square mint"></div><div class="empty"></div><div class="empty"></div><div class="shape umbrella red"></div><div class="empty"></div>
+      <div class="shape square mint"></div><div class="empty"></div><div class="shape star orange">★</div><div class="empty"></div><div class="shape circle red"></div>
     </div>
 
     <!-- I -->
     <div class="letter I">
-      <div class="circle sky"></div><div class="circle sky"></div><div class="circle sky"></div><div class="circle sky"></div><div class="circle sky"></div>
-      <div class="empty"></div><div class="empty"></div><div class="pixel sky"></div><div class="empty"></div><div class="empty"></div>
-      <div class="empty"></div><div class="empty"></div><div class="circle sky" style="opacity:.7"></div><div class="empty"></div><div class="empty"></div>
-      <div class="empty"></div><div class="empty"></div><div class="pixel sky"></div><div class="empty"></div><div class="empty"></div>
-      <div class="empty"></div><div class="empty"></div><div class="circle sky"></div><div class="empty"></div><div class="empty"></div>
-      <div class="empty"></div><div class="empty"></div><div class="pixel sky"></div><div class="empty"></div><div class="empty"></div>
-      <div class="circle sky"></div><div class="circle sky"></div><div class="circle sky"></div><div class="circle sky"></div><div class="circle sky"></div>
+      <div class="shape square sky"></div><div class="shape circle sky"></div><div class="shape umbrella sky"></div><div class="shape star sky">★</div><div class="shape triangle sky"></div>
+      <div class="empty"></div><div class="empty"></div><div class="shape square sky"></div><div class="empty"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="shape circle sky"></div><div class="empty"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="shape star sky">★</div><div class="empty"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="shape umbrella sky"></div><div class="empty"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="shape square sky"></div><div class="empty"></div><div class="empty"></div>
+      <div class="shape circle sky"></div><div class="shape umbrella sky"></div><div class="shape square sky"></div><div class="shape triangle sky"></div><div class="shape star sky">★</div>
     </div>
 
     <!-- R -->
     <div class="letter R">
-      <div class="pixel violet"></div><div class="pixel violet"></div><div class="pixel violet"></div><div class="empty"></div><div class="empty"></div>
-      <div class="pixel violet"></div><div class="empty"></div><div class="circle violet"></div><div class="empty"></div><div class="empty"></div>
-      <div class="pixel violet"></div><div class="empty"></div><div class="pixel violet"></div><div class="empty"></div><div class="empty"></div>
-      <div class="pixel violet"></div><div class="pixel violet"></div><div class="pixel violet"></div><div class="empty"></div><div class="empty"></div>
-      <div class="pixel violet"></div><div class="empty"></div><div class="pixel orange"></div><div class="empty"></div><div class="empty"></div>
-      <div class="pixel violet"></div><div class="empty"></div><div class="empty"></div><div class="triangle"></div><div class="empty"></div>
-      <div class="pixel violet"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel red"></div>
+      <div class="shape square violet"></div><div class="shape triangle violet"></div><div class="shape circle violet"></div><div class="empty"></div><div class="empty"></div>
+      <div class="shape square violet"></div><div class="empty"></div><div class="shape umbrella violet"></div><div class="empty"></div><div class="empty"></div>
+      <div class="shape square violet"></div><div class="empty"></div><div class="shape star violet">★</div><div class="empty"></div><div class="empty"></div>
+      <div class="shape square violet"></div><div class="shape circle violet"></div><div class="shape triangle violet"></div><div class="empty"></div><div class="empty"></div>
+      <div class="shape square violet"></div><div class="empty"></div><div class="shape umbrella orange"></div><div class="empty"></div><div class="empty"></div>
+      <div class="shape square violet"></div><div class="empty"></div><div class="empty"></div><div class="shape triangle red"></div><div class="empty"></div>
+      <div class="shape square violet"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape star red">★</div>
     </div>
 
     <!-- Y -->
     <div class="letter Y">
-      <div class="triangle"></div><div class="empty"></div><div class="triangle"></div><div class="empty"></div><div class="triangle"></div>
-      <div class="empty"></div><div class="circle orange"></div><div class="empty"></div><div class="circle orange"></div><div class="empty"></div>
-      <div class="empty"></div><div class="empty"></div><div class="pixel orange"></div><div class="empty"></div><div class="empty"></div>
-      <div class="empty"></div><div class="empty"></div><div class="circle orange" style="opacity:.6"></div><div class="empty"></div><div class="empty"></div>
-      <div class="empty"></div><div class="empty"></div><div class="pixel orange"></div><div class="empty"></div><div class="empty"></div>
-      <div class="empty"></div><div class="empty"></div><div class="circle orange"></div><div class="empty"></div><div class="empty"></div>
-      <div class="triangle"></div><div class="triangle"></div><div class="triangle"></div><div class="triangle"></div><div class="triangle"></div>
+      <div class="shape triangle orange"></div><div class="empty"></div><div class="shape triangle orange"></div><div class="empty"></div><div class="shape triangle orange"></div>
+      <div class="empty"></div><div class="shape circle orange"></div><div class="empty"></div><div class="shape circle orange"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="shape square orange"></div><div class="empty"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="shape star orange">★</div><div class="empty"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="shape umbrella orange"></div><div class="empty"></div><div class="empty"></div>
+      <div class="empty"></div><div class="empty"></div><div class="shape square orange"></div><div class="empty"></div><div class="empty"></div>
+      <div class="shape triangle orange"></div><div class="shape triangle orange"></div><div class="shape triangle orange"></div><div class="shape triangle orange"></div><div class="shape triangle orange"></div>
     </div>
 
     <!-- O -->
     <div class="letter O">
-      <div class="circle yellow"></div><div class="circle yellow"></div><div class="circle yellow"></div><div class="circle yellow"></div><div class="circle yellow"></div>
-      <div class="circle yellow"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="circle yellow"></div>
-      <div class="circle yellow"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="circle yellow"></div>
-      <div class="circle yellow"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="circle yellow"></div>
-      <div class="circle yellow"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="circle yellow"></div>
-      <div class="circle yellow"></div><div class="circle yellow"></div><div class="circle yellow"></div><div class="circle yellow"></div><div class="circle yellow"></div>
+      <div class="shape circle yellow"></div><div class="shape circle yellow"></div><div class="shape circle yellow"></div><div class="shape circle yellow"></div><div class="shape circle yellow"></div>
+      <div class="shape square yellow"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape star yellow">★</div>
+      <div class="shape umbrella yellow"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape triangle yellow"></div>
+      <div class="shape circle yellow"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape square yellow"></div>
+      <div class="shape star yellow">★</div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape umbrella yellow"></div>
+      <div class="shape circle yellow"></div><div class="shape circle yellow"></div><div class="shape circle yellow"></div><div class="shape circle yellow"></div><div class="shape circle yellow"></div>
       <div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div>
     </div>
 
     <!-- U -->
     <div class="letter U">
-      <div class="pixel red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel red"></div>
-      <div class="pixel red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel red"></div>
-      <div class="pixel red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel red"></div>
-      <div class="pixel red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel red"></div>
-      <div class="pixel red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel red"></div>
-      <div class="pixel red"></div><div class="pixel red"></div><div class="pixel red"></div><div class="pixel red"></div><div class="pixel red"></div>
+      <div class="shape square red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape square red"></div>
+      <div class="shape umbrella red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape star red">★</div>
+      <div class="shape circle red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape triangle red"></div>
+      <div class="shape square red"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape circle red"></div>
+      <div class="shape star red">★</div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape umbrella red"></div>
+      <div class="shape square red"></div><div class="shape triangle red"></div><div class="shape star red">★</div><div class="shape umbrella red"></div><div class="shape circle red"></div>
       <div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div>
     </div>
 
     <!-- N -->
     <div class="letter N">
-      <div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel mint"></div>
-      <div class="pixel mint"></div><div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="pixel mint"></div>
-      <div class="pixel mint"></div><div class="empty"></div><div class="pixel mint"></div><div class="empty"></div><div class="pixel mint"></div>
-      <div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="pixel mint"></div><div class="pixel mint"></div>
-      <div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel mint"></div>
-      <div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel mint"></div>
-      <div class="pixel mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="pixel mint"></div>
+      <div class="shape square mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape square mint"></div>
+      <div class="shape umbrella mint"></div><div class="shape triangle mint"></div><div class="empty"></div><div class="empty"></div><div class="shape star mint">★</div>
+      <div class="shape circle mint"></div><div class="empty"></div><div class="shape square mint"></div><div class="empty"></div><div class="shape triangle mint"></div>
+      <div class="shape square mint"></div><div class="empty"></div><div class="empty"></div><div class="shape circle mint"></div><div class="shape star mint">★</div>
+      <div class="shape umbrella mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape square mint"></div>
+      <div class="shape square mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape triangle mint"></div>
+      <div class="shape circle mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="shape star mint">★</div>
     </div>
 
   </div>
