@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KIRY Variations</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 60px;
+      height: 100vh;
+      background: #000;
+      font-family: sans-serif;
+    }
+
+    .glyph {
+      width: 120px;
+      height: 150px;
+      position: relative;
+    }
+
+    /* ===== K ===== */
+    .K .stem, .K .arm {
+      position: absolute;
+      background: #00ffc6;
+    }
+    .K .stem { width: 20px; height: 150px; left: 20px; top: 0; }
+    .K .arm.top {
+      width: 90px; height: 15px; top: 40px; left: 30px;
+      transform: rotate(45deg);
+      transform-origin: left center;
+    }
+    .K .arm.bottom {
+      width: 90px; height: 15px; top: 90px; left: 30px;
+      transform: rotate(-45deg);
+      transform-origin: left center;
+    }
+
+    /* ===== I ===== */
+    .I {
+      background: #00ffc6;
+      width: 20px; height: 150px;
+      margin: auto;
+      border-radius: 5px;
+    }
+
+    /* ===== R ===== */
+    .R .stem, .R .bowl, .R .leg {
+      position: absolute;
+      background: #00ffc6;
+    }
+    .R .stem { width: 20px; height: 150px; left: 10px; top: 0; }
+    .R .bowl {
+      width: 70px; height: 70px;
+      border: 15px solid #00ffc6;
+      border-radius: 50%;
+      top: 0; left: 20px;
+      box-sizing: border-box;
+    }
+    .R .leg {
+      width: 80px; height: 15px;
+      top: 90px; left: 20px;
+      transform: rotate(45deg);
+      transform-origin: left center;
+    }
+
+    /* ===== Y ===== */
+    .Y .arm {
+      position: absolute;
+      width: 80px; height: 15px;
+      background: #00ffc6;
+      top: 30px;
+      transform-origin: center;
+    }
+    .Y .arm.left { left: 0; transform: rotate(45deg); }
+    .Y .arm.right { right: 0; transform: rotate(-45deg); }
+    .Y .stem {
+      position: absolute;
+      width: 20px; height: 100px;
+      background: #00ffc6;
+      top: 50px; left: 50px;
+    }
+  </style>
+</head>
+<body>
+  <!-- K -->
+  <div class="glyph K">
+    <div class="stem"></div>
+    <div class="arm top"></div>
+    <div class="arm bottom"></div>
+  </div>
+
+  <!-- I -->
+  <div class="glyph I"></div>
+
+  <!-- R -->
+  <div class="glyph R">
+    <div class="stem"></div>
+    <div class="bowl"></div>
+    <div class="leg"></div>
+  </div>
+
+  <!-- Y -->
+  <div class="glyph Y">
+    <div class="arm left"></div>
+    <div class="arm right"></div>
+    <div class="stem"></div>
+  </div>
+</body>
+</html>
