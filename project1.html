@@ -6,9 +6,9 @@
   <title>Techno Catalogue Sketch</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #0e0e0e;
-      color: #eee;
+      font-family: 'Courier New', monospace;
+      background: #000;
+      color: #00ff66;
       margin: 0;
       padding: 0;
       display: flex;
@@ -23,15 +23,29 @@
       font-size: 2rem;
       margin-bottom: 0.5rem;
     }
+    header p {
+      color: #77ffbb;
+    }
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+    }
     .timeline, .map {
-      width: 80%;
-      margin: 2rem 0;
-      padding: 1rem;
-      border: 1px solid #444;
-      border-radius: 10px;
+      flex: 1 1 45%;
+      background: #0f0f0f;
+      padding: 1.5rem;
+      border: 1px solid #00ff66;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #00ff66;
     }
     .timeline h2, .map h2 {
       margin-top: 0;
+      border-bottom: 1px solid #00ff66;
+      padding-bottom: 0.5rem;
     }
     .timeline ul {
       list-style: none;
@@ -43,56 +57,84 @@
       transition: color 0.3s;
     }
     .timeline li:hover {
-      color: #1db954;
+      color: #ff33cc;
     }
     .map {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
       justify-content: center;
+      text-align: center;
     }
     .node {
-      background: #222;
-      padding: 1rem 1.5rem;
+      background: #111;
+      padding: 1.2rem 1.5rem;
       border-radius: 50%;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: all 0.3s;
+      border: 1px solid #00ff66;
+      box-shadow: 0 0 10px #00ff66 inset;
     }
     .node:hover {
-      background: #1db954;
+      background: #00ff66;
+      color: #000;
+      box-shadow: 0 0 20px #ff33cc;
     }
     footer {
       margin: 3rem;
       font-size: 0.8rem;
-      color: #aaa;
+      color: #777;
+    }
+    .visuals {
+      margin: 2rem auto;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .visuals img {
+      width: 180px;
+      border: 1px solid #00ff66;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #00ff66;
     }
   </style>
 </head>
 <body>
   <header>
     <h1>Mapping Techno: A Hyperlinked Catalogue</h1>
-    <p>Two structures: Timeline vs Exploratory Map</p>
+    <p><strong>Subtitle:</strong> Genres, History, Places, and Sounds</p>
+    <p><strong>Visual:</strong> Abstract sound wave / archive-style graphic</p>
   </header>
 
-  <section class="timeline">
-    <h2>Plan A: Timeline Structure</h2>
-    <ul>
-      <li onclick="alert('Detroit Techno (1980s): Underground Resistance, Juan Atkins...')">1980s – Detroit</li>
-      <li onclick="alert('Berlin Techno (1990s): Tresor, Love Parade...')">1990s – Berlin</li>
-      <li onclick="alert('Global Spread (2000s+): Minimal Techno, Festivals worldwide...')">2000s – Global</li>
-    </ul>
-  </section>
+  <div class="visuals">
+    <img src="https://i.ibb.co/JxhDtpF/retro-futuristic-1.png" alt="retro futuristic" />
+    <img src="https://i.ibb.co/sR7LdnX/retro-futuristic-2.png" alt="symbols" />
+    <img src="https://i.ibb.co/cbSm8MF/retro-futuristic-3.png" alt="analog effect" />
+    <img src="https://i.ibb.co/8jP3MLR/retro-futuristic-4.png" alt="sound wave" />
+  </div>
 
-  <section class="map">
-    <h2>Plan B: Exploratory Map</h2>
-    <div class="node" onclick="alert('Acid Techno: Origin in London, squats, Roland TB-303 sounds')">Acid</div>
-    <div class="node" onclick="alert('Minimal Techno: Berlin-based, repetitive stripped-down sound')">Minimal</div>
-    <div class="node" onclick="alert('Hard Techno: Industrial vibe, Spain & Germany strong scenes')">Hard</div>
-    <div class="node" onclick="alert('Ambient Techno: Dreamy textures, Orbital & UK artists')">Ambient</div>
-  </section>
+  <div class="container">
+    <section class="timeline">
+      <h2>Plan A: Timeline Structure</h2>
+      <ul>
+        <li onclick="alert('Detroit Techno (1980s): Underground Resistance, Juan Atkins...')">1980s – Detroit</li>
+        <li onclick="alert('Berlin Techno (1990s): Tresor, Love Parade...')">1990s – Berlin</li>
+        <li onclick="alert('Global Spread (2000s+): Minimal Techno, Festivals worldwide...')">2000s – Global</li>
+      </ul>
+    </section>
+
+    <section class="map">
+      <h2>Plan B: Exploratory Mind Map</h2>
+      <div class="node" onclick="alert('Acid Techno: Origin in London, squats, Roland TB-303 sounds')">Acid</div>
+      <div class="node" onclick="alert('Minimal Techno: Berlin-based, repetitive stripped-down sound')">Minimal</div>
+      <div class="node" onclick="alert('Hard Techno: Industrial vibe, Spain & Germany strong scenes')">Hard</div>
+      <div class="node" onclick="alert('Ambient Techno: Dreamy textures, Orbital & UK artists')">Ambient</div>
+    </section>
+  </div>
 
   <footer>
-    <p>Sketch prototype – not final, just for presentation concept.</p>
+    <p>⚡ Prototype sketch — not final, just for presentation demo.</p>
   </footer>
 </body>
 </html>
