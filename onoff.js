@@ -8,7 +8,7 @@ toggleBtn.addEventListener('click', () => {
 
   if (body.classList.contains('dark-mode')) {
     title.textContent = "🌙 Welcome to the Dark Side";
-    text.textContent = "Surprise! Even text changed!";
+    text.textContent = "Surprise! The text changed too!";
     toggleBtn.textContent = "☀️ Toggle";
   } else {
     title.textContent = "☀️ Hello World";
