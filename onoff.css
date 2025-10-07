@@ -24,6 +24,7 @@ button:hover {
   background: orange;
 }
 
+/* 토글 후 적용될 클래스 */
 .dark-mode {
   background-color: black;
   color: white;
