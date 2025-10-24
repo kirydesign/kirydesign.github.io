@@ -1,140 +1,443 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Techno Catalogue Sketch</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Techno Map — Region × Year × Genre</title>
   <style>
-    body {
-      font-family: 'Courier New', monospace;
-      background: #000;
-      color: #00ff66;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    :root{
+      --bg:#0e0f12; --panel:#14161b; --muted:#8b93a7; --text:#e9ecf3; --line:#22252c;
+      --chip:#1e2129; --chip-b:#2a2e38; --accent:#5ee1ff;
+      --g-hard:#ff4d4f; --g-minimal:#4c9dff; --g-acid:#25d366; --g-detroit:#b280ff;
+      --g-industrial:#ff9a00; --g-gabber:#ff2fb3; --g-schranz:#ffa600; --g-drumcode:#37e7ff;
     }
-    header {
-      text-align: center;
-      padding: 2rem;
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:radial-gradient(1200px 600px at 70% -10%, #1a1f2a 0%, #0e0f12 60%, #0b0c10 100%);
+      color:var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Noto Sans KR", Apple SD Gothic Neo, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
     }
-    header h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
+    header{
+      position:sticky; top:0; z-index:5;
+      display:flex; gap:16px; align-items:center; justify-content:space-between;
+      padding:12px 18px; background:rgba(10,11,14,.7); backdrop-filter: blur(8px); border-bottom:1px solid var(--line);
     }
-    header p {
-      color: #77ffbb;
+    .brand{display:flex; gap:10px; align-items:center; font-weight:700; letter-spacing:.3px}
+    .brand .dot{width:10px; height:10px; border-radius:50%; background:var(--accent); box-shadow:0 0 12px var(--accent)}
+    .filters{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center; max-width:820px}
+    .chip{
+      display:flex; align-items:center; gap:8px; padding:6px 10px; border:1px solid var(--line);
+      background:linear-gradient(180deg, var(--chip), var(--chip-b)); border-radius:999px; font-size:13px; cursor:pointer; user-select:none;
     }
-    .container {
-      width: 90%;
-      max-width: 1000px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 2rem;
+    .chip input{accent-color:currentColor}
+    .chip .sw{display:inline-block; width:10px; height:10px; border-radius:2px}
+    .tools{display:flex; gap:10px; align-items:center; opacity:.9}
+    .btn{padding:8px 12px; border:1px solid var(--line); background:var(--panel); border-radius:10px; font-size:13px; cursor:pointer}
+    main{display:grid; grid-template-columns: 1.6fr 1fr; gap:16px; padding:16px; min-height:calc(100vh - 62px)}
+    @media (max-width:1024px){ main{grid-template-columns:1fr; grid-auto-rows:min-content} }
+    .map{
+      position:relative; border:1px solid var(--line); border-radius:16px; overflow:hidden; background:
+        radial-gradient(1200px 500px at 30% 10%, #1b2030 0%, #14161b 50%, #101218 100%);
+      min-height:520px;
     }
-    .timeline, .map {
-      flex: 1 1 45%;
-      background: #0f0f0f;
-      padding: 1.5rem;
-      border: 1px solid #00ff66;
-      border-radius: 12px;
-      box-shadow: 0 0 15px #00ff66;
+    .map .water{
+      position:absolute; inset:0; opacity:.15;
+      background-image:
+        radial-gradient(800px 380px at 35% 32%, #81b3ff, transparent 60%),
+        radial-gradient(900px 420px at 75% 48%, #7fd1ff, transparent 60%),
+        radial-gradient(600px 280px at 50% 72%, #9fe3ff, transparent 60%);
+      mix-blend-mode:screen;
+      pointer-events:none;
     }
-    .timeline h2, .map h2 {
-      margin-top: 0;
-      border-bottom: 1px solid #00ff66;
-      padding-bottom: 0.5rem;
+    .map .grid{position:absolute; inset:0; background-image:linear-gradient(to right, rgba(255,255,255,.03) 1px, transparent 1px),
+                                                   linear-gradient(to bottom, rgba(255,255,255,.03) 1px, transparent 1px);
+               background-size:40px 40px; pointer-events:none}
+    .legend{position:absolute; left:12px; bottom:12px; display:flex; gap:8px; flex-wrap:wrap; font-size:12px; color:var(--muted)}
+    .legend .l{display:flex; gap:6px; align-items:center; background:rgba(0,0,0,.35); border:1px solid var(--line); padding:4px 8px; border-radius:8px}
+    .legend .sw{width:10px; height:10px; border-radius:2px}
+    .marker{
+      position:absolute; width:12px; height:12px; border-radius:50%; transform:translate(-50%, -50%);
+      border:1px solid rgba(255,255,255,.5); box-shadow:0 0 0 0 rgba(255,255,255,.0); transition: box-shadow .25s, transform .1s;
+      cursor:pointer;
     }
-    .timeline ul {
-      list-style: none;
-      padding: 0;
+    .marker:hover{box-shadow:0 0 16px 4px rgba(255,255,255,.14); transform:translate(-50%, -50%) scale(1.06)}
+    .panel{
+      display:flex; flex-direction:column; gap:12px; border:1px solid var(--line); border-radius:16px; padding:14px;
+      background:linear-gradient(180deg, #11141a, #0f1217);
+      min-height:520px;
     }
-    .timeline li {
-      margin: 1rem 0;
-      cursor: pointer;
-      transition: color 0.3s;
+    .panel .title{display:flex; justify-content:space-between; align-items:center}
+    .panel h2{margin:0; font-size:20px}
+    .meta{display:flex; gap:8px; flex-wrap:wrap; color:var(--muted); font-size:12px}
+    .mini-tl{display:flex; align-items:center; gap:10px; font-size:12px; color:var(--muted)}
+    input[type="range"]{width:100%}
+    .cards{display:flex; flex-direction:column; gap:10px; overflow:auto; padding-right:4px}
+    .card{
+      display:grid; grid-template-columns: 56px 1fr auto; gap:12px; align-items:center;
+      border:1px solid var(--line); background:var(--panel); border-radius:12px; padding:10px;
     }
-    .timeline li:hover {
-      color: #ff33cc;
+    .thumb{width:56px; height:56px; border-radius:8px; background:#222 center/cover no-repeat; border:1px solid var(--line)}
+    .card h3{margin:0; font-size:14px}
+    .card .sub{font-size:12px; color:var(--muted)}
+    .pill{display:inline-flex; align-items:center; gap:6px; padding:4px 8px; font-size:11px; border-radius:999px;
+      border:1px solid var(--line); background:rgba(255,255,255,.03)}
+    .play{padding:8px 10px; font-size:12px; border-radius:10px; border:1px solid var(--line); background:#1a1e26; text-decoration:none; color:var(--text)}
+    footer{
+      position:sticky; bottom:0; z-index:3; padding:12px 16px; border-top:1px solid var(--line);
+      background:rgba(10,11,14,.72); backdrop-filter: blur(8px);
     }
-    .map {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-      text-align: center;
-    }
-    .node {
-      background: #111;
-      padding: 1.2rem 1.5rem;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: all 0.3s;
-      border: 1px solid #00ff66;
-      box-shadow: 0 0 10px #00ff66 inset;
-    }
-    .node:hover {
-      background: #00ff66;
-      color: #000;
-      box-shadow: 0 0 20px #ff33cc;
-    }
-    footer {
-      margin: 3rem;
-      font-size: 0.8rem;
-      color: #777;
-    }
-    .visuals {
-      margin: 2rem auto;
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .visuals img {
-      width: 180px;
-      border: 1px solid #00ff66;
-      border-radius: 8px;
-      box-shadow: 0 0 10px #00ff66;
-    }
+    .foot{display:grid; grid-template-columns: 120px 1fr 120px; gap:12px; align-items:center}
+    .muted{color:var(--muted)}
   </style>
 </head>
 <body>
   <header>
-    <h1>Mapping Techno: A Hyperlinked Catalogue</h1>
-    <p><strong>Origin:</strong> Techno emerged in Detroit during the 1980s with pioneers like Juan Atkins, Derrick May, and Kevin Saunderson.</p>
-    <p><strong>Focus:</strong> Exploring how techno spread across cities like Berlin, London, and Tokyo, evolving into countless subgenres.</p>
+    <div class="brand"><span class="dot"></span> Techno Map</div>
+    <div class="filters" id="genreFilters">
+      <!-- 필터는 JS에서 생성 -->
+    </div>
+    <div class="tools">
+      <button class="btn" id="resetBtn">Reset</button>
+      <button class="btn" id="randomBtn">Random</button>
+    </div>
   </header>
 
-  <div class="visuals">
-    <img src="https://i.ibb.co/JxhDtpF/retro-futuristic-1.png" alt="retro futuristic" />
-    <img src="https://i.ibb.co/sR7LdnX/retro-futuristic-2.png" alt="symbols" />
-    <img src="https://i.ibb.co/cbSm8MF/retro-futuristic-3.png" alt="analog effect" />
-    <img src="https://i.ibb.co/8jP3MLR/retro-futuristic-4.png" alt="sound wave" />
-  </div>
-
-  <div class="container">
-    <section class="timeline">
-      <h2>Plan A: Timeline Structure</h2>
-      <ul>
-        <li onclick="alert('Detroit Techno (1980s): Underground Resistance, Juan Atkins...')">1980s – Detroit</li>
-        <li onclick="alert('Berlin Techno (1990s): Tresor, Love Parade...')">1990s – Berlin</li>
-        <li onclick="alert('Global Spread (2000s+): Minimal Techno, Festivals worldwide...')">2000s – Global</li>
-      </ul>
+  <main>
+    <!-- MAP -->
+    <section class="map" id="map">
+      <div class="water"></div>
+      <div class="grid"></div>
+      <div class="legend" id="legend"></div>
+      <!-- 마커는 JS로 생성 -->
     </section>
 
-    <section class="map">
-      <h2>Plan B: Exploratory Mind Map</h2>
-      <div class="node" onclick="alert('Acid Techno: Origin in London, squats, Roland TB-303 sounds')">Acid</div>
-      <div class="node" onclick="alert('Minimal Techno: Berlin-based, repetitive stripped-down sound')">Minimal</div>
-      <div class="node" onclick="alert('Hard Techno: Industrial vibe, Spain & Germany strong scenes')">Hard</div>
-      <div class="node" onclick="alert('Ambient Techno: Dreamy textures, Orbital & UK artists')">Ambient</div>
-    </section>
-  </div>
+    <!-- PANEL -->
+    <aside class="panel">
+      <div class="title">
+        <h2 id="regionTitle">지역을 선택하세요</h2>
+        <span class="muted" id="countInfo">0 tracks</span>
+      </div>
+      <div class="meta" id="regionMeta">
+        <!-- 지역 메타 정보 -->
+      </div>
+      <div class="mini-tl">
+        <span>Local Timeline</span>
+        <input type="range" id="localYear" min="1980" max="2025" value="1995" />
+        <span id="localYearVal">1995</span>
+      </div>
+      <div class="cards" id="cards">
+        <!-- 카드 리스트 -->
+      </div>
+    </aside>
+  </main>
 
   <footer>
-    <p>⚡ Prototype sketch — not final, just for presentation demo.</p>
+    <div class="foot">
+      <div class="muted">Global Year</div>
+      <input type="range" id="globalYear" min="1980" max="2025" value="2000" />
+      <div class="muted" id="globalYearVal">2000</div>
+    </div>
   </footer>
+
+  <script>
+    /* ==========
+       데이터
+       ========== */
+    const GENRES = [
+      {key:"hard",       name:"Hard Techno",    color:"var(--g-hard)"},
+      {key:"minimal",    name:"Minimal",        color:"var(--g-minimal)"},
+      {key:"acid",       name:"Acid Techno",    color:"var(--g-acid)"},
+      {key:"detroit",    name:"Detroit Techno", color:"var(--g-detroit)"},
+      {key:"industrial", name:"Industrial",     color:"var(--g-industrial)"},
+      {key:"gabber",     name:"Gabber/Rotter",  color:"var(--g-gabber)"},
+      {key:"schranz",    name:"Schranz",        color:"var(--g-schranz)"},
+      {key:"drumcode",   name:"Scandi/Drumcode",color:"var(--g-drumcode)"},
+    ];
+
+    // 대략적 위치(0~100%) — 시연용 좌표
+    const REGIONS = [
+      {id:"detroit",  name:"Detroit",  x:46, y:38},
+      {id:"berlin",   name:"Berlin",   x:60, y:33},
+      {id:"london",   name:"London",   x:56, y:34},
+      {id:"birmingham",name:"Birmingham",x:57, y:35},
+      {id:"rotterdam",name:"Rotterdam",x:58, y:34},
+      {id:"naples",   name:"Naples",   x:61, y:42},
+      {id:"stockholm",name:"Stockholm",x:60, y:28},
+      {id:"paris",    name:"Paris",    x:57, y:36},
+      {id:"glasgow",  name:"Glasgow",  x:56, y:32},
+      {id:"amsterdam",name:"Amsterdam",x:58, y:33.5},
+      {id:"ghent",    name:"Ghent",    x:58, y:35},
+      {id:"tokyo",    name:"Tokyo",    x:86, y:38},
+      {id:"warsaw",   name:"Warsaw",   x:63, y:33},
+      {id:"tbilisi",  name:"Tbilisi",  x:68, y:39},
+      {id:"seoul",    name:"Seoul",    x:84, y:36},
+    ];
+
+    // 트랙(데모용) — url은 외부로 연결(유튜브/스포티파이 등)
+    const TRACKS = [
+      // Detroit
+      {region:"detroit", year:1985, artist:"Model 500 (Juan Atkins)", title:"No UFOs", genre:"detroit", url:"https://open.spotify.com/track/4H3o9SSsYt2mB2Z6T3mEoF"},
+      {region:"detroit", year:1987, artist:"Derrick May", title:"Strings of Life", genre:"detroit", url:"https://open.spotify.com/track/39Zz3xg7X2h8mJrHik9Etx"},
+      {region:"detroit", year:1992, artist:"Jeff Mills", title:"The Bells", genre:"detroit", url:"https://open.spotify.com/track/6I5r7C7lH3P8i4H0"},
+      // Berlin
+      {region:"berlin", year:1993, artist:"Basic Channel", title:"Phylyps Trak", genre:"minimal", url:"https://open.spotify.com/playlist/37i9dQZF1DXa8NOEUWPn9W"},
+      {region:"berlin", year:2009, artist:"Ben Klock", title:"Subzero", genre:"minimal", url:"https://open.spotify.com/track/0SO0aBv2r9lSp3Y2EJtL0G"},
+      {region:"berlin", year:2012, artist:"Marcel Dettmann", title:"Corebox", genre:"minimal", url:"https://open.spotify.com/track/2yUDF5hSSGdN2"},
+      // London / Acid
+      {region:"london", year:1995, artist:"Liberator DJs", title:"Stay Up Forever Cuts", genre:"acid", url:"https://open.spotify.com/playlist/37i9dQZF1DX2vYju3i0lNX"},
+      {region:"london", year:1997, artist:"Josh Wink", title:"Higher State (Acid Mix)", genre:"acid", url:"https://open.spotify.com/track/6c9dc7L7nB"},
+      // Birmingham / UK Techno
+      {region:"birmingham", year:1997, artist:"Surgeon", title:"Magneze", genre:"hard", url:"https://open.spotify.com/track/5h2m6Fi1"},
+      // Rotterdam / Gabber
+      {region:"rotterdam", year:1992, artist:"Euromasters", title:"Amsterdam Waar Lech Dat Dan?", genre:"gabber", url:"https://open.spotify.com/playlist/37i9dQZF1DX3LDIBRoaCDQ"},
+      // Naples / Italy Techno
+      {region:"naples", year:1998, artist:"Gaetek", title:"Advanced Series", genre:"hard", url:"https://open.spotify.com/artist/1qY0qvD2"},
+      // Stockholm / Drumcode
+      {region:"stockholm", year:1997, artist:"Adam Beyer", title:"Drumcode 1-2", genre:"drumcode", url:"https://open.spotify.com/artist/3tN6M2KXxgC"},
+      // Paris / France
+      {region:"paris", year:1993, artist:"Laurent Garnier", title:"Crispy Bacon", genre:"minimal", url:"https://open.spotify.com/track/6IhFYoW"},
+      // Glasgow / Scotland
+      {region:"glasgow", year:1993, artist:"Slam", title:"Positive Education", genre:"detroit", url:"https://open.spotify.com/track/2Z8fF2r"},
+      // Amsterdam / NL (Speedy J is Rotterdam but keep NL cluster)
+      {region:"amsterdam", year:1991, artist:"Speedy J", title:"Pullover", genre:"hard", url:"https://open.spotify.com/track/0ZPulover"},
+      // Ghent / Belgium (R&S)
+      {region:"ghent", year:1991, artist:"Joey Beltram", title:"Energy Flash", genre:"detroit", url:"https://open.spotify.com/track/1t6i7O"},
+      // Tokyo / Japan
+      {region:"tokyo", year:1995, artist:"Ken Ishii", title:"Extra", genre:"minimal", url:"https://open.spotify.com/track/4AmMD9"},
+      // Warsaw / PL (modern hard)
+      {region:"warsaw", year:2019, artist:"VTSS", title:"Atlantyda", genre:"hard", url:"https://open.spotify.com/artist/1N8Wf7"},
+      // Tbilisi / GE
+      {region:"tbilisi", year:2016, artist:"Various (KHIDI)", title:"Scene Cuts", genre:"industrial", url:"https://open.spotify.com/playlist/4KHIDI"},
+      // Seoul / KR
+      {region:"seoul", year:2018, artist:"Various (vurt.)", title:"Vurt Selections", genre:"minimal", url:"https://open.spotify.com/playlist/37i9dQZF1DX4VvfRBFClxm"},
+    ];
+
+    /* ==========
+       유틸/상태
+       ========== */
+    const state = {
+      selectedGenres: new Set(GENRES.map(g=>g.key)), // 기본: 전체 선택
+      globalYear: 2000,
+      currentRegion: null,
+      localYear: 1995
+    };
+
+    const el = {
+      legend: document.getElementById('legend'),
+      map: document.getElementById('map'),
+      cards: document.getElementById('cards'),
+      regionTitle: document.getElementById('regionTitle'),
+      regionMeta: document.getElementById('regionMeta'),
+      countInfo: document.getElementById('countInfo'),
+      localYear: document.getElementById('localYear'),
+      localYearVal: document.getElementById('localYearVal'),
+      globalYear: document.getElementById('globalYear'),
+      globalYearVal: document.getElementById('globalYearVal'),
+      filters: document.getElementById('genreFilters'),
+      resetBtn: document.getElementById('resetBtn'),
+      randomBtn: document.getElementById('randomBtn'),
+    };
+
+    function genreColor(key){
+      const g = GENRES.find(x=>x.key===key);
+      return g ? g.color : 'white';
+    }
+
+    /* ==========
+       필터 UI
+       ========== */
+    function renderFilters(){
+      el.filters.innerHTML = '';
+      GENRES.forEach(g=>{
+        const id = `g-${g.key}`;
+        const wrap = document.createElement('label');
+        wrap.className = 'chip';
+        wrap.style.color = getComputedStyle(document.documentElement).getPropertyValue( g.color.replace('var(','').replace(')','') ) || '#fff';
+        wrap.innerHTML = `
+          <span class="sw" style="background:${g.color}"></span>
+          <input type="checkbox" id="${id}" ${state.selectedGenres.has(g.key)?'checked':''}/>
+          <span>${g.name}</span>
+        `;
+        wrap.querySelector('input').addEventListener('change', e=>{
+          if(e.target.checked) state.selectedGenres.add(g.key);
+          else state.selectedGenres.delete(g.key);
+          renderMarkers();
+          renderPanel();
+        });
+        el.filters.appendChild(wrap);
+      });
+
+      // 범례도 표시
+      el.legend.innerHTML = '';
+      GENRES.forEach(g=>{
+        const l = document.createElement('div');
+        l.className = 'l';
+        l.innerHTML = `<span class="sw" style="background:${g.color}"></span> ${g.name}`;
+        el.legend.appendChild(l);
+      });
+    }
+
+    /* ==========
+       마커 렌더링
+       ========== */
+    function renderMarkers(){
+      // 기존 마커 제거
+      Array.from(el.map.querySelectorAll('.marker')).forEach(m=>m.remove());
+
+      // 각 지역에 표시 색상: 해당 지역 트랙 중 현재 글로벌 연도 이하 && 장르필터 통과인 트랙이 있으면 장르 색 (여러개면 복수 효과)
+      REGIONS.forEach(r=>{
+        const tracks = TRACKS.filter(t=>
+          t.region===r.id &&
+          t.year <= state.globalYear &&
+          state.selectedGenres.has(t.genre)
+        );
+        if(tracks.length===0) return;
+
+        // 대표 색상: 가장 최근 트랙의 장르색
+        const latest = tracks.sort((a,b)=>b.year-a.year)[0];
+        const m = document.createElement('div');
+        m.className = 'marker';
+        m.style.left = r.x + '%';
+        m.style.top  = r.y + '%';
+        m.style.background = `radial-gradient(circle at 40% 35%, #fff8, transparent 45%), ${genreColor(latest.genre)}`;
+
+        m.title = `${r.name} • ${tracks.length} tracks`;
+        m.addEventListener('click', ()=>{
+          state.currentRegion = r.id;
+          state.localYear = Math.min(state.globalYear, 2025);
+          el.localYear.value = state.localYear;
+          el.localYearVal.textContent = state.localYear;
+          renderPanel();
+          // 스크롤이 모바일이면 패널로 포커스
+          document.querySelector('.panel').scrollIntoView({behavior:'smooth', block:'start'});
+        });
+        el.map.appendChild(m);
+      });
+    }
+
+    /* ==========
+       패널 렌더링
+       ========== */
+    function renderPanel(){
+      if(!state.currentRegion){
+        el.regionTitle.textContent = '지역을 선택하세요';
+        el.regionMeta.innerHTML = '';
+        el.cards.innerHTML = '';
+        el.countInfo.textContent = '0 tracks';
+        return;
+      }
+      const region = REGIONS.find(r=>r.id===state.currentRegion);
+      el.regionTitle.textContent = region.name;
+
+      const allRegionTracks = TRACKS
+        .filter(t=>t.region===region.id && state.selectedGenres.has(t.genre))
+        .sort((a,b)=>a.year-b.year);
+
+      // 로컬 연도 이하
+      const visibleTracks = allRegionTracks.filter(t=>t.year <= state.localYear);
+
+      el.countInfo.textContent = `${visibleTracks.length} tracks`;
+
+      // 메타
+      const spanYearMin = allRegionTracks.length ? allRegionTracks[0].year : '—';
+      const spanYearMax = allRegionTracks.length ? allRegionTracks[allRegionTracks.length-1].year : '—';
+      el.regionMeta.innerHTML = `
+        <span class="pill">Years: ${spanYearMin}–${spanYearMax}</span>
+        <span class="pill">Genres: ${
+          [...new Set(allRegionTracks.map(t=>t.genre))].map(g=>`<span style="display:inline-flex;align-items:center;gap:6px">
+            <span class="sw" style="background:${genreColor(g)}"></span>${GENRES.find(x=>x.key===g)?.name||g}
+          </span>`).join(' , ')
+        }</span>
+      `;
+
+      // 카드
+      el.cards.innerHTML = '';
+      visibleTracks.forEach(t=>{
+        const card = document.createElement('div');
+        card.className = 'card';
+        const thumbGrad = `linear-gradient(135deg, ${genreColor(t.genre)}, rgba(255,255,255,.08))`;
+        card.innerHTML = `
+          <div class="thumb" style="background:${thumbGrad}"></div>
+          <div>
+            <h3>${t.artist} — ${t.title}</h3>
+            <div class="sub">${region.name} • ${t.year}</div>
+            <div class="pill" style="margin-top:6px">
+              <span class="sw" style="background:${genreColor(t.genre)}"></span>
+              ${GENRES.find(x=>x.key===t.genre)?.name || t.genre}
+            </div>
+          </div>
+          <div>
+            <a class="play" href="${t.url}" target="_blank" rel="noopener">▶ 재생</a>
+          </div>
+        `;
+        el.cards.appendChild(card);
+      });
+
+      if(visibleTracks.length===0){
+        const empty = document.createElement('div');
+        empty.className = 'muted';
+        empty.style.padding = '16px';
+        empty.textContent = '이 지역에서 선택된 연도/장르에 해당하는 트랙이 없습니다. 필터나 연도를 조정해 보세요.';
+        el.cards.appendChild(empty);
+      }
+    }
+
+    /* ==========
+       이벤트
+       ========== */
+    // 로컬 연도
+    el.localYear.addEventListener('input', (e)=>{
+      state.localYear = parseInt(e.target.value,10);
+      el.localYearVal.textContent = state.localYear;
+      renderPanel();
+    });
+
+    // 글로벌 연도
+    el.globalYear.addEventListener('input', (e)=>{
+      state.globalYear = parseInt(e.target.value,10);
+      el.globalYearVal.textContent = state.globalYear;
+      renderMarkers(); // 맵 업데이트
+      // 현재 지역의 로컬 연도도 글로벌에 맞춰 상한 조정(넘치면 끌어내림)
+      if(state.localYear > state.globalYear){
+        state.localYear = state.globalYear;
+        el.localYear.value = state.localYear;
+        el.localYearVal.textContent = state.localYear;
+      }
+      renderPanel();
+    });
+
+    // 리셋
+    el.resetBtn.addEventListener('click', ()=>{
+      state.selectedGenres = new Set(GENRES.map(g=>g.key));
+      state.globalYear = 2000;
+      state.localYear = 1995;
+      state.currentRegion = null;
+      el.globalYear.value = state.globalYear;
+      el.globalYearVal.textContent = state.globalYear;
+      el.localYear.value = state.localYear;
+      el.localYearVal.textContent = state.localYear;
+      renderFilters();
+      renderMarkers();
+      renderPanel();
+    });
+
+    // 랜덤 지역
+    el.randomBtn.addEventListener('click', ()=>{
+      const regionsWithTracks = REGIONS.filter(r=>TRACKS.some(t=>t.region===r.id));
+      const r = regionsWithTracks[Math.floor(Math.random()*regionsWithTracks.length)];
+      state.currentRegion = r.id;
+      state.localYear = state.globalYear;
+      el.localYear.value = state.localYear;
+      el.localYearVal.textContent = state.localYear;
+      renderPanel();
+      document.querySelector('.panel').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+
+    /* ==========
+       시작
+       ========== */
+    renderFilters();
+    renderMarkers();
+    renderPanel();
+  </script>
 </body>
 </html>
