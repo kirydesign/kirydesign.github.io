@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Techno Map — Region × Year × Genre</title>
+  <title>Techno Map — Region × Year × Genre (YouTube/Spotify 선택)</title>
   <style>
     :root{
       --bg:#0e0f12; --panel:#14161b; --muted:#8b93a7; --text:#e9ecf3; --line:#22252c;
@@ -23,15 +23,17 @@
     }
     .brand{display:flex; gap:10px; align-items:center; font-weight:700; letter-spacing:.3px}
     .brand .dot{width:10px; height:10px; border-radius:50%; background:var(--accent); box-shadow:0 0 12px var(--accent)}
-    .filters{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center; max-width:820px}
+    .filters{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center; max-width:760px}
     .chip{
       display:flex; align-items:center; gap:8px; padding:6px 10px; border:1px solid var(--line);
       background:linear-gradient(180deg, var(--chip), var(--chip-b)); border-radius:999px; font-size:13px; cursor:pointer; user-select:none;
     }
     .chip input{accent-color:currentColor}
     .chip .sw{display:inline-block; width:10px; height:10px; border-radius:2px}
-    .tools{display:flex; gap:10px; align-items:center; opacity:.9}
+    .tools{display:flex; gap:10px; align-items:center; opacity:.95}
     .btn{padding:8px 12px; border:1px solid var(--line); background:var(--panel); border-radius:10px; font-size:13px; cursor:pointer}
+    .source{display:flex; gap:8px; align-items:center; padding:8px 12px; border:1px solid var(--line); background:var(--panel); border-radius:10px; font-size:13px}
+    .source select{background:transparent; border:none; color:var(--text); font-size:13px}
     main{display:grid; grid-template-columns: 1.6fr 1fr; gap:16px; padding:16px; min-height:calc(100vh - 62px)}
     @media (max-width:1024px){ main{grid-template-columns:1fr; grid-auto-rows:min-content} }
     .map{
@@ -39,15 +41,12 @@
         radial-gradient(1200px 500px at 30% 10%, #1b2030 0%, #14161b 50%, #101218 100%);
       min-height:520px;
     }
-    .map .water{
-      position:absolute; inset:0; opacity:.15;
+    .map .water{position:absolute; inset:0; opacity:.15;
       background-image:
         radial-gradient(800px 380px at 35% 32%, #81b3ff, transparent 60%),
         radial-gradient(900px 420px at 75% 48%, #7fd1ff, transparent 60%),
         radial-gradient(600px 280px at 50% 72%, #9fe3ff, transparent 60%);
-      mix-blend-mode:screen;
-      pointer-events:none;
-    }
+      mix-blend-mode:screen; pointer-events:none}
     .map .grid{position:absolute; inset:0; background-image:linear-gradient(to right, rgba(255,255,255,.03) 1px, transparent 1px),
                                                    linear-gradient(to bottom, rgba(255,255,255,.03) 1px, transparent 1px);
                background-size:40px 40px; pointer-events:none}
@@ -92,10 +91,17 @@
 <body>
   <header>
     <div class="brand"><span class="dot"></span> Techno Map</div>
-    <div class="filters" id="genreFilters">
-      <!-- 필터는 JS에서 생성 -->
-    </div>
+
+    <div class="filters" id="genreFilters"></div>
+
     <div class="tools">
+      <div class="source">
+        Source:
+        <select id="sourceSelect" title="재생 소스 선택">
+          <option value="youtube" selected>YouTube</option>
+          <option value="spotify">Spotify</option>
+        </select>
+      </div>
       <button class="btn" id="resetBtn">Reset</button>
       <button class="btn" id="randomBtn">Random</button>
     </div>
@@ -107,7 +113,7 @@
       <div class="water"></div>
       <div class="grid"></div>
       <div class="legend" id="legend"></div>
-      <!-- 마커는 JS로 생성 -->
+      <!-- markers via JS -->
     </section>
 
     <!-- PANEL -->
@@ -116,17 +122,13 @@
         <h2 id="regionTitle">지역을 선택하세요</h2>
         <span class="muted" id="countInfo">0 tracks</span>
       </div>
-      <div class="meta" id="regionMeta">
-        <!-- 지역 메타 정보 -->
-      </div>
+      <div class="meta" id="regionMeta"></div>
       <div class="mini-tl">
         <span>Local Timeline</span>
         <input type="range" id="localYear" min="1980" max="2025" value="1995" />
         <span id="localYearVal">1995</span>
       </div>
-      <div class="cards" id="cards">
-        <!-- 카드 리스트 -->
-      </div>
+      <div class="cards" id="cards"></div>
     </aside>
   </main>
 
@@ -153,7 +155,7 @@
       {key:"drumcode",   name:"Scandi/Drumcode",color:"var(--g-drumcode)"},
     ];
 
-    // 대략적 위치(0~100%) — 시연용 좌표
+    // 지역 좌표(대략 %) — 시연용
     const REGIONS = [
       {id:"detroit",  name:"Detroit",  x:46, y:38},
       {id:"berlin",   name:"Berlin",   x:60, y:33},
@@ -172,53 +174,55 @@
       {id:"seoul",    name:"Seoul",    x:84, y:36},
     ];
 
-    // 트랙(데모용) — url은 외부로 연결(유튜브/스포티파이 등)
+    // Spotify URL이 있는 경우는 그대로 쓰고, 없으면 빌드
+    // YouTube는 검색 URL로 링크(로그인 없이 바로 듣기 쉬움)
     const TRACKS = [
       // Detroit
-      {region:"detroit", year:1985, artist:"Model 500 (Juan Atkins)", title:"No UFOs", genre:"detroit", url:"https://open.spotify.com/track/4H3o9SSsYt2mB2Z6T3mEoF"},
-      {region:"detroit", year:1987, artist:"Derrick May", title:"Strings of Life", genre:"detroit", url:"https://open.spotify.com/track/39Zz3xg7X2h8mJrHik9Etx"},
-      {region:"detroit", year:1992, artist:"Jeff Mills", title:"The Bells", genre:"detroit", url:"https://open.spotify.com/track/6I5r7C7lH3P8i4H0"},
+      {region:"detroit", year:1985, artist:"Model 500 (Juan Atkins)", title:"No UFOs", genre:"detroit", spotify:"https://open.spotify.com/track/4H3o9SSsYt2mB2Z6T3mEoF"},
+      {region:"detroit", year:1987, artist:"Derrick May", title:"Strings of Life", genre:"detroit", spotify:"https://open.spotify.com/track/39Zz3xg7X2h8mJrHik9Etx"},
+      {region:"detroit", year:1992, artist:"Jeff Mills", title:"The Bells", genre:"detroit", spotify:"https://open.spotify.com/track/6I5r7C7lH3P8i4H0"},
       // Berlin
-      {region:"berlin", year:1993, artist:"Basic Channel", title:"Phylyps Trak", genre:"minimal", url:"https://open.spotify.com/playlist/37i9dQZF1DXa8NOEUWPn9W"},
-      {region:"berlin", year:2009, artist:"Ben Klock", title:"Subzero", genre:"minimal", url:"https://open.spotify.com/track/0SO0aBv2r9lSp3Y2EJtL0G"},
-      {region:"berlin", year:2012, artist:"Marcel Dettmann", title:"Corebox", genre:"minimal", url:"https://open.spotify.com/track/2yUDF5hSSGdN2"},
+      {region:"berlin", year:1993, artist:"Basic Channel", title:"Phylyps Trak", genre:"minimal", spotify:"https://open.spotify.com/playlist/37i9dQZF1DXa8NOEUWPn9W"},
+      {region:"berlin", year:2009, artist:"Ben Klock", title:"Subzero", genre:"minimal", spotify:"https://open.spotify.com/track/0SO0aBv2r9lSp3Y2EJtL0G"},
+      {region:"berlin", year:2012, artist:"Marcel Dettmann", title:"Corebox", genre:"minimal", spotify:"https://open.spotify.com/track/2yUDF5hSSGdN2"},
       // London / Acid
-      {region:"london", year:1995, artist:"Liberator DJs", title:"Stay Up Forever Cuts", genre:"acid", url:"https://open.spotify.com/playlist/37i9dQZF1DX2vYju3i0lNX"},
-      {region:"london", year:1997, artist:"Josh Wink", title:"Higher State (Acid Mix)", genre:"acid", url:"https://open.spotify.com/track/6c9dc7L7nB"},
+      {region:"london", year:1995, artist:"Liberator DJs", title:"Stay Up Forever Cuts", genre:"acid", spotify:"https://open.spotify.com/playlist/37i9dQZF1DX2vYju3i0lNX"},
+      {region:"london", year:1997, artist:"Josh Wink", title:"Higher State (Acid Mix)", genre:"acid", spotify:"https://open.spotify.com/track/6c9dc7L7nB"},
       // Birmingham / UK Techno
-      {region:"birmingham", year:1997, artist:"Surgeon", title:"Magneze", genre:"hard", url:"https://open.spotify.com/track/5h2m6Fi1"},
+      {region:"birmingham", year:1997, artist:"Surgeon", title:"Magneze", genre:"hard", spotify:"https://open.spotify.com/track/5h2m6Fi1"},
       // Rotterdam / Gabber
-      {region:"rotterdam", year:1992, artist:"Euromasters", title:"Amsterdam Waar Lech Dat Dan?", genre:"gabber", url:"https://open.spotify.com/playlist/37i9dQZF1DX3LDIBRoaCDQ"},
+      {region:"rotterdam", year:1992, artist:"Euromasters", title:"Amsterdam Waar Lech Dat Dan?", genre:"gabber", spotify:"https://open.spotify.com/playlist/37i9dQZF1DX3LDIBRoaCDQ"},
       // Naples / Italy Techno
-      {region:"naples", year:1998, artist:"Gaetek", title:"Advanced Series", genre:"hard", url:"https://open.spotify.com/artist/1qY0qvD2"},
+      {region:"naples", year:1998, artist:"Gaetek", title:"Advanced Series", genre:"hard", spotify:"https://open.spotify.com/artist/1qY0qvD2"},
       // Stockholm / Drumcode
-      {region:"stockholm", year:1997, artist:"Adam Beyer", title:"Drumcode 1-2", genre:"drumcode", url:"https://open.spotify.com/artist/3tN6M2KXxgC"},
+      {region:"stockholm", year:1997, artist:"Adam Beyer", title:"Drumcode 1-2", genre:"drumcode", spotify:"https://open.spotify.com/artist/3tN6M2KXxgC"},
       // Paris / France
-      {region:"paris", year:1993, artist:"Laurent Garnier", title:"Crispy Bacon", genre:"minimal", url:"https://open.spotify.com/track/6IhFYoW"},
+      {region:"paris", year:1993, artist:"Laurent Garnier", title:"Crispy Bacon", genre:"minimal", spotify:"https://open.spotify.com/track/6IhFYoW"},
       // Glasgow / Scotland
-      {region:"glasgow", year:1993, artist:"Slam", title:"Positive Education", genre:"detroit", url:"https://open.spotify.com/track/2Z8fF2r"},
-      // Amsterdam / NL (Speedy J is Rotterdam but keep NL cluster)
-      {region:"amsterdam", year:1991, artist:"Speedy J", title:"Pullover", genre:"hard", url:"https://open.spotify.com/track/0ZPulover"},
+      {region:"glasgow", year:1993, artist:"Slam", title:"Positive Education", genre:"detroit", spotify:"https://open.spotify.com/track/2Z8fF2r"},
+      // Amsterdam / NL
+      {region:"amsterdam", year:1991, artist:"Speedy J", title:"Pullover", genre:"hard", spotify:"https://open.spotify.com/track/0ZPulover"},
       // Ghent / Belgium (R&S)
-      {region:"ghent", year:1991, artist:"Joey Beltram", title:"Energy Flash", genre:"detroit", url:"https://open.spotify.com/track/1t6i7O"},
+      {region:"ghent", year:1991, artist:"Joey Beltram", title:"Energy Flash", genre:"detroit", spotify:"https://open.spotify.com/track/1t6i7O"},
       // Tokyo / Japan
-      {region:"tokyo", year:1995, artist:"Ken Ishii", title:"Extra", genre:"minimal", url:"https://open.spotify.com/track/4AmMD9"},
+      {region:"tokyo", year:1995, artist:"Ken Ishii", title:"Extra", genre:"minimal", spotify:"https://open.spotify.com/track/4AmMD9"},
       // Warsaw / PL (modern hard)
-      {region:"warsaw", year:2019, artist:"VTSS", title:"Atlantyda", genre:"hard", url:"https://open.spotify.com/artist/1N8Wf7"},
+      {region:"warsaw", year:2019, artist:"VTSS", title:"Atlantyda", genre:"hard", spotify:"https://open.spotify.com/artist/1N8Wf7"},
       // Tbilisi / GE
-      {region:"tbilisi", year:2016, artist:"Various (KHIDI)", title:"Scene Cuts", genre:"industrial", url:"https://open.spotify.com/playlist/4KHIDI"},
+      {region:"tbilisi", year:2016, artist:"Various (KHIDI)", title:"Scene Cuts", genre:"industrial", spotify:"https://open.spotify.com/playlist/4KHIDI"},
       // Seoul / KR
-      {region:"seoul", year:2018, artist:"Various (vurt.)", title:"Vurt Selections", genre:"minimal", url:"https://open.spotify.com/playlist/37i9dQZF1DX4VvfRBFClxm"},
+      {region:"seoul", year:2018, artist:"Various (vurt.)", title:"Vurt Selections", genre:"minimal", spotify:"https://open.spotify.com/playlist/37i9dQZF1DX4VvfRBFClxm"},
     ];
 
     /* ==========
-       유틸/상태
+       상태 & 엘리먼트
        ========== */
     const state = {
-      selectedGenres: new Set(GENRES.map(g=>g.key)), // 기본: 전체 선택
+      selectedGenres: new Set(GENRES.map(g=>g.key)),
       globalYear: 2000,
       currentRegion: null,
-      localYear: 1995
+      localYear: 1995,
+      playSource: 'youtube' // 'youtube' | 'spotify'
     };
 
     const el = {
@@ -235,11 +239,30 @@
       filters: document.getElementById('genreFilters'),
       resetBtn: document.getElementById('resetBtn'),
       randomBtn: document.getElementById('randomBtn'),
+      sourceSelect: document.getElementById('sourceSelect'),
     };
 
     function genreColor(key){
       const g = GENRES.find(x=>x.key===key);
       return g ? g.color : 'white';
+    }
+
+    function buildYouTubeURL(artist, title){
+      const q = encodeURIComponent(`${artist} ${title} official audio`);
+      return `https://www.youtube.com/results?search_query=${q}`;
+    }
+
+    function buildSpotifyURL(track){
+      // 제공된 spotify 필드 우선, 없으면 검색
+      if (track.spotify) return track.spotify;
+      const q = encodeURIComponent(`${track.artist} ${track.title}`);
+      return `https://open.spotify.com/search/${q}`;
+    }
+
+    function currentPlayURL(track){
+      return state.playSource === 'youtube'
+        ? buildYouTubeURL(track.artist, track.title)
+        : buildSpotifyURL(track);
     }
 
     /* ==========
@@ -266,7 +289,7 @@
         el.filters.appendChild(wrap);
       });
 
-      // 범례도 표시
+      // 범례
       el.legend.innerHTML = '';
       GENRES.forEach(g=>{
         const l = document.createElement('div');
@@ -277,29 +300,21 @@
     }
 
     /* ==========
-       마커 렌더링
+       마커
        ========== */
     function renderMarkers(){
-      // 기존 마커 제거
       Array.from(el.map.querySelectorAll('.marker')).forEach(m=>m.remove());
-
-      // 각 지역에 표시 색상: 해당 지역 트랙 중 현재 글로벌 연도 이하 && 장르필터 통과인 트랙이 있으면 장르 색 (여러개면 복수 효과)
       REGIONS.forEach(r=>{
         const tracks = TRACKS.filter(t=>
-          t.region===r.id &&
-          t.year <= state.globalYear &&
-          state.selectedGenres.has(t.genre)
+          t.region===r.id && t.year <= state.globalYear && state.selectedGenres.has(t.genre)
         );
         if(tracks.length===0) return;
-
-        // 대표 색상: 가장 최근 트랙의 장르색
         const latest = tracks.sort((a,b)=>b.year-a.year)[0];
         const m = document.createElement('div');
         m.className = 'marker';
         m.style.left = r.x + '%';
         m.style.top  = r.y + '%';
         m.style.background = `radial-gradient(circle at 40% 35%, #fff8, transparent 45%), ${genreColor(latest.genre)}`;
-
         m.title = `${r.name} • ${tracks.length} tracks`;
         m.addEventListener('click', ()=>{
           state.currentRegion = r.id;
@@ -307,7 +322,6 @@
           el.localYear.value = state.localYear;
           el.localYearVal.textContent = state.localYear;
           renderPanel();
-          // 스크롤이 모바일이면 패널로 포커스
           document.querySelector('.panel').scrollIntoView({behavior:'smooth', block:'start'});
         });
         el.map.appendChild(m);
@@ -315,7 +329,7 @@
     }
 
     /* ==========
-       패널 렌더링
+       패널
        ========== */
     function renderPanel(){
       if(!state.currentRegion){
@@ -332,12 +346,9 @@
         .filter(t=>t.region===region.id && state.selectedGenres.has(t.genre))
         .sort((a,b)=>a.year-b.year);
 
-      // 로컬 연도 이하
       const visibleTracks = allRegionTracks.filter(t=>t.year <= state.localYear);
-
       el.countInfo.textContent = `${visibleTracks.length} tracks`;
 
-      // 메타
       const spanYearMin = allRegionTracks.length ? allRegionTracks[0].year : '—';
       const spanYearMax = allRegionTracks.length ? allRegionTracks[allRegionTracks.length-1].year : '—';
       el.regionMeta.innerHTML = `
@@ -349,7 +360,6 @@
         }</span>
       `;
 
-      // 카드
       el.cards.innerHTML = '';
       visibleTracks.forEach(t=>{
         const card = document.createElement('div');
@@ -366,7 +376,7 @@
             </div>
           </div>
           <div>
-            <a class="play" href="${t.url}" target="_blank" rel="noopener">▶ 재생</a>
+            <a class="play" href="${currentPlayURL(t)}" target="_blank" rel="noopener">▶ ${state.playSource === 'youtube' ? 'YouTube' : 'Spotify'}</a>
           </div>
         `;
         el.cards.appendChild(card);
@@ -384,19 +394,16 @@
     /* ==========
        이벤트
        ========== */
-    // 로컬 연도
     el.localYear.addEventListener('input', (e)=>{
       state.localYear = parseInt(e.target.value,10);
       el.localYearVal.textContent = state.localYear;
       renderPanel();
     });
 
-    // 글로벌 연도
     el.globalYear.addEventListener('input', (e)=>{
       state.globalYear = parseInt(e.target.value,10);
       el.globalYearVal.textContent = state.globalYear;
-      renderMarkers(); // 맵 업데이트
-      // 현재 지역의 로컬 연도도 글로벌에 맞춰 상한 조정(넘치면 끌어내림)
+      renderMarkers();
       if(state.localYear > state.globalYear){
         state.localYear = state.globalYear;
         el.localYear.value = state.localYear;
@@ -405,22 +412,22 @@
       renderPanel();
     });
 
-    // 리셋
     el.resetBtn.addEventListener('click', ()=>{
       state.selectedGenres = new Set(GENRES.map(g=>g.key));
       state.globalYear = 2000;
       state.localYear = 1995;
       state.currentRegion = null;
+      state.playSource = 'youtube';
       el.globalYear.value = state.globalYear;
       el.globalYearVal.textContent = state.globalYear;
       el.localYear.value = state.localYear;
       el.localYearVal.textContent = state.localYear;
+      el.sourceSelect.value = state.playSource;
       renderFilters();
       renderMarkers();
       renderPanel();
     });
 
-    // 랜덤 지역
     el.randomBtn.addEventListener('click', ()=>{
       const regionsWithTracks = REGIONS.filter(r=>TRACKS.some(t=>t.region===r.id));
       const r = regionsWithTracks[Math.floor(Math.random()*regionsWithTracks.length)];
@@ -430,6 +437,11 @@
       el.localYearVal.textContent = state.localYear;
       renderPanel();
       document.querySelector('.panel').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+
+    el.sourceSelect.addEventListener('change', (e)=>{
+      state.playSource = e.target.value; // 'youtube' | 'spotify'
+      renderPanel(); // 버튼 라벨/링크 갱신
     });
 
     /* ==========
