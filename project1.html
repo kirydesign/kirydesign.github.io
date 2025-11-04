@@ -3,131 +3,167 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Journey Through Scent — Sequential Hyperlinks</title>
+  <title>Journey Through Scent — Split-Screen Sequential</title>
   <style>
-    :root { --bg:#fafafa; --ink:#111; --muted:#666; --line:#e6e6e6; }
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"}
-    .container{max-width:48rem;margin:0 auto;padding:2rem 1.25rem}
-    h1{font-size:clamp(1.6rem,2.5vw,2.1rem);margin:0 0 0.5rem}
-    h2{font-size:clamp(1.2rem,2vw,1.4rem);margin:1.25rem 0 0.5rem}
-    p{line-height:1.55}
-    .muted{color:var(--muted)}
-    .card{border:1px solid var(--line);border-radius:16px;padding:1rem}
-    nav.links{display:flex;flex-direction:column;gap:.5rem;margin-top:1rem}
-    nav.links a{border:1px solid var(--line);border-radius:14px;padding:.75rem 1rem;text-decoration:none;color:inherit}
-    nav.links a:hover{box-shadow:0 2px 8px rgba(0,0,0,.06)}
-    footer{margin-top:2rem;font-size:.8rem;color:var(--muted)}
-    section{display:none}
-    section.active{display:block}
-    .grid{display:grid;gap:1rem}
-    @media(min-width:900px){.grid.two{grid-template-columns:1fr 1fr}}
+    /* --- Visual language inspired by 90s net-art split screens --- */
+    :root{--bg:#0a0a0a;--ink:#f5f5f5;--dim:#bdbdbd;--line:#2b2b2b;--accent:#f5f5f5}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family: ui-monospace, Menlo, Monaco, "SFMono-Regular", Consolas, "Liberation Mono", monospace}
+    a{color:var(--ink);text-decoration:none}
+    a:hover{color:#9ae6b4}
+    .viewport{display:grid;grid-template-columns:1fr 1fr;gap:1px;min-height:100vh}
+    .panel{border-left:1px solid var(--line);border-right:1px solid var(--line);padding:1rem;display:flex;flex-direction:column}
+    .panel header{border-bottom:1px solid var(--line);padding-bottom:.5rem;margin-bottom:.75rem;display:flex;justify-content:space-between;align-items:center}
+    .stamp{font-size:.7rem;color:var(--dim);letter-spacing:.08em}
+    .frag{border:1px solid var(--line);padding:.75rem;border-radius:6px;margin:.5rem 0;position:relative;overflow:hidden}
+    .frag::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(255,255,255,.02) 50%,transparent);mix-blend-mode:overlay;pointer-events:none}
+    .frag:hover{box-shadow:0 0 0 1px var(--accent) inset}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+    .min{font-size:.9rem;line-height:1.4}
+    .muted{color:var(--dim)}
+    .scan{position:relative}
+    .scan::before{content:"";position:absolute;left:0;right:0;top:-100%;height:40%;background:linear-gradient(180deg,rgba(255,255,255,.06),transparent);animation:scan 6s linear infinite}
+    @keyframes scan{to{top:130%}}
+    .ticker{white-space:nowrap;overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:.25rem 0;margin:.5rem 0;color:var(--dim)}
+    .ticker span{display:inline-block;padding-left:100%;animation:ticker 18s linear infinite}
+    @keyframes ticker{to{transform:translateX(-100%)}}
+    .title{font-size:clamp(1rem,2.2vw,1.3rem);}
+    .btn{display:inline-block;border:1px solid var(--line);padding:.5rem .75rem;border-radius:6px}
+
+    /* Sections behave like scenes; only active are fully opaque, others dim but remain visible for collage feel */
+    section.scene{opacity:.25;transition:opacity .4s ease}
+    section.scene.active{opacity:1}
+
+    /* Right column result compositor */
+    .stack{display:flex;flex-direction:column;gap:.5rem}
+    .card{border:1px solid var(--line);border-radius:8px;padding:.75rem}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+
+    @media (max-width:900px){
+      .viewport{grid-template-columns:1fr}
+      .panel{min-height:50vh}
+    }
   </style>
 </head>
 <body>
-  <main class="container">
+  <div class="viewport">
+    <!-- LEFT: Scenes / Questions (collaged) -->
+    <div class="panel scan" id="left">
+      <header>
+        <div class="title">Journey Through Scent</div>
+        <div class="stamp">sequential · hyperlinks · v3</div>
+      </header>
 
-    <!-- START -->
-    <section id="start">
-      <h1>Journey Through Scent</h1>
-      <p>Translate your personality into fragrance. Follow six linked scenes. At the end, your scent portrait will appear.</p>
-      <nav class="links">
-        <a data-next="q1">Start</a>
-      </nav>
-      <footer>Navigation works entirely through hyperlinks.</footer>
-    </section>
+      <div class="ticker"><span>Follow the links. No buttons. Move through six scenes. Your scent portrait will assemble on the right →</span></div>
 
-    <!-- Q1 -->
-    <section id="q1">
-      <h1>Q1. What rhythm best describes your day?</h1>
-      <p class="muted">Purpose: intensity and projection</p>
-      <nav class="links">
-        <a data-next="q2" data-param="i=light">Soft and gentle</a>
-        <a data-next="q2" data-param="i=balanced">Organized and steady</a>
-        <a data-next="q2" data-param="i=deep">Focused at night</a>
-        <a data-next="q2" data-param="i=energetic">Spontaneous and lively</a>
-      </nav>
-      <footer><a href="#start">Restart</a></footer>
-    </section>
+      <!-- START / scene 0 -->
+      <section class="scene active" id="s0">
+        <div class="frag min">
+          <p>Translate your personality into fragrance. Start the walk:</p>
+          <a class="btn" data-next="q1">Start</a>
+        </div>
+      </section>
 
-    <!-- Q2 -->
-    <section id="q2">
-      <h1>Q2. What kind of air feels most like you?</h1>
-      <p class="muted">Purpose: tone and atmosphere</p>
-      <nav class="links">
-        <a data-next="q3" data-param="air=dawn">Cool morning air</a>
-        <a data-next="q3" data-param="air=noon">Heavy afternoon light</a>
-        <a data-next="q3" data-param="air=rain">Air after rain</a>
-        <a data-next="q3" data-param="air=night">Calm midnight air</a>
-      </nav>
-      <footer><a href="#start">Restart</a></footer>
-    </section>
+      <!-- Q1 -->
+      <section class="scene" id="q1">
+        <div class="frag min">
+          <div class="muted">Purpose: intensity & projection</div>
+          <div class="row">
+            <a class="frag" data-next="q2" data-param="i=light">Soft and gentle</a>
+            <a class="frag" data-next="q2" data-param="i=balanced">Organized and steady</a>
+            <a class="frag" data-next="q2" data-param="i=deep">Focused at night</a>
+            <a class="frag" data-next="q2" data-param="i=energetic">Spontaneous and lively</a>
+          </div>
+        </div>
+      </section>
 
-    <!-- Q3 -->
-    <section id="q3">
-      <h1>Q3. What impression do you want your scent to leave?</h1>
-      <p class="muted">Purpose: mood and presence</p>
-      <nav class="links">
-        <a data-next="q4" data-param="mood=clean">Clean and transparent</a>
-        <a data-next="q4" data-param="mood=warm">Warm and gentle</a>
-        <a data-next="q4" data-param="mood=myst">Mysterious and deep</a>
-        <a data-next="q4" data-param="mood=sensual">Bold and sensual</a>
-      </nav>
-      <footer><a href="#start">Restart</a></footer>
-    </section>
+      <!-- Q2 -->
+      <section class="scene" id="q2">
+        <div class="frag min">
+          <div class="muted">Purpose: tone & atmosphere</div>
+          <div class="row">
+            <a class="frag" data-next="q3" data-param="air=dawn">Cool morning air</a>
+            <a class="frag" data-next="q3" data-param="air=noon">Heavy afternoon light</a>
+            <a class="frag" data-next="q3" data-param="air=rain">Air after rain</a>
+            <a class="frag" data-next="q3" data-param="air=night">Calm midnight air</a>
+          </div>
+        </div>
+      </section>
 
-    <!-- Q4 -->
-    <section id="q4">
-      <h1>Q4. Which city would you like to wander in now?</h1>
-      <p class="muted">Purpose: brand/style association</p>
-      <nav class="links">
-        <a data-next="q5" data-param="city=paris">Paris</a>
-        <a data-next="q5" data-param="city=ny">New York</a>
-        <a data-next="q5" data-param="city=tokyo">Tokyo</a>
-        <a data-next="q5" data-param="city=maldives">Maldives</a>
-      </nav>
-      <footer><a href="#start">Restart</a></footer>
-    </section>
+      <!-- Q3 -->
+      <section class="scene" id="q3">
+        <div class="frag min">
+          <div class="muted">Purpose: mood & presence</div>
+          <div class="row">
+            <a class="frag" data-next="q4" data-param="mood=clean">Clean & transparent</a>
+            <a class="frag" data-next="q4" data-param="mood=warm">Warm & gentle</a>
+            <a class="frag" data-next="q4" data-param="mood=myst">Mysterious & deep</a>
+            <a class="frag" data-next="q4" data-param="mood=sensual">Bold & sensual</a>
+          </div>
+        </div>
+      </section>
 
-    <!-- Q5 -->
-    <section id="q5">
-      <h1>Q5. If you were a perfume bottle, what material would you be?</h1>
-      <p class="muted">Purpose: texture and longevity</p>
-      <nav class="links">
-        <a data-next="q6" data-param="mat=glass">Transparent glass</a>
-        <a data-next="q6" data-param="mat=metal">Metal</a>
-        <a data-next="q6" data-param="mat=velvet">Velvet</a>
-        <a data-next="q6" data-param="mat=stone">Stone</a>
-      </nav>
-      <footer><a href="#start">Restart</a></footer>
-    </section>
+      <!-- Q4 -->
+      <section class="scene" id="q4">
+        <div class="frag min">
+          <div class="muted">Purpose: brand/style association</div>
+          <div class="row">
+            <a class="frag" data-next="q5" data-param="city=paris">Paris</a>
+            <a class="frag" data-next="q5" data-param="city=ny">New York</a>
+            <a class="frag" data-next="q5" data-param="city=tokyo">Tokyo</a>
+            <a class="frag" data-next="q5" data-param="city=maldives">Maldives</a>
+          </div>
+        </div>
+      </section>
 
-    <!-- Q6 -->
-    <section id="q6">
-      <h1>Q6. What remains after the scent fades?</h1>
-      <p class="muted">Purpose: identity of the afterglow</p>
-      <nav class="links">
-        <a data-next="result" data-param="echo=memory">Memory</a>
-        <a data-next="result" data-param="echo=trail">Trail</a>
-        <a data-next="result" data-param="echo=person">Someone</a>
-        <a data-next="result" data-param="echo=air">Air</a>
-      </nav>
-      <footer><a href="#start">Restart</a></footer>
-    </section>
+      <!-- Q5 -->
+      <section class="scene" id="q5">
+        <div class="frag min">
+          <div class="muted">Purpose: texture & longevity</div>
+          <div class="row">
+            <a class="frag" data-next="q6" data-param="mat=glass">Transparent glass</a>
+            <a class="frag" data-next="q6" data-param="mat=metal">Metal</a>
+            <a class="frag" data-next="q6" data-param="mat=velvet">Velvet</a>
+            <a class="frag" data-next="q6" data-param="mat=stone">Stone</a>
+          </div>
+        </div>
+      </section>
 
-    <!-- RESULT -->
-    <section id="result">
-      <h1>Your Scent Portrait</h1>
-      <div id="summary" class="muted" style="margin:.25rem 0 1rem"></div>
-      <div id="suggestion" class="card"></div>
-      <footer><a href="#start">Start over</a></footer>
-    </section>
+      <!-- Q6 -->
+      <section class="scene" id="q6">
+        <div class="frag min">
+          <div class="muted">Purpose: identity of the afterglow</div>
+          <div class="row">
+            <a class="frag" data-next="result" data-param="echo=memory">Memory</a>
+            <a class="frag" data-next="result" data-param="echo=trail">Trail</a>
+            <a class="frag" data-next="result" data-param="echo=person">Someone</a>
+            <a class="frag" data-next="result" data-param="echo=air">Air</a>
+          </div>
+        </div>
+      </section>
 
-  </main>
+      <footer class="muted" style="margin-top:1rem">[ <a href="#" id="restart">restart</a> ]</footer>
+    </div>
+
+    <!-- RIGHT: Assembling Result / Collage text -->
+    <div class="panel" id="right">
+      <header>
+        <div class="title">Your Scent Portrait</div>
+        <div class="stamp" id="stamp">––––</div>
+      </header>
+
+      <div id="portrait" class="stack">
+        <div class="card" id="summary">Walk the left panel. Your choices will compose here.</div>
+        <div class="card" id="family"></div>
+        <div class="grid2" id="picks"></div>
+        <div class="card muted" id="tip" style="display:none">Tip: Spray on your wrist and check again after 2–4 hours. Citrus/green fade faster; woods/musk last longer.</div>
+      </div>
+    </div>
+  </div>
 
   <script>
-    // --- tiny router (hash + query) ---
-    const $ = (sel, ctx=document) => ctx.querySelector(sel);
-    const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+    // Minimal JS to keep hypertext spirit: links act as href updates, scenes stay visible for collage feel
+    const $$ = (s, c=document) => Array.from(c.querySelectorAll(s));
+    const $ = (s, c=document) => c.querySelector(s);
 
     const RESULTS = {
       fresh_citrus_day: {
@@ -174,7 +210,7 @@
       }
     };
 
-    const maps = {
+    const labelMaps = {
       mood: { clean: "clean", warm: "warm", myst: "mysterious", sensual: "sensual" },
       air: { dawn: "morning air", noon: "afternoon light", rain: "after rain", night: "midnight calm" },
       i: { light: "light", balanced: "balanced", deep: "deep", energetic: "energetic" },
@@ -183,88 +219,79 @@
       echo: { memory: "memory", trail: "trail", person: "someone", air: "air" }
     };
 
-    function parseHash(){
-      const raw = location.hash.replace(/^#/, "");
-      const [id = "start", query = ""] = raw.split("?");
-      const params = Object.fromEntries(new URLSearchParams(query));
-      return { id, params };
+    function humanize(p){
+      const order=['i','air','mood','city','mat','echo'];
+      return order.map(k=>labelMaps[k]&&labelMaps[k][p[k]]).filter(Boolean).join(' · ');
     }
 
-    function setActive(id){
-      $$('main section').forEach(s => s.classList.remove('active'));
-      const el = '#' + CSS.escape(id);
-      const target = $(el);
-      (target || $('#start')).classList.add('active');
+    function parse(){
+      const raw=location.hash.replace(/^#/,"");
+      const [id='s0',query='']=raw.split('?');
+      const params=Object.fromEntries(new URLSearchParams(query));
+      return {id,params};
     }
 
-    function updateLinks(params){
-      $$('a[data-next]').forEach(a => {
-        const next = a.getAttribute('data-next');
-        const add = a.getAttribute('data-param') || '';
-        const merged = new URLSearchParams(params);
-        if(add){
-          const [k,v] = add.split('=');
-          merged.set(k, v);
-        }
-        const qs = merged.toString();
-        a.setAttribute('href', `#${next}${qs?`?${qs}`:''}`);
-      });
-    }
-
-    function humanize(params){
-      const order = ['i','air','mood','city','mat','echo'];
-      const parts = order.map(k => maps[k] && maps[k][params[k]]).filter(Boolean);
-      return parts.join(' · ');
+    function mergeToHref(next, params, addKV){
+      const q=new URLSearchParams(params);
+      if(addKV){ const [k,v]=addKV.split('='); q.set(k,v); }
+      const qs=q.toString();
+      return `#${next}${qs?`?${qs}`:''}`;
     }
 
     function inferResultKey(p){
-      if (p.mood === 'clean') {
-        if (p.air === 'dawn' || p.air === 'rain') return 'fresh_citrus_day';
-        return 'aromatic_fresh_sport';
-      }
-      if (p.mood === 'warm') {
-        if (p.mat === 'velvet' || p.echo === 'person') return 'cozy_sweet_gourmand';
-        return 'floral_musk_soft';
-      }
-      if (p.mood === 'sensual') return 'spicy_resinous_night';
-      if (p.mood === 'myst') {
-        if (p.air === 'rain' || p.city === 'tokyo') return 'airy_green_woods';
-        return 'spicy_resinous_night';
-      }
-      if (p.i === 'light' && (p.air === 'dawn' || p.air === 'rain')) return 'airy_green_woods';
+      if (p.mood==='clean'){ if (p.air==='dawn'||p.air==='rain') return 'fresh_citrus_day'; return 'aromatic_fresh_sport'; }
+      if (p.mood==='warm'){ if (p.mat==='velvet'||p.echo==='person') return 'cozy_sweet_gourmand'; return 'floral_musk_soft'; }
+      if (p.mood==='sensual') return 'spicy_resinous_night';
+      if (p.mood==='myst'){ if (p.air==='rain'||p.city==='tokyo') return 'airy_green_woods'; return 'spicy_resinous_night'; }
+      if (p.i==='light' && (p.air==='dawn'||p.air==='rain')) return 'airy_green_woods';
       return 'floral_musk_soft';
     }
 
-    function renderResult(params){
-      const key = inferResultKey(params);
-      const data = RESULTS[key];
-      $('#summary').textContent = `You lean toward: ${humanize(params) || '—'}`;
-      const box = $('#suggestion');
-      box.innerHTML = `<h2 style="margin:.25rem 0 0.75rem">Suggested Family — ${data.title}</h2>` +
-        `<div class="grid two">` +
-        data.picks.map(p => `
-          <a href="${p.link}" target="_blank" rel="noreferrer" class="card" style="text-decoration:none;color:inherit">
-            <h3 style="margin:.25rem 0 .25rem">${p.name}</h3>
-            <p class="muted"><strong>Notes:</strong> ${p.notes}</p>
-            <p class="muted"><strong>Vibe:</strong> ${p.vibe}</p>
-            <p>${p.why}</p>
-            <p class="muted" style="font-size:.8rem;margin-top:.25rem;text-decoration:underline">Visit site ↗</p>
+    function render(){
+      const {id,params}=parse();
+      // Activate current scene (keep previous visible but dim)
+      const scenes=$$('section.scene');
+      scenes.forEach(s=>s.classList.remove('active'));
+      const cur=document.getElementById(id)||document.getElementById('s0');
+      cur.classList.add('active');
+
+      // Update hyperlink hrefs with merged params
+      $$('a[data-next]').forEach(a=>{
+        a.setAttribute('href', mergeToHref(a.dataset.next, params, a.dataset.param));
+      });
+
+      // Compose the right panel
+      $('#stamp').textContent = humanize(params) || '—';
+      $('#summary').textContent = humanize(params) ? `You lean toward: ${humanize(params)}` : 'Walk the left panel. Your choices will compose here.';
+
+      if(id==='result'){
+        const key=inferResultKey(params);
+        const data=RESULTS[key];
+        $('#family').innerHTML = `<strong>Suggested Family — ${data.title}</strong>`;
+        $('#picks').innerHTML = data.picks.map(p=>`
+          <a class="card" href="${p.link}" target="_blank" rel="noreferrer">
+            <div><strong>${p.name}</strong></div>
+            <div class="muted">Notes: ${p.notes}</div>
+            <div class="muted">Vibe: ${p.vibe}</div>
+            <div>${p.why}</div>
+            <div class="muted" style="text-decoration:underline;font-size:.8rem;margin-top:.25rem">Visit site ↗</div>
           </a>
-        `).join('') + `</div>` +
-        `<p class="muted" style="font-size:.8rem;margin-top:.5rem">Tip: Spray on your wrist and check it again after 2–4 hours. Citrus/green fade faster; woods/musk last longer.</p>`;
+        `).join('');
+        $('#tip').style.display='block';
+      }
     }
 
-    function onRoute(){
-      const { id, params } = parseHash();
-      setActive(id);
-      updateLinks(params);
-      if(id === 'result') renderResult(params);
-    }
+    // Link behavior stays native via href, we just react on hashchange
+    window.addEventListener('hashchange', render);
+    window.addEventListener('DOMContentLoaded', ()=>{
+      if(!location.hash) location.hash='#s0';
+      render();
+    });
 
-    window.addEventListener('hashchange', onRoute);
-    window.addEventListener('DOMContentLoaded', () => {
-      if(!location.hash) location.hash = '#start';
-      onRoute();
+    // Restart
+    $('#restart').addEventListener('click', e=>{
+      e.preventDefault();
+      location.hash='#s0';
     });
   </script>
 </body>
