@@ -439,35 +439,53 @@
     window.addEventListener('DOMContentLoaded', ()=>{ if(!location.hash) location.hash='#start'; render(); });
   
     // --- typewriter ---
-    function typeIn(el, text, speed=18){
-      if(!el) return; el.classList.add('type-caret');
-      let i=0; function step(){
-        if(i<=text.length){ el.textContent = text.slice(0,i); i++; setTimeout(step, speed + Math.random()*12); }
+    function typeIn(el, text, speed){
+      if(!el) return;
+      el.classList.add('type-caret');
+      el.classList.remove('done');
+      let i = 0;
+      (function step(){
+        if(i <= text.length){
+          el.textContent = text.slice(0,i);
+          i++;
+          setTimeout(step, speed + Math.random()*22);
+        } else {
+          el.classList.remove('type-caret');
+          el.classList.add('done');
+        }
+      })();
+    }
         else { el.classList.remove('type-caret'); el.classList.add('done'); }
       } step();
     }
-    function typeOnce(el){ if(!el || el.dataset.typed) return; el.dataset.typed='1'; typeIn(el, el.dataset.text || el.textContent || ''); }
+    function typeOnce(el, speed){
+      if(!el) return;
+      const text = el.dataset.text || el.textContent || '';
+      el.textContent = '';
+      typeIn(el, text, speed);
+    }
 
     function prepareTypeTargets(){
-      // ensure all .tw have data-text; if empty, keep existing
-      document.querySelectorAll('.tw').forEach(el=>{ if(!el.dataset.text) el.dataset.text = el.textContent.trim(); el.textContent=''; });
+      document.querySelectorAll('.tw').forEach(el=>{
+        if(!el.dataset.text){ el.dataset.text = (el.textContent || '').trim(); }
+        el.textContent='';
+      });
+    });
     }
 
     // augment render to trigger typing on scene activate
     const _render = render;
+    const TYPE_SPEED = 55; // slower typing (ms per char base)
     render = function(){
       _render();
-      const {id} = (function(){ const raw=location.hash.replace(/^#/,""); const [id='start']=raw.split('?'); return {id}; })();
+      const raw=location.hash.replace(/^#/,"");
+      const [id='start']=raw.split('?');
       const scene = document.getElementById(id) || document.getElementById('start');
-      const title = scene.querySelector('h1.tw');
-      typeOnce(title);
-      if(id==='result'){
-        const fam = document.getElementById('family');
-        if(fam && fam.dataset.text){ fam.textContent=''; typeOnce(fam); }
-      }
+      // type all .tw elements within the active scene
+      scene.querySelectorAll('.tw').forEach(el=> typeOnce(el, TYPE_SPEED));
     }
 
-    window.addEventListener('DOMContentLoaded', ()=>{ prepareTypeTargets(); });
+    window.addEventListener('DOMContentLoaded', ()=>{ prepareTypeTargets(); }); });
   </script>
 </body>
 </body>
