@@ -485,7 +485,7 @@
       scene.querySelectorAll('.tw').forEach(el=> typeOnce(el, TYPE_SPEED));
     }
 
-    window.addEventListener('DOMContentLoaded', ()=>{ prepareTypeTargets(); }); });
+    window.addEventListener('DOMContentLoaded', ()=>{ prepareTypeTargets(); if(!location.hash) location.hash='#start'; render(); }); });
   </script>
 </body>
 </body>
