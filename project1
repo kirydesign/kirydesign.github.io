@@ -1,0 +1,188 @@
+import React, { useEffect, useMemo, useState } from "react";
+
+/**
+ * Sequential Hyperlink Perfume Recommender — English Version
+ * A + C blended tone (philosophical + storytelling)
+ * 6 sequential questions → final result with poetic description + fragrance suggestions
+ */
+
+const RESULTS = {
+  fresh_citrus_day: {
+    title: "Fresh Citrus / Day",
+    picks: [
+      { name: "Acqua di Parma Colonia", notes: "citrus, lavender, rosemary", vibe: "classic, bright, tailored", why: "For those who love airy brightness with a clean finish.", link: "https://www.acquadiparma.com/" },
+      { name: "Byredo Blanche", notes: "aldehydes, rose, musk", vibe: "clean, linen-fresh, minimal", why: "Soft, soapy clarity for everyday wear.", link: "https://www.byredo.com/" }
+    ]
+  },
+  airy_green_woods: {
+    title: "Airy Green Woods",
+    picks: [
+      { name: "Diptyque Philosykos (EDT)", notes: "fig leaf, coconut, woody", vibe: "sunlit, leafy, transparent", why: "Green fig with breezy woods; perfect for spring/summer.", link: "https://www.diptyqueparis.com/" },
+      { name: "Le Labo Another 13", notes: "ambroxan, pear, musk", vibe: "sheer, modern, skin-scent", why: "For those who enjoy subtle radiance with a cool edge.", link: "https://www.lelabofragrances.com/" }
+    ]
+  },
+  cozy_sweet_gourmand: {
+    title: "Cozy Sweet / Gourmand",
+    picks: [
+      { name: "Maison Margiela Replica – By the Fireplace", notes: "smoke, chestnut, vanilla", vibe: "cozy, toasted, nostalgic", why: "A smoky-sweet hug for cold evenings.", link: "https://www.maisonmargiela-fragrances.us/" },
+      { name: "Prada Candy", notes: "caramel, benzoin, musk", vibe: "playful, plush, sweet", why: "If you want a fun, dessert-like sweetness.", link: "https://www.prada.com/" }
+    ]
+  },
+  spicy_resinous_night: {
+    title: "Spicy & Resinous / Night",
+    picks: [
+      { name: "Tom Ford Oud Wood", notes: "cardamom, oud, amber", vibe: "smoky, polished, intimate", why: "A sophisticated evening signature.", link: "https://www.tomford.com/" },
+      { name: "Byredo Black Saffron", notes: "saffron, leather, raspberry", vibe: "warm, distinct, luminous", why: "For a luminous spice with a sleek leather base.", link: "https://www.byredo.com/" }
+    ]
+  },
+  floral_musk_soft: {
+    title: "Soft Floral Musk",
+    picks: [
+      { name: "Chanel Chance Eau Tendre", notes: "grapefruit, jasmine, musk", vibe: "petal-soft, youthful, bright", why: "A dreamy everyday floral.", link: "https://www.chanel.com/" },
+      { name: "Glossier You", notes: "ambrette, musk", vibe: "clean, minimalist, skin-like", why: "A barely-there scent that smells like you, but better.", link: "https://www.glossier.com/" }
+    ]
+  },
+  aromatic_fresh_sport: {
+    title: "Aromatic Fresh / Sporty",
+    picks: [
+      { name: "Dior Sauvage EDT", notes: "bergamot, pepper, ambroxan", vibe: "crisp, energetic, versatile", why: "An instantly fresh, go-anywhere profile.", link: "https://www.dior.com/" },
+      { name: "Hermès H24", notes: "clary sage, rosewood, metallic moss", vibe: "green, modern, lucid", why: "A sleek green freshness with a futuristic twist.", link: "https://www.hermes.com/" }
+    ]
+  }
+};
+
+function parseHash() {
+  if (typeof window === "undefined") return { id: "start", params: {} };
+  const raw = window.location.hash.replace(/^#/, "");
+  const [id = "start", query = ""] = raw.split("?");
+  const params = Object.fromEntries(new URLSearchParams(query));
+  return { id, params };
+}
+
+function withParamHref(nextId, currentParams, newParams) {
+  const merged = { ...currentParams, ...newParams };
+  const qs = new URLSearchParams(merged).toString();
+  return `#${nextId}${qs ? `?${qs}` : ""}`;
+}
+
+function useHashState(defaultId = "start") {
+  const [{ id, params }, setState] = useState(() => parseHash());
+  useEffect(() => {
+    const onHash = () => setState(parseHash());
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+  return { id: id || defaultId, params };
+}
+
+function humanizeProfile(p) {
+  const moodMap = { clean: "clean", warm: "warm", myst: "mysterious", sensual: "sensual" };
+  const airMap = { dawn: "morning air", noon: "afternoon light", rain: "after rain", night: "midnight calm" };
+  const iMap = { light: "light", balanced: "balanced", deep: "deep" };
+  const cityMap = { paris: "Paris", ny: "New York", tokyo: "Tokyo", maldives: "Maldives" };
+  const matMap = { glass: "glass", metal: "metal", velvet: "velvet", stone: "stone" };
+  const echoMap = { memory: "memory", trail: "trail", person: "person", air: "air" };
+  return [iMap[p.i], airMap[p.air], moodMap[p.mood], cityMap[p.city], matMap[p.mat], echoMap[p.echo]]
+    .filter(Boolean)
+    .join(" · ");
+}
+
+function inferResultKey(p) {
+  if (p.mood === "clean") {
+    if (p.air === "dawn" || p.air === "rain") return "fresh_citrus_day";
+    return "aromatic_fresh_sport";
+  }
+  if (p.mood === "warm") {
+    if (p.mat === "velvet" || p.echo === "person") return "cozy_sweet_gourmand";
+    return "floral_musk_soft";
+  }
+  if (p.mood === "sensual") return "spicy_resinous_night";
+  if (p.mood === "myst") {
+    if (p.air === "rain" || p.city === "tokyo") return "airy_green_woods";
+    return "spicy_resinous_night";
+  }
+  if (p.i === "light" && (p.air === "dawn" || p.air === "rain")) return "airy_green_woods";
+  return "floral_musk_soft";
+}
+
+function ResultBody({ params }) {
+  const resultKey = inferResultKey(params);
+  const data = RESULTS[resultKey];
+  return (
+    <div className="space-y-5">
+      <p>Your scent leans toward <em>{humanizeProfile(params)}</em>.</p>
+      <h3 className="text-lg font-semibold mt-4">Suggested Family — {data.title}</h3>
+      <div className="grid md:grid-cols-2 gap-4 mt-3">
+        {data.picks.map((p, i) => (
+          <a key={i} href={p.link} target="_blank" rel="noreferrer" className="block rounded-xl border p-4 hover:shadow-sm transition">
+            <h4 className="font-semibold">{p.name}</h4>
+            <p className="text-sm mt-1"><strong>Notes:</strong> {p.notes}</p>
+            <p className="text-sm"><strong>Vibe:</strong> {p.vibe}</p>
+            <p className="text-sm mt-1">{p.why}</p>
+            <p className="text-xs mt-2 underline">Visit site ↗</p>
+          </a>
+        ))}
+      </div>
+      <p className="text-xs opacity-60 mt-3">Tip: Spray on your wrist and check how it evolves over 2–4 hours. Light scents fade quickly, woody/musk last longer.</p>
+    </div>
+  );
+}
+
+function makeQuestions(params) {
+  return [
+    { id: "start", title: "Journey Through Scent", body: <p>Translate your personality into fragrance. Follow six linked scenes, and your scent portrait will appear at the end.</p>, links: [{ label: "Start", href: withParamHref("q1", params, {}) }] },
+    { id: "q1", title: "Q1. What rhythm best describes your day?", hint: "Purpose: intensity and projection", options: [{ k: "light", label: "Soft and gentle" }, { k: "balanced", label: "Organized and steady" }, { k: "deep", label: "Focused at night" }, { k: "energetic", label: "Spontaneous and lively" }], next: "q2", paramKey: "i" },
+    { id: "q2", title: "Q2. What kind of air feels most like you?", hint: "Purpose: tone and atmosphere", options: [{ k: "dawn", label: "Cool morning air" }, { k: "noon", label: "Heavy afternoon light" }, { k: "rain", label: "Air after rain" }, { k: "night", label: "Calm midnight air" }], next: "q3", paramKey: "air" },
+    { id: "q3", title: "Q3. What impression do you want your scent to leave?", hint: "Purpose: mood and presence", options: [{ k: "clean", label: "Clean and transparent" }, { k: "warm", label: "Warm and gentle" }, { k: "myst", label: "Mysterious and deep" }, { k: "sensual", label: "Bold and sensual" }], next: "q4", paramKey: "mood" },
+    { id: "q4", title: "Q4. Which city would you like to wander in now?", hint: "Purpose: brand/style association", options: [{ k: "paris", label: "Paris" }, { k: "ny", label: "New York" }, { k: "tokyo", label: "Tokyo" }, { k: "maldives", label: "Maldives" }], next: "q5", paramKey: "city" },
+    { id: "q5", title: "Q5. If you were a perfume bottle, what material would you be?", hint: "Purpose: texture and longevity", options: [{ k: "glass", label: "Transparent glass" }, { k: "metal", label: "Metal" }, { k: "velvet", label: "Velvet" }, { k: "stone", label: "Stone" }], next: "q6", paramKey: "mat" },
+    { id: "q6", title: "Q6. What remains after the scent fades?", hint: "Purpose: identity of the afterglow", options: [{ k: "memory", label: "Memory" }, { k: "trail", label: "Trail" }, { k: "person", label: "Someone" }, { k: "air", label: "Air" }], next: "result", paramKey: "echo" },
+    { id: "result", title: "Your Scent Portrait", isResult: true }
+  ];
+}
+
+function QuestionPage({ node, params }) {
+  return (
+    <div className="mx-auto max-w-3xl p-6">
+      <h1 className="text-2xl md:text-3xl font-bold mb-4">{node.title}</h1>
+      <p className="text-sm opacity-70 mb-4">{node.hint}</p>
+      <nav className="flex flex-col gap-2">
+        {node.options.map((opt, i) => (
+          <a key={i} href={withParamHref(node.next, params, { [node.paramKey]: opt.k })} className="inline-block rounded-2xl border px-4 py-3 hover:shadow-sm transition text-sm">{opt.label}</a>
+        ))}
+      </nav>
+      <footer className="mt-10 text-xs opacity-60"><a href="#start" className="underline">Restart</a></footer>
+    </div>
+  );
+}
+
+function ResultPage({ params }) {
+  return (
+    <div className="mx-auto max-w-3xl p-6">
+      <h1 className="text-2xl md:text-3xl font-bold mb-4">Your Scent Portrait</h1>
+      <p className="text-sm opacity-70 mb-4">Based on your six choices:</p>
+      <ResultBody params={params} />
+      <footer className="mt-10 text-xs opacity-60"><a href="#start" className="underline">Start over</a></footer>
+    </div>
+  );
+}
+
+export default function App() {
+  const { id, params } = useHashState("start");
+  const nodes = useMemo(() => makeQuestions(params), [params]);
+  const node = nodes.find(n => n.id === id) || nodes[0];
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-white to-zinc-50">
+      <div className="mx-auto max-w-4xl py-6 px-4 md:px-8">
+        {node.isResult ? <ResultPage params={params} /> : node.id === "start" ? (
+          <div className="mx-auto max-w-3xl p-6">
+            <h1 className="text-2xl md:text-3xl font-bold mb-4">Journey Through Scent</h1>
+            <p className="text-base mb-6">Translate your personality into fragrance. Follow each hyperlink to move through six scenes. At the end, your scent portrait will appear.</p>
+            <a href="#q1" className="inline-block rounded-2xl border px-4 py-3 hover:shadow-sm transition text-sm">Start</a>
+            <footer className="mt-10 text-xs opacity-60">Navigation works entirely through hyperlinks.</footer>
+          </div>
+        ) : <QuestionPage node={node} params={params} />}
+      </div>
+    </div>
+  );
+}
