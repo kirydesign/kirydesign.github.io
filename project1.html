@@ -37,7 +37,10 @@
     .thumb{border:1px solid var(--line);border-radius:10px;min-height:120px;background:#0b0b0b}
     figure.art{border:1px solid var(--line);border-radius:12px;min-height:42vh;background:#0b0b0b}
     @media(max-width:900px){.split{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}}
-  </style>
+  .type-caret:after{content:"▍";display:inline-block;margin-left:2px;animation:blink 1s steps(1,end) infinite}@keyframes blink{50%{opacity:0}}
+.tw{white-space:pre-wrap}
+.tw.done:after{content:""}
+</style>
 </head>
 <body>
 
@@ -49,7 +52,7 @@
           <div class="cursor">Journey Through Scent</div>
           <div class="stamp">sequential / branching / v5</div>
         </header>
-        <h1>Translate your personality into fragrance.</h1>
+        <h1 class="tw" data-text="Translate your personality into fragrance."></h1>
         <p class="muted">Follow the hyperlinks. One question per page. Your answer chooses the next question.</p>
         <nav class="links"><a data-next="q1">Start</a></nav>
         <footer>All navigation is hyperlink-based. No forms. No buttons.</footer>
@@ -63,7 +66,7 @@
     <div class="wrap split">
       <div>
         <header><div class="cursor">Q1</div><div class="stamp">purpose: intensity & projection</div></header>
-        <h1>What rhythm best describes your day?</h1>
+        <h1 class="tw" data-text="What rhythm best describes your day?"></h1>
         <nav class="links">
           <a data-next="q2_light" data-param="i=light">Soft and gentle</a>
           <a data-next="q2_balanced" data-param="i=balanced">Organized and steady</a>
@@ -81,7 +84,7 @@
     <div class="wrap split">
       <div>
         <header><div class="cursor">Q2</div><div class="stamp">tone & atmosphere</div></header>
-        <h1>Which air feels most like you?</h1>
+        <h1 class="tw" data-text="Which air feels most like you?"></h1>
         <nav class="links">
           <a data-next="q3_clean_citrus" data-param="air=dawn">Cool morning air</a>
           <a data-next="q3_floral_soft" data-param="air=noon">Heavy afternoon light</a>
@@ -99,7 +102,7 @@
     <div class="wrap split">
       <div>
         <header><div class="cursor">Q2</div><div class="stamp">tone & atmosphere</div></header>
-        <h1>Afternoon light, choose a direction.</h1>
+        <h1 class="tw" data-text="Afternoon light, choose a direction."></h1>
         <nav class="links">
           <a data-next="q3_clean_citrus" data-param="air=noon">Citrus clarity</a>
           <a data-next="q3_floral_soft" data-param="air=noon">Soft floral</a>
@@ -117,7 +120,7 @@
     <div class="wrap split">
       <div>
         <header><div class="cursor">Q2</div><div class="stamp">tone & atmosphere</div></header>
-        <h1>Midnight calm. Where do you go?</h1>
+        <h1 class="tw" data-text="Midnight calm. Where do you go?"></h1>
         <nav class="links">
           <a data-next="q3_spice_resin" data-param="air=night">Spice & resin</a>
           <a data-next="q3_amber_musk" data-param="air=night">Amber & musk</a>
@@ -135,7 +138,7 @@
     <div class="wrap split">
       <div>
         <header><div class="cursor">Q2</div><div class="stamp">tone & atmosphere</div></header>
-        <h1>Rain runner or sun chaser?</h1>
+        <h1 class="tw" data-text="Rain runner or sun chaser?"></h1>
         <nav class="links">
           <a data-next="q3_green_breeze" data-param="air=rain">Green & brisk</a>
           <a data-next="q3_clean_citrus" data-param="air=dawn">Sparkling citrus</a>
@@ -153,7 +156,7 @@
     <div class="wrap split">
       <div>
         <header><div class="cursor">Q3</div><div class="stamp">note nuance</div></header>
-        <h1>You chose clarity. Which citrus?</h1>
+        <h1 class="tw" data-text="You chose clarity. Which citrus?"></h1>
         <nav class="links">
           <a data-next="q4_city" data-param="mood=clean&note=bergamot">Bergamot</a>
           <a data-next="q4_city" data-param="mood=clean&note=grapefruit">Grapefruit</a>
@@ -171,7 +174,7 @@
     <div class="wrap split">
       <div>
         <header><div class="cursor">Q3</div><div class="stamp">note nuance</div></header>
-        <h1>Soft bloom. Which flower?</h1>
+        <h1 class="tw" data-text="Soft bloom. Which flower?"></h1>
         <nav class="links">
           <a data-next="q4_city" data-param="mood=warm&note=rose">Rose</a>
           <a data-next="q4_city" data-param="mood=warm&note=jasmine">Jasmine</a>
@@ -189,7 +192,7 @@
     <div class="wrap split">
       <div>
         <header><div class="cursor">Q3</div><div class="stamp">note nuance</div></header>
-        <h1>After-rain green. Which path?</h1>
+        <h1 class="tw" data-text="After-rain green. Which path?"></h1>
         <nav class="links">
           <a data-next="q4_city" data-param="mood=myst&note=fig">Fig leaf</a>
           <a data-next="q4_city" data-param="mood=myst&note=vétiver">Vetiver</a>
@@ -207,7 +210,7 @@
     <div class="wrap split">
       <div>
         <header><div class="cursor">Q3</div><div class="stamp">note nuance</div></header>
-        <h1>Midnight sheen. What kind of allure?</h1>
+        <h1 class="tw" data-text="Midnight sheen. What kind of allure?"></h1>
         <nav class="links">
           <a data-next="q4_city" data-param="mood=sensual&note=amber">Amber glow</a>
           <a data-next="q4_city" data-param="mood=sensual&note=leather">Leather ribbon</a>
@@ -225,7 +228,7 @@
     <div class="wrap split">
       <div>
         <header><div class="cursor">Q4</div><div class="stamp">brand / style association</div></header>
-        <h1>Which city would you like to wander in now?</h1>
+        <h1 class="tw" data-text="Which city would you like to wander in now?"></h1>
         <nav class="links">
           <a data-next="q5_mat" data-param="city=paris">Paris</a>
           <a data-next="q5_mat" data-param="city=ny">New York</a>
@@ -243,7 +246,7 @@
     <div class="wrap split">
       <div>
         <header><div class="cursor">Q5</div><div class="stamp">texture & longevity</div></header>
-        <h1>If you were a perfume bottle, what material would you be?</h1>
+        <h1 class="tw" data-text="If you were a perfume bottle, what material would you be?"></h1>
         <nav class="links">
           <a data-next="q6_echo" data-param="mat=glass">Transparent glass</a>
           <a data-next="q6_echo" data-param="mat=metal">Metal</a>
@@ -261,7 +264,7 @@
     <div class="wrap split">
       <div>
         <header><div class="cursor">Q6</div><div class="stamp">afterglow identity</div></header>
-        <h1>What remains after the scent fades?</h1>
+        <h1 class="tw" data-text="What remains after the scent fades?"></h1>
         <nav class="links">
           <a data-next="result" data-param="echo=memory">Memory</a>
           <a data-next="result" data-param="echo=trail">Trail</a>
@@ -283,7 +286,7 @@
           <div class="stamp" id="stamp">—</div>
         </header>
         <div id="summary" class="note">Your choices assemble a profile.</div>
-        <h1 id="family"></h1>
+        <h1 id="family" class="tw" data-text=""></h1>
         <div id="picks" class="grid2"></div>
         <p id="tip" class="muted" style="display:none">Tip: Spray on your wrist and check again after 2–4 hours. Citrus/green fade faster; woods/musk last longer.</p>
         <footer><a data-next="start">Start over</a></footer>
@@ -434,6 +437,38 @@
 
     window.addEventListener('hashchange', render);
     window.addEventListener('DOMContentLoaded', ()=>{ if(!location.hash) location.hash='#start'; render(); });
+  
+    // --- typewriter ---
+    function typeIn(el, text, speed=18){
+      if(!el) return; el.classList.add('type-caret');
+      let i=0; function step(){
+        if(i<=text.length){ el.textContent = text.slice(0,i); i++; setTimeout(step, speed + Math.random()*12); }
+        else { el.classList.remove('type-caret'); el.classList.add('done'); }
+      } step();
+    }
+    function typeOnce(el){ if(!el || el.dataset.typed) return; el.dataset.typed='1'; typeIn(el, el.dataset.text || el.textContent || ''); }
+
+    function prepareTypeTargets(){
+      // ensure all .tw have data-text; if empty, keep existing
+      document.querySelectorAll('.tw').forEach(el=>{ if(!el.dataset.text) el.dataset.text = el.textContent.trim(); el.textContent=''; });
+    }
+
+    // augment render to trigger typing on scene activate
+    const _render = render;
+    render = function(){
+      _render();
+      const {id} = (function(){ const raw=location.hash.replace(/^#/,""); const [id='start']=raw.split('?'); return {id}; })();
+      const scene = document.getElementById(id) || document.getElementById('start');
+      const title = scene.querySelector('h1.tw');
+      typeOnce(title);
+      if(id==='result'){
+        const fam = document.getElementById('family');
+        if(fam && fam.dataset.text){ fam.textContent=''; typeOnce(fam); }
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', ()=>{ prepareTypeTargets(); });
   </script>
+</body>
 </body>
 </html>
