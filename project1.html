@@ -485,7 +485,22 @@
       scene.querySelectorAll('.tw').forEach(el=> typeOnce(el, TYPE_SPEED));
     }
 
-    window.addEventListener('DOMContentLoaded', ()=>{ prepareTypeTargets(); if(!location.hash) location.hash='#start'; render(); }); });
+    window.addEventListener('DOMContentLoaded', ()=>{
+      // Fallback hrefs so links work even before first render
+      document.querySelectorAll('a[data-next]').forEach(a=>{
+        if(!a.getAttribute('href')) a.setAttribute('href', '#'+(a.dataset.next||''));
+      });
+      prepareTypeTargets();
+      if(!location.hash) location.hash='#start';
+      try { render(); }
+      catch(e){
+        console.error('[render fallback]', e);
+        // graceful fallback: show static text so questions are visible
+        document.querySelectorAll('.tw').forEach(el=>{
+          el.textContent = el.dataset.text || el.textContent || '';
+        });
+      }
+    }); });
   </script>
 </body>
 </body>
