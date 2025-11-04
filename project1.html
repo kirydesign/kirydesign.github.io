@@ -3,86 +3,66 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Journey Through Scent — Branching Sequential</title>
+  <title>Journey Through Scent — Branching Sequential (v5)</title>
   <style>
-    /* --- Deep black, analog dialog vibe --- */
     :root{--bg:#000;--ink:#f4f4f4;--dim:#a6a6a6;--line:#1a1a1a;--hi:#fafafa}
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);} 
     body{font-family:"Courier New", Courier, ui-monospace, Menlo, Consolas, monospace; letter-spacing:.02em}
     a{color:var(--ink);text-decoration:none}
     a:hover{color:#d1ffd6}
-    .frame{display:grid;grid-template-columns:1fr;min-height:100vh}
     .scene{display:none;position:relative}
     .scene.active{display:block;animation:fade .35s ease}
     @keyframes fade{from{opacity:.2; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
-
     .wrap{max-width:54rem;margin:0 auto;padding:2rem 1.25rem}
     header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
     .stamp{font-size:.75rem;color:var(--dim);letter-spacing:.1em}
-
     h1{font-size:clamp(1.2rem,2.2vw,1.6rem);margin:.25rem 0 .5rem 0}
     .muted{color:var(--dim)}
     .note{border-top:1px solid var(--line);padding-top:.5rem;margin-top:.5rem}
-
     nav.links{display:grid;grid-template-columns:1fr;gap:.5rem;margin-top:1rem}
     nav.links a{border:1px solid var(--line);border-radius:10px;padding:.85rem 1rem;background:#0b0b0b}
     nav.links a:hover{outline:1px solid #2a2a2a;box-shadow:0 0 0 1px #2a2a2a inset}
-
     footer{margin-top:1.25rem;font-size:.85rem;color:var(--dim)}
-
-    /* Visual layer per scene */
     .visual{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.12}
-    .grain{position:absolute;inset:-50%;background:radial-gradient(circle at 30% 30%, #fff2, transparent 40%),
-                                radial-gradient(circle at 70% 60%, #fff1, transparent 45%),
-                                radial-gradient(circle at 10% 80%, #fff2, transparent 35%);
-           filter:contrast(140%) saturate(0.6);animation:grain 8s linear infinite}
+    .grain{position:absolute;inset:-50%;background:radial-gradient(circle at 30% 30%, #fff2, transparent 40%), radial-gradient(circle at 70% 60%, #fff1, transparent 45%), radial-gradient(circle at 10% 80%, #fff2, transparent 35%); filter:contrast(140%) saturate(0.6);animation:grain 8s linear infinite}
     @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-2%,1%)}50%{transform:translate(1%,-1%)}75%{transform:translate(2%,2%)}100%{transform:translate(0,0)}}
     .scan{position:absolute;left:0;right:0;top:-40%;height:40%;background:linear-gradient(180deg,rgba(255,255,255,.08),transparent);animation:scan 9s linear infinite}
     @keyframes scan{to{top:130%}}
-
-    /* Type cursor for title */
     .cursor:after{content:"_";animation:blink 1.2s step-start infinite}
     @keyframes blink{50%{opacity:0}}
-
-    /* Tiny inline image blocks */
     .chips{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.5rem}
     .chip{border:1px solid var(--line);border-radius:6px;padding:.25rem .5rem;font-size:.8rem;color:#cfcfcf}
-
-    @media(min-width:900px){
-      .split{display:grid;grid-template-columns:1.2fr .8fr;gap:1rem}
-    }
+    .split{display:grid;grid-template-columns:1.2fr .8fr;gap:1rem}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .thumb{border:1px solid var(--line);border-radius:10px;min-height:120px;background:#0b0b0b}
+    figure.art{border:1px solid var(--line);border-radius:12px;min-height:42vh;background:#0b0b0b}
+    @media(max-width:900px){.split{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
 
-  <!-- Scenes (each question = one page) -->
   <section class="scene active" id="start">
     <div class="visual"><div class="grain"></div><div class="scan"></div></div>
     <div class="wrap split">
       <div>
         <header>
           <div class="cursor">Journey Through Scent</div>
-          <div class="stamp">sequential / branching / v4</div>
+          <div class="stamp">sequential / branching / v5</div>
         </header>
         <h1>Translate your personality into fragrance.</h1>
         <p class="muted">Follow the hyperlinks. One question per page. Your answer chooses the next question.</p>
-        <nav class="links">
-          <a data-next="q1">Start</a>
-        </nav>
+        <nav class="links"><a data-next="q1">Start</a></nav>
         <footer>All navigation is hyperlink-based. No forms. No buttons.</footer>
       </div>
+      <figure class="art" id="art-start"></figure>
     </div>
   </section>
 
-  <!-- Q1: Day rhythm → branches to four distinct Q2 scenes -->
   <section class="scene" id="q1">
     <div class="visual"><div class="grain"></div><div class="scan"></div></div>
     <div class="wrap split">
       <div>
-        <header>
-          <div class="cursor">Q1</div>
-          <div class="stamp">purpose: intensity & projection</div>
-        </header>
+        <header><div class="cursor">Q1</div><div class="stamp">purpose: intensity & projection</div></header>
         <h1>What rhythm best describes your day?</h1>
         <nav class="links">
           <a data-next="q2_light" data-param="i=light">Soft and gentle</a>
@@ -92,10 +72,10 @@
         </nav>
         <footer><a data-next="start">Restart</a></footer>
       </div>
+      <figure class="art" id="art-q1"></figure>
     </div>
   </section>
 
-  <!-- Q2 variants (branch by Q1) → each goes to its own Q3 variant -->
   <section class="scene" id="q2_light">
     <div class="visual"><div class="grain"></div><div class="scan"></div></div>
     <div class="wrap split">
@@ -110,6 +90,7 @@
         </nav>
         <footer><a data-next="start">Restart</a></footer>
       </div>
+      <figure class="art" id="art-q2_light"></figure>
     </div>
   </section>
 
@@ -127,6 +108,7 @@
         </nav>
         <footer><a data-next="start">Restart</a></footer>
       </div>
+      <figure class="art" id="art-q2_balanced"></figure>
     </div>
   </section>
 
@@ -144,6 +126,7 @@
         </nav>
         <footer><a data-next="start">Restart</a></footer>
       </div>
+      <figure class="art" id="art-q2_deep"></figure>
     </div>
   </section>
 
@@ -161,10 +144,10 @@
         </nav>
         <footer><a data-next="start">Restart</a></footer>
       </div>
+      <figure class="art" id="art-q2_energetic"></figure>
     </div>
   </section>
 
-  <!-- Q3 variants (branch deeper like fruit example) → each leads to Q4 city or sub-choice -->
   <section class="scene" id="q3_clean_citrus">
     <div class="visual"><div class="grain"></div><div class="scan"></div></div>
     <div class="wrap split">
@@ -179,6 +162,7 @@
         </nav>
         <div class="chips"><div class="chip">fresh</div><div class="chip">airy</div><div class="chip">daylight</div></div>
       </div>
+      <figure class="art" id="art-q3_clean_citrus"></figure>
     </div>
   </section>
 
@@ -196,6 +180,7 @@
         </nav>
         <div class="chips"><div class="chip">petal</div><div class="chip">musk</div><div class="chip">soft light</div></div>
       </div>
+      <figure class="art" id="art-q3_floral_soft"></figure>
     </div>
   </section>
 
@@ -213,6 +198,7 @@
         </nav>
         <div class="chips"><div class="chip">transparent woods</div><div class="chip">green</div></div>
       </div>
+      <figure class="art" id="art-q3_green_breeze"></figure>
     </div>
   </section>
 
@@ -230,10 +216,10 @@
         </nav>
         <div class="chips"><div class="chip">nocturne</div><div class="chip">silhouette</div></div>
       </div>
+      <figure class="art" id="art-q3_night_sheen"></figure>
     </div>
   </section>
 
-  <!-- Q4: City (shared) → Q5 material → Q6 echo → result -->
   <section class="scene" id="q4_city">
     <div class="visual"><div class="grain"></div><div class="scan"></div></div>
     <div class="wrap split">
@@ -248,6 +234,7 @@
         </nav>
         <footer><a data-next="start">Restart</a></footer>
       </div>
+      <figure class="art" id="art-q4_city"></figure>
     </div>
   </section>
 
@@ -265,6 +252,7 @@
         </nav>
         <footer><a data-next="start">Restart</a></footer>
       </div>
+      <figure class="art" id="art-q5_mat"></figure>
     </div>
   </section>
 
@@ -282,10 +270,10 @@
         </nav>
         <footer><a data-next="start">Restart</a></footer>
       </div>
+      <figure class="art" id="art-q6_echo"></figure>
     </div>
   </section>
 
-  <!-- RESULT -->
   <section class="scene" id="result">
     <div class="visual"><div class="grain"></div><div class="scan"></div></div>
     <div class="wrap split">
@@ -300,13 +288,52 @@
         <p id="tip" class="muted" style="display:none">Tip: Spray on your wrist and check again after 2–4 hours. Citrus/green fade faster; woods/musk last longer.</p>
         <footer><a data-next="start">Start over</a></footer>
       </div>
+      <figure class="art" id="art-result"></figure>
     </div>
   </section>
 
   <script>
-    // Minimal router with branching
     const $$=(s,c=document)=>Array.from(c.querySelectorAll(s));
     const $=(s,c=document)=>c.querySelector(s);
+
+    function svgBlob(label, hue){
+      const bg = `hsl(${hue}, 75%, 12%)`;
+      const grad1 = `hsl(${(hue+30)%360}, 80%, 55%)`;
+      const grad2 = `hsl(${(hue+300)%360}, 70%, 45%)`;
+      const txt = `hsl(${hue}, 10%, 92%)`;
+      const svg = encodeURIComponent(
+        `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'>
+          <defs>
+            <radialGradient id='g' cx='30%' cy='30%'>
+              <stop offset='0%' stop-color='${grad1}' stop-opacity='0.9'/>
+              <stop offset='60%' stop-color='${grad2}' stop-opacity='0.35'/>
+              <stop offset='100%' stop-color='${bg}' stop-opacity='0.2'/>
+            </radialGradient>
+          </defs>
+          <rect width='600' height='400' fill='${bg}'/>
+          <circle cx='180' cy='150' r='140' fill='url(#g)' />
+          <circle cx='420' cy='260' r='170' fill='url(#g)' />
+          <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='${txt}' font-family='Courier New, monospace' font-size='26'>${label}</text>
+        </svg>`
+      );
+      return `url("data:image/svg+xml,${svg}")`;
+    }
+
+    function paintArt(id, label, hue){
+      const el = document.getElementById('art-'+id);
+      if(!el) return;
+      el.style.backgroundImage = svgBlob(label, hue);
+      el.style.backgroundSize = 'cover';
+      el.style.backgroundPosition = 'center';
+      el.style.filter = 'saturate(0.9)';
+    }
+
+    function perfumeThumb(name){
+      const hue = Math.abs([...name].reduce((a,c)=>a + c.charCodeAt(0), 0)) % 360;
+      const label = name.split(' ')[0];
+      const bg = svgBlob(label, hue);
+      return `<div class="thumb" style="background-image:${bg};background-size:cover;background-position:center"></div>`;
+    }
 
     const RESULTS={
       fresh_citrus_day:{title:"Fresh Citrus / Day",picks:[
@@ -365,7 +392,6 @@
     }
 
     function inferResultKey(p){
-      // Now considers mood + air + note + intensity with gentle weights
       if(p.mood==='clean'){ if(p.air==='dawn'||p.air==='rain'||p.note==='bergamot'||p.note==='neroli') return 'fresh_citrus_day'; return 'aromatic_fresh_sport'; }
       if(p.mood==='warm'){ if(p.note==='rose'||p.note==='jasmine'||p.mat==='velvet'||p.echo==='person') return 'floral_musk_soft'; return 'cozy_sweet_gourmand'; }
       if(p.mood==='sensual'){ if(p.note==='leather'||p.note==='incense'||p.note==='spice') return 'spicy_resinous_night'; return 'floral_musk_soft'; }
@@ -374,13 +400,19 @@
       return 'floral_musk_soft';
     }
 
+    function renderArt(id, params){
+      const keys=['note','mood','air','i'];
+      let hue=210; let label='Scent';
+      for(const k of keys){ if(params[k]){ const seed = Math.abs([...params[k]].reduce((a,c)=>a+c.charCodeAt(0),0)); hue = seed % 360; label = (labelMaps[k]&&labelMaps[k][params[k]])||label; break; } }
+      paintArt(id, label, hue);
+    }
+
     function render(){
       const {id,params}=parse();
       $$('.scene').forEach(s=>s.classList.remove('active'));
       (document.getElementById(id)||document.getElementById('start')).classList.add('active');
-      $$('a[data-next]').forEach(a=>{
-        a.setAttribute('href', href(a.dataset.next, params, a.dataset.param||''));
-      });
+      $$('a[data-next]').forEach(a=>{ a.setAttribute('href', href(a.dataset.next, params, a.dataset.param||'')); });
+      renderArt(id, params);
       if(id==='result'){
         $('#stamp').textContent = humanize(params) || '—';
         $('#summary').textContent = humanize(params) ? `You lean toward: ${humanize(params)}` : 'Your choices assemble a profile.';
@@ -388,13 +420,15 @@
         $('#family').textContent = `Suggested Family — ${data.title}`;
         $('#picks').innerHTML = data.picks.map(p=>`
           <a class="note" style="display:block;color:inherit" href="${p.link}" target="_blank" rel="noreferrer">
-            <div><strong>${p.name}</strong></div>
+            ${perfumeThumb(p.name)}
+            <div style="margin-top:.5rem"><strong>${p.name}</strong></div>
             <div class="muted">Notes: ${p.notes}</div>
             <div class="muted">Vibe: ${p.vibe}</div>
             <div>${p.why}</div>
           </a>
         `).join('');
-        $('#tip').style.display='block';
+        document.getElementById('art-result') && paintArt('result', data.title, Math.abs(key.split('').reduce((a,c)=>a+c.charCodeAt(0),0))%360);
+        document.getElementById('tip').style.display='block';
       }
     }
 
