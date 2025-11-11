@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Light Through Time</title>
+<style>
+  :root{
+    --bg: #f4f3ef;        /* 낮 기본 */
+    --text: #222222;
+    --lamp-glow: 0;       /* 0~1 */
+    --lamp-color: 255,215,102; /* 노란빛 RGB */
+  }
+  html, body { height: 100%; margin: 0; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    transition: background 0.8s ease, color 0.8s ease;
+    display: grid; place-items: center;
+  }
+  .scene{
+    position: relative;
+    width: min(600px, 90vw);
+    height: min(600px, 90vw);
+    border-radius: 18px;
+    padding: 32px;
+    display: grid; place-items: center;
+    background: rgba(255,255,255,0.04);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .lamp{
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 40%,
+      rgba(var(--lamp-color), calc(var(--lamp-glow)*0.85)) 0%,
+      rgba(var(--lamp-color), calc(var(--lamp-glow)*0.45)) 25%,
+      rgba(255,255,255,0) 60%);
+    filter: blur(calc(var(--lamp-glow)*3px));
+    transition: filter 0.6s ease, background 0.6s ease;
+  }
+  /* 바닥으로 퍼지는 빛 */
+  .lamp::after{
+    content:"";
+    position:absolute; left:50%; top:55%;
+    transform: translateX(-50%);
+    width: 90%; height: 50%;
+    background: radial-gradient(ellipse at 50% 0%,
+      rgba(var(--lamp-color), calc(var(--lamp-glow)*0.35)) 0%,
+      rgba(0,0,0,0) 70%);
+    filter: blur(10px);
+    pointer-events:none;
+  }
+  h1{ font-size: clamp(22px, 3vw, 28px); margin: 16px 0 4px; }
+  p{ opacity: .85; margin: 0 0 18px; }
+
+  .controls{
+    position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(6px);
+    padding: 10px 14px; border-radius: 12px;
+    display: flex; gap: 10px; align-items: center;
+    color: #111;
+  }
+  .controls input[type="range"]{ width: 260px; }
+  .badge{
+    position: fixed; top: 16px; right: 16px;
+    font-size: 12px; opacity: .7;
+  }
+  /* 밤 테마에서 대비 보장 */
+  .night-text { color: #f8f7f2; text-shadow: 0 0 10px rgba(255,255,255,.08); }
+</style>
+</head>
+<body>
+  <div class="badge" id="clock">--:--</div>
+  <div class="scene" id="scene">
+    <div class="lamp" aria-hidden="true"></div>
+    <div style="position:absolute; bottom:28px; left:28px;">
+      <h1 id="title">The light has not yet awakened.</h1>
+      <p id="desc">This page follows the slow rhythm of a day.</p>
+    </div>
+  </div>
+
+  <div class="controls">
+    <label for="time">Preview time</label>
+    <input id="time" type="range" min="0" max="1439" value="0" />
+    <button id="now">Now</button>
+  </div>
+
+<script>
+(function(){
+  const clock = document.getElementById('clock');
+  const scene = document.getElementById('scene');
+  const title = document.getElementById('title');
+  const desc  = document.getElementById('desc');
+  const slider = document.getElementById('time');
+  const nowBtn = document.getElementById('now');
+
+  // 시간→밝기 매핑: 낮(정오) 최대, 새벽/밤 최소
+  // 부드럽게: cosine 곡선 (0~1 범위), 분 단위
+  function brightnessFromMinutes(m){
+    const t = (m / 1440) * 2 * Math.PI; // 하루 주기
+    // 낮 12시 정점이 되도록 위상 이동: -6시간(360분)
+    const shifted = t - (Math.PI/2);
+    const cosVal = Math.cos(shifted); // -1..1
+    // 0~1 스케일로, 밤엔 어둡고 낮엔 밝게
+    const dayness = (cosVal + 1) / 2; // 0..1
+    // 인공 조명은 "어두울수록" 강해짐
+    const lampGlow = 1 - dayness;     // 밤 1, 낮 0
+    return { dayness, lampGlow };
+  }
+
+  function setByMinutes(m, fromSlider=false){
+    const {dayness, lampGlow} = brightnessFromMinutes(m);
+
+    // 배경색: 낮은 아이보리, 밤은 차콜로 보간
+    const dayBg = [244,243,239]; // #f4f3ef
+    const nightBg = [30,27,24];  // #1e1b18
+    const mix = (a,b,t)=> Math.round(a*(t) + b*(1-t));
+    // dayness가 1이면 낮(밝음), 0이면 밤
+    const r = mix(dayBg[0], nightBg[0], dayness);
+    const g = mix(dayBg[1], nightBg[1], dayness);
+    const b = mix(dayBg[2], nightBg[2], dayness);
+    document.documentElement.style.setProperty('--bg', `rgb(${r},${g},${b})`);
+
+    // 텍스트 컬러: 밤엔 밝게
+    const textColor = dayness > 0.5 ? '#222' : '#f8f7f2';
+    document.documentElement.style.setProperty('--text', textColor);
+    title.classList.toggle('night-text', dayness <= 0.5);
+
+    // 램프 글로우(0~1)
+    document.documentElement.style.setProperty('--lamp-glow', lampGlow.toFixed(3));
+
+    // 상태별 카피
+    const hour = Math.floor(m/60);
+    let state = '';
+    if (hour >= 6 && hour < 12) state = 'morning';
+    else if (hour >= 12 && hour < 18) state = 'day';
+    else if (hour >= 18 && hour < 24) state = 'evening';
+    else state = 'afterglow';
+
+    const copy = {
+      morning: ["The light has not yet awakened.", "Soft daylight fills the room."],
+      day:     ["Balanced noon light.", "Natural and artificial lights overlap."],
+      evening: ["The evening glows softly.", "Darkness defines the space; the lamp responds."],
+      afterglow:["Only a trace of light remains.", "Silence carries the last warmth."]
+    };
+    title.textContent = copy[state][0];
+    desc.textContent  = copy[state][1];
+
+    // 시계 UI
+    const hh = String(hour).padStart(2,'0');
+    const mm = String(m%60).padStart(2,'0');
+    clock.textContent = `${hh}:${mm}`;
+
+    if (!fromSlider) slider.value = m;
+  }
+
+  // 실시간 자동 업데이트(분 단위)
+  function setNow(){
+    const d = new Date();
+    const m = d.getHours()*60 + d.getMinutes();
+    setByMinutes(m);
+  }
+  setNow();
+  // 매 30초마다 갱신(충분히 잔잔)
+  setInterval(setNow, 30000);
+
+  // 프리뷰 슬라이더
+  slider.addEventListener('input', e=>{
+    setByMinutes(parseInt(e.target.value,10), true);
+  });
+  nowBtn.addEventListener('click', setNow);
+})();
+</script>
+</body>
+</html>
