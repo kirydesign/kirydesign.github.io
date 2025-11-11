@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>Kiry — Preview (1095–1160px block only)</title>
+  <style>
+    /* Smooth transitions */
+    * { transition: all .35s ease; }
+
+    /* Background: soft gradient + subtle grain */
+    body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 800px at 50% 50%, rgba(255,255,255,.85), rgba(240,248,255,.7) 40%, rgba(230,240,255,.6) 60%, rgba(215,235,255,.5) 80%, rgba(210,230,255,.45)),
+        repeating-radial-gradient(circle at 20% 30%, rgba(0,0,0,.02) 0 2px, transparent 2px 6px);
+      background-blend-mode: screen, normal;
+      min-height: 100svh;
+      overflow: hidden;
+    }
+
+    /* Central ring */
+    #div1 {
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: min(56vmin, 560px);
+      height: min(56vmin, 560px);
+      transform: translate(-50%, -50%);
+      background: transparent;
+      border: min(1.2vmin, 12px) solid #0aa18b;
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(10,161,139,.25), inset 0 0 30px rgba(10,161,139,.15);
+      mix-blend-mode: multiply;
+      animation: ringPulse 2.2s ease-in-out both infinite;
+      z-index: 2;
+    }
+    @keyframes ringPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(10,161,139,.25), inset 0 0 18px rgba(10,161,139,.12); }
+      50%  { box-shadow: 0 0 0 16px rgba(10,161,139,0), inset 0 0 40px rgba(10,161,139,.22); }
+      100% { box-shadow: 0 0 0 0 rgba(10,161,139,.25), inset 0 0 18px rgba(10,161,139,.12); }
+    }
+
+    /* Splat element settles and fades at the bottom */
+    #div6 {
+      display: block;
+      position: absolute;
+      left: 50%;
+      bottom: 14%;
+      width: min(42vmin, 420px);
+      height: min(14vmin, 140px);
+      transform: translateX(-50%) scale(1);
+      background: linear-gradient(90deg, #8f0000, #c9003a);
+      border-radius: 40% 60% 55% 45% / 65% 45% 55% 35%;
+      opacity: .85;
+      filter: blur(2px) saturate(1.1);
+      z-index: 1;
+      animation: splatFade 1.6s ease-out .2s both;
+    }
+    @keyframes splatFade {
+      0%   { opacity: .95; transform: translateX(-50%) scale(1);     filter: blur(0px) saturate(1.1); }
+      60%  { opacity: .75; transform: translateX(-50%) scaleX(1.25) scaleY(.8) rotate(-2deg); filter: blur(1px) saturate(1.05); }
+      100% { opacity: .35; transform: translateX(-50%) scaleX(1.5)  scaleY(.6) rotate(-3deg); filter: blur(3px) saturate(.95); }
+    }
+
+    /* Orbiting dot around the ring */
+    #div8 {
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: min(1.6vmin, 16px);
+      height: min(1.6vmin, 16px);
+      transform-origin: -20vmin 0;
+      background: radial-gradient(circle at 35% 35%, #bafcff, #0098a6);
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(0,152,166,.45);
+      z-index: 3;
+      animation: orbit 6s linear infinite, twinkle 1.8s ease-in-out infinite alternate;
+    }
+    @keyframes orbit {
+      from { transform: translate(-50%,-50%) rotate(0deg); }
+      to   { transform: translate(-50%,-50%) rotate(360deg); }
+    }
+    @keyframes twinkle {
+      0%   { opacity: .7; box-shadow: 0 0 8px rgba(0,152,166,.35); }
+      100% { opacity: 1;  box-shadow: 0 0 18px rgba(0,152,166,.55); }
+    }
+
+    /* Central pole retracts and becomes lighter */
+    #div9 {
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: min(.9vmin, 9px);
+      height: min(42vmin, 420px);
+      transform: translate(-50%, -50%);
+      background: linear-gradient(180deg, #adadad, #515151);
+      border-radius: 999px;
+      opacity: .65;
+      z-index: 0;
+      animation: retract 1.2s ease-out .15s both;
+    }
+    @keyframes retract {
+      0%   { height: min(50vmin, 500px); opacity: .85; }
+      100% { height: min(26vmin, 260px); opacity: .35; }
+    }
+
+    /* Small accent dots */
+    #div2, #div3, #div4 {
+      display: block;
+      position: absolute;
+      width: min(1.2vmin, 12px);
+      height: min(1.2vmin, 12px);
+      background: #0aa18b;
+      border-radius: 50%;
+      opacity: .55;
+      box-shadow: 0 0 10px rgba(10,161,139,.35);
+    }
+    #div2 { top: 18%; left: 20%; }
+    #div3 { top: 22%; right: 18%; }
+    #div4 { bottom: 18%; left: 24%; }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      #div1, #div6, #div8, #div9 { animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Only the elements your block uses need to be present, but including all keeps parity -->
+  <div id="div1"></div>
+  <div id="div2"></div>
+  <div id="div3"></div>
+  <div id="div4"></div>
+  <div id="div5"></div>
+  <div id="div6"></div>
+  <div id="div7"></div>
+  <div id="div8"></div>
+  <div id="div9"></div>
+  <div id="div10"></div>
+  <div id="div11"></div>
+  <div id="div12"></div>
+  <div id="div13"></div>
+  <div id="div14"></div>
+  <div id="div15"></div>
+  <div id="div16"></div>
+  <div id="div17"></div>
+  <div id="div18"></div>
+  <div id="div19"></div>
+  <div id="div20"></div>
+</body>
+</html>
