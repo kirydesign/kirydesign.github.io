@@ -15,12 +15,24 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content:center;
-    gap:20px;
+    justify-content:flex-start;
+    gap:28px;
     background:#151515;
     color:#f8f7f2;
     padding:24px;
     transition:background 0.6s ease,color 0.6s ease;
+  }
+
+  /* 현재 시간(clock) */
+  .clock{
+    font-size:48px;
+    font-weight:700;
+    letter-spacing:0.02em;
+    margin-top:12px;
+  }
+  .clock small{
+    font-size:18px;
+    opacity:0.7;
   }
 
   /* 메인 카드 */
@@ -95,168 +107,91 @@
   .cell{
     position:relative;
     border:1px solid rgba(0,0,0,0.08);
-    background:#b8b0a2;                /* 선반 색 */
+    background:#b8b0a2;
     transition:background 0.5s ease, filter 0.5s ease;
     filter:brightness(0.9);
   }
-  /* 전선 + 기둥 */
   .cell::before{
     content:"";
     position:absolute;
-    left:50%;
-    top:12%;
+    left:50%; top:12%;
     width:2px;
     height:20%;
     transform:translateX(-50%);
     background:rgba(0,0,0,0.45);
   }
-  /* 갓 (lamp shade) */
   .cell::after{
     content:"";
     position:absolute;
-    left:50%;
-    top:30%;
-    width:18px;
-    height:12px;
+    left:50%; top:30%;
+    width:18px;height:12px;
     transform:translateX(-50%);
     border-radius:8px 8px 3px 3px;
     background:#5b4a3b;
-    box-shadow:none;
     transition:background 0.5s ease, box-shadow 0.5s ease;
   }
 
   /* 상태별 전체 톤 -------------------------------------------------- */
 
-  /* 6–11AM Mid Bright (50%) */
   body.state-mid{
-    background:#f4f3ef;
-    color:#222222;
+    background:#f4f3ef;color:#222;
   }
   body.state-mid .frame{
     background:#ffffff;
   }
-  body.state-mid .right{
-    background:#ece6da;
-  }
-  body.state-mid .cell{
-    filter:brightness(1);
-  }
 
-  /* 12–5PM Lights Off (0%) */
   body.state-off{
-    background:#ded1b9;
-    color:#222222;
+    background:#ded1b9;color:#222;
   }
   body.state-off .frame{
     background:#f3e5c8;
   }
-  body.state-off .right{
-    background:#e9ddc8;
-  }
-  body.state-off .cell{
-    filter:brightness(0.85);
-  }
-  body.state-off .cell::after{
-    background:#5b4a3b;           /* 불 꺼진 느낌 */
-    box-shadow:none;
-  }
 
-  /* 6–11PM Lights On (100%) */
   body.state-on{
-    background:#3b3129;
-    color:#f8f7f2;
+    background:#3b3129;color:#f8f7f2;
   }
   body.state-on .frame{
-    background:rgba(0,0,0,0.45);
-  }
-  body.state-on .right{
-    background:#1e1813;
-  }
-  body.state-on .cell{
-    filter:brightness(1.05);
+    background:rgba(0,0,0,0.5);
   }
   body.state-on .cell::after{
-    background:#ffdf8a;
-    box-shadow:0 0 10px rgba(255,223,138,0.85);
+    background:#ffdf8a;box-shadow:0 0 10px rgba(255,223,138,0.9);
   }
 
-  /* 12–5AM Afterglow (20%) */
   body.state-after{
-    background:#050506;
-    color:#f4f3ef;
+    background:#050506;color:#f2f2f2;
   }
   body.state-after .frame{
     background:rgba(0,0,0,0.7);
   }
-  body.state-after .right{
-    background:#0d0d0f;
-  }
-  body.state-after .cell{
-    filter:brightness(0.75);
-  }
   body.state-after .cell::after{
-    background:#ffb493;
-    box-shadow:0 0 8px rgba(255,180,147,0.6);
+    background:#ffb493;box-shadow:0 0 8px rgba(255,180,147,0.7);
   }
 
-  /* 컨트롤 영역 ----------------------------------------------------- */
+  /* 컨트롤 영역 */
   .controls{
     max-width:1080px;
     width:100%;
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    font-size:12px;
-    color:rgba(255,255,255,0.8);
-  }
-  .controls-row{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    align-items:center;
-    justify-content:space-between;
-  }
-  .controls-left{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    align-items:center;
-  }
-  .controls label{
-    font-weight:500;
-  }
-  .controls input[type="range"]{
-    width:220px;
-  }
-  .controls button{
-    background:transparent;
-    border-radius:999px;
-    padding:4px 10px;
-    border:1px solid rgba(255,255,255,0.4);
-    color:inherit;
-    cursor:pointer;
-    font-size:11px;
-  }
-  .controls button:hover{
-    background:rgba(255,255,255,0.08);
-  }
-  .mode-label{
-    font-style:italic;
-    opacity:0.75;
+    text-align:center;
+    font-size:14px;
+    margin-bottom:8px;
   }
 
-  .device-time{
-    font-size:11px;
-    opacity:0.8;
+  input[type="range"]{
+    width:260px;
+    margin-top:6px;
   }
 
-  @media(max-width:800px){
-    .frame{grid-template-columns:1fr;}
-  }
 </style>
 </head>
 <body>
-  <main class="frame" aria-label="Diurnal lighting showroom">
+
+  <!-- 현재 시간 크게 표시 -->
+  <div class="clock">
+    <span id="currentClock">--:--:--</span>
+    <small>(local time)</small>
+  </div>
+
+  <main class="frame">
     <section class="left">
       <div>
         <div class="wordmark">Diurnal</div>
@@ -279,86 +214,75 @@
 
     <section class="right">
       <div class="grid">
-        <!-- 단순 일러스트 셀 40개 -->
-        <!-- 8 x 5 -->
-        <!-- 그냥 복붙용, 필요하면 줄여도 됨 -->
-        <!-- 1 -->
-        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-        <!-- 2 -->
-        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-        <!-- 3 -->
-        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-        <!-- 4 -->
-        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-        <!-- 5 -->
-        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <!-- 40 cells -->
+        <!-- row 1 -->
+        ${"<div class='cell'></div>".repeat(40)}
       </div>
     </section>
   </main>
 
-  <section class="controls" aria-label="Time controls">
-    <div class="controls-row">
-      <div class="controls-left">
-        <label for="timeSlider">Preview time</label>
-        <input type="range" id="timeSlider" min="0" max="23" step="1">
-        <span id="sliderLabel">–:–</span>
-        <button type="button" id="backToNow">Back to current time</button>
-      </div>
-      <div class="mode-label" id="modeLabel">Mode: Live (using current time)</div>
-    </div>
-    <div class="device-time">
-      Device time: <span id="deviceTime">--:--</span> (uses your local timezone, e.g. New York)
+  <section class="controls">
+    <div>
+      <label>Preview time: </label>
+      <input type="range" id="timeSlider" min="0" max="23" step="1">
+      <div id="sliderLabel">--:--</div>
+      <button id="backNow">Back to current time</button>
     </div>
   </section>
 
 <script>
-  function pad(n){ return n<10 ? "0"+n : ""+n; }
-
-  const greetText  = document.getElementById('greetText');
-  const sceneTime  = document.getElementById('sceneTime');
-  const stateText  = document.getElementById('stateText');
-  const stateName  = document.getElementById('stateName');
+  const clockEl = document.getElementById('currentClock');
+  const greetText = document.getElementById('greetText');
+  const sceneTime = document.getElementById('sceneTime');
+  const stateText = document.getElementById('stateText');
+  const stateName = document.getElementById('stateName');
   const timeSlider = document.getElementById('timeSlider');
-  const sliderLabel= document.getElementById('sliderLabel');
-  const backToNow  = document.getElementById('backToNow');
-  const modeLabel  = document.getElementById('modeLabel');
-  const deviceTime = document.getElementById('deviceTime');
+  const sliderLabel = document.getElementById('sliderLabel');
+  const backNow = document.getElementById('backNow');
 
-  let liveMode = true; // true면 현재 시간, false면 슬라이더 프리뷰
+  let liveMode = true;
 
-  function applyScene(hour, minute){
-    // 본문에 보여줄 시간 (씬 시간)
-    sceneTime.textContent = pad(hour)+":"+pad(minute);
+  function pad(n){return n<10?"0"+n:n;}
 
-    // 상태 초기화
+  /* 현재 시간 업데이트 (시:분:초) */
+  function updateClock(){
+    const now = new Date();
+    const h = pad(now.getHours());
+    const m = pad(now.getMinutes());
+    const s = pad(now.getSeconds());
+    clockEl.textContent = `${h}:${m}:${s}`;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  /* 상태 적용 */
+  function applyScene(h, m){
+    sceneTime.textContent = pad(h)+":"+pad(m);
+
     document.body.classList.remove('state-mid','state-off','state-on','state-after');
 
     let cls, greet, label, name;
-    if (hour >= 6 && hour < 11) {
-      cls   = 'state-mid';
-      greet = 'Good morning';
-      label = 'Mid Bright · 50% brightness';
-      name  = 'Mid Bright 6AM–11AM';
-    } else if (hour >= 12 && hour < 17) {
-      cls   = 'state-off';
-      greet = 'Have a nice day';
-      label = 'Lights Off · 0% brightness';
-      name  = 'Lights Off 12PM–5PM';
-    } else if (hour >= 18 && hour <= 23) {
-      cls   = 'state-on';
-      greet = 'Good evening';
-      label = 'Lights On · 100% brightness';
-      name  = 'Evening 6PM–11PM';
-    } else {
-      cls   = 'state-after';
-      greet = 'Good night';
-      label = 'Afterglow · 20% brightness';
-      name  = 'Afterglow 12AM–5AM';
+
+    if(h>=6 && h<11){
+      cls='state-mid';
+      greet='Good morning';
+      label='Mid Bright · 50% brightness';
+      name='Mid Bright 6AM–11AM';
+    }else if(h>=12 && h<17){
+      cls='state-off';
+      greet='Have a nice day';
+      label='Lights Off · 0% brightness';
+      name='Lights Off 12PM–5PM';
+    }else if(h>=18){
+      cls='state-on';
+      greet='Good evening';
+      label='Lights On · 100% brightness';
+      name='Evening 6PM–11PM';
+    }else{
+      cls='state-after';
+      greet='Good night';
+      label='Afterglow · 20% brightness';
+      name='Afterglow 12AM–5AM';
     }
 
     document.body.classList.add(cls);
@@ -367,50 +291,34 @@
     stateName.textContent = name;
   }
 
-  function updateFromNow(){
-    const now = new Date();
-    const h   = now.getHours();
-    const m   = now.getMinutes();
-    if(liveMode){
-      applyScene(h,m);
-      timeSlider.value = h;
-      sliderLabel.textContent = pad(h)+":00";
-    }
-    deviceTime.textContent = pad(h)+":"+pad(m);
-  }
-
-  // 초기 세팅: 현재 시간 기준
-  (function init(){
+  /* 현재 시간 기반 업데이트 */
+  function updateFromCurrent(){
+    if(!liveMode) return;
     const now = new Date();
     const h = now.getHours();
     const m = now.getMinutes();
+    applyScene(h,m);
     timeSlider.value = h;
     sliderLabel.textContent = pad(h)+":00";
-    applyScene(h,m);
-    deviceTime.textContent = pad(h)+":"+pad(m);
-  })();
+  }
 
-  // 30초마다 기기 시간 갱신 + 라이브 모드일 때 씬도 갱신
-  setInterval(updateFromNow, 30000);
+  updateFromCurrent();
+  setInterval(updateFromCurrent, 30000);
 
-  // 슬라이더로 프리뷰
-  timeSlider.addEventListener('input', function(e){
+  /* 슬라이더 */
+  timeSlider.addEventListener('input', e=>{
     const h = parseInt(e.target.value,10);
     liveMode = false;
-    modeLabel.textContent = 'Mode: Preview (slider)';
     sliderLabel.textContent = pad(h)+":00";
     applyScene(h,0);
   });
 
-  // 현재 시간으로 복귀
-  backToNow.addEventListener('click', function(){
+  /* 현재 시간으로 복귀 */
+  backNow.addEventListener('click', ()=>{
     liveMode = true;
-    modeLabel.textContent = 'Mode: Live (using current time)';
-    updateFromNow();
+    updateFromCurrent();
   });
 
-  // 페이지 첫 로드 직후에도 한 번 더 정확히 반영
-  updateFromNow();
 </script>
 </body>
 </html>
