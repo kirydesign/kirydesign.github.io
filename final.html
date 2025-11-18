@@ -2,403 +2,292 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Diurnal – Time-based Lighting Storyboard</title>
+<title>Diurnal – Time-based Lighting</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
-  * { box-sizing: border-box; }
+  *{box-sizing:border-box;margin:0;padding:0;}
 
-  body {
-    margin: 0;
-    padding: 40px 16px;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-                 Segoe UI, Roboto, sans-serif;
-    background: #151515;
-    color: #f8f7f2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 32px;
+  body{
+    min-height:100vh;
+    font-family:system-ui,-apple-system,BlinkMacSystemFont,"SF Pro Text",
+      Segoe UI,Roboto,sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#151515;
+    color:#f8f7f2;
+    padding:24px;
+    transition:background 0.6s ease,color 0.6s ease;
   }
 
-  .wrap {
-    width: 100%;
-    max-width: 1200px;
+  .frame{
+    max-width:1080px;
+    width:100%;
+    border-radius:18px;
+    padding:28px 32px;
+    background:rgba(0,0,0,0.4);
+    box-shadow:0 18px 40px rgba(0,0,0,0.55);
+    display:grid;
+    grid-template-columns:minmax(180px,220px) minmax(0,1fr);
+    gap:28px;
   }
 
-  /* 헤더 */
-  h1 {
-    font-size: clamp(24px, 4vw, 32px);
-    margin: 0 0 8px;
-    text-align: center;
+  .left{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
   }
 
-  .sub {
-    text-align: center;
-    font-size: 14px;
-    opacity: 0.75;
-    margin: 0 0 24px;
+  .wordmark{
+    font-size:32px;
+    font-weight:800;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    margin-bottom:24px;
   }
 
-  /* 상단 플로우 다이어그램 (박스 + 화살표) */
-  .flow {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
-    align-items: center;
-    margin-bottom: 40px;
-    font-size: 12px;
+  .nav{
+    list-style:none;
+    font-size:13px;
+    text-transform:lowercase;
+    letter-spacing:0.1em;
+  }
+  .nav li+li{margin-top:4px;}
+
+  .greeting{
+    font-size:13px;
+    margin-top:24px;
+    line-height:1.4;
+  }
+  .greeting strong{display:block;margin-bottom:2px;}
+
+  .state-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:3px 10px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,0.25);
+    font-size:11px;
+    margin-top:8px;
+  }
+  .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:linear-gradient(135deg,#ffd766,#ff9d4b);
   }
 
-  .flow-box {
-    padding: 10px 18px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,0.25);
-    background: #202020;
-    white-space: nowrap;
+  .right{
+    border-radius:14px;
+    overflow:hidden;
+    background:#111;
   }
 
-  .flow-box.light {
-    background: #f4f3ef;
-    color: #222;
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(8,1fr);
+    aspect-ratio:8/5;
   }
 
-  .flow-arrow {
-    color: rgba(255,255,255,0.6);
-    font-size: 14px;
-  }
-
-  /* 스토리보드 4 프레임 레이아웃 */
-  .frames {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
-    gap: 24px;
-  }
-
-  .frame {
-    border-radius: 18px;
-    overflow: hidden;
-    background: #222;
-    box-shadow:
-      0 18px 35px rgba(0,0,0,0.45),
-      0 0 0 1px rgba(255,255,255,0.05);
-  }
-
-  .frame-header {
-    font-size: 11px;
-    padding: 10px 16px 4px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.7);
-  }
-
-  .frame-body {
-    padding: 24px 28px 24px;
-    display: grid;
-    grid-template-columns: minmax(160px, 210px) minmax(0, 1fr);
-    gap: 24px;
-    align-items: stretch;
-  }
-
-  .left {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .wordmark {
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-
-  .nav {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    font-size: 13px;
-    text-transform: lowercase;
-    letter-spacing: 0.1em;
-  }
-  .nav li + li { margin-top: 4px; }
-
-  .greeting {
-    font-size: 12px;
-    margin-top: 26px;
-    line-height: 1.4;
-  }
-
-  .greeting strong {
-    display: block;
-    margin-bottom: 2px;
-  }
-
-  .right {
-    border-radius: 12px;
-    overflow: hidden;
-    background: #111;
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    aspect-ratio: 8 / 5;
-  }
-
-  .cell {
-    border: 1px solid rgba(0,0,0,0.04);
+  .cell{
+    border:1px solid rgba(0,0,0,0.05);
     background:
       radial-gradient(circle at 50% 30%,
-        rgba(255,255,255,0.15) 0%,
-        rgba(255,255,255,0.02) 55%),
+        rgba(255,255,255,0.16) 0%,
+        rgba(255,255,255,0.03) 55%),
       #b8b0a2;
+    transition:filter 0.5s ease,background 0.5s ease;
   }
 
-  /* 상태별 색·톤 */
+  /* 상태별 스타일 (body에 클래스로 적용) */
 
-  /* 6:00–11:00 50% Mid Bright */
-  .frame-midBright {
-    background: #f4f3ef;
-    color: #222;
+  /* 6–11AM Mid Bright (50%) */
+  body.state-mid{
+    background:#f4f3ef;
+    color:#222222;
   }
-  .frame-midBright .right {
-    background: #ece6da;
+  body.state-mid .frame{
+    background:#ffffff;
   }
-
-  /* 12:00–5:00 0% Lights Off */
-  .frame-off {
-    background: #ded1b9;
-    color: #222;
-  }
-  .frame-off .right {
-    background: #e9ddc8;
+  body.state-mid .right{
+    background:#ece6da;
   }
 
-  /* 6:00–11:00 100% Lights On */
-  .frame-on {
-    background: #3b3129;
-    color: #f8f7f2;
+  /* 12–5PM Lights Off (0%) */
+  body.state-off{
+    background:#ded1b9;
+    color:#222222;
   }
-  .frame-on .right {
-    background: #1e1813;
+  body.state-off .frame{
+    background:#f3e5c8;
   }
-  .frame-on .cell {
-    /* 전구 켜진 느낌: 더 따뜻하고 어두운 배경 */
+  body.state-off .right{
+    background:#e9ddc8;
+  }
+
+  /* 6–11PM Lights On (100%) */
+  body.state-on{
+    background:#3b3129;
+    color:#f8f7f2;
+  }
+  body.state-on .frame{
+    background:rgba(0,0,0,0.45);
+  }
+  body.state-on .right{
+    background:#1e1813;
+  }
+  body.state-on .cell{
     background:
       radial-gradient(circle at 50% 30%,
-        rgba(255,215,118,0.6) 0%,
-        rgba(255,145,68,0.28) 24%,
-        rgba(0,0,0,0.6) 80%),
+        rgba(255,215,118,0.65) 0%,
+        rgba(255,145,68,0.30) 26%,
+        rgba(0,0,0,0.7) 80%),
       #4a3828;
   }
 
-  /* 12:00–5:00 20% Afterglow */
-  .frame-after {
-    background: #060606;
-    color: #f4f3ef;
+  /* 12–5AM Afterglow (20%) */
+  body.state-after{
+    background:#050506;
+    color:#f4f3ef;
   }
-  .frame-after .right {
-    background: #0d0d0f;
+  body.state-after .frame{
+    background:rgba(0,0,0,0.65);
   }
-  .frame-after .cell {
+  body.state-after .right{
+    background:#0d0d0f;
+  }
+  body.state-after .cell{
     background:
       radial-gradient(circle at 50% 30%,
-        rgba(255,140,120,0.45) 0%,
-        rgba(255,140,120,0.12) 26%,
-        rgba(0,0,0,0.9) 80%),
+        rgba(255,140,120,0.50) 0%,
+        rgba(255,140,120,0.16) 26%,
+        rgba(0,0,0,0.92) 80%),
       #26252a;
   }
 
-  @media (max-width: 640px) {
-    .frame-body {
-      grid-template-columns: 1fr;
+  .note{
+    position:fixed;
+    bottom:10px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:11px;
+    opacity:0.7;
+  }
+
+  @media(max-width:800px){
+    .frame{
+      grid-template-columns:1fr;
     }
   }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>A time-based lighting website that transforms in brightness and tone throughout the day.</h1>
-    <p class="sub">
-      Diurnal explores how a lighting showroom can slowly shift across four moments in a day.
-    </p>
-
-    <!-- 플로우 다이어그램 (개념) -->
-    <div class="flow">
-      <div class="flow-box">Evening 6PM–11PM</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-box">Afterglow 12AM–5AM</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-box light">Morning 6AM–11AM</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-box light">Mid Bright 12PM–5PM</div>
-    </div>
-
-    <!-- 4개 상태 스토리보드 -->
-    <div class="frames">
-
-      <!-- 6:00–11:00 (50%) Mid Bright -->
-      <article class="frame frame-midBright">
-        <div class="frame-header">6:00–11:00 (50%) Mid Bright</div>
-        <div class="frame-body">
-          <div class="left">
-            <div>
-              <div class="wordmark">Diurnal</div>
-              <ul class="nav">
-                <li>shop</li>
-                <li>collection</li>
-                <li>showroom</li>
-              </ul>
-            </div>
-            <div class="greeting">
-              <strong>Good morning</strong>
-              08:00
-            </div>
-          </div>
-          <div class="right">
-            <div class="grid">
-              <!-- 여기에 이미지 넣고 싶으면 각 .cell에 background-image 또는 <img> 사용 -->
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-            </div>
-          </div>
+  <main class="frame" aria-label="Diurnal lighting showroom">
+    <section class="left">
+      <div>
+        <div class="wordmark">Diurnal</div>
+        <ul class="nav">
+          <li>shop</li>
+          <li>collection</li>
+          <li>showroom</li>
+        </ul>
+      </div>
+      <div class="greeting">
+        <strong id="greetText">Good evening</strong>
+        <span id="timeText">18:00</span><br>
+        <span id="stateText">Lights On · 100% brightness</span>
+        <div class="state-tag">
+          <span class="dot"></span>
+          <span id="stateName">Evening 6PM–11PM</span>
         </div>
-      </article>
+      </div>
+    </section>
 
-      <!-- 12:00–5:00 (0%) Lights Off -->
-      <article class="frame frame-off">
-        <div class="frame-header">12:00–5:00 (0%) Lights Off</div>
-        <div class="frame-body">
-          <div class="left">
-            <div>
-              <div class="wordmark">Diurnal</div>
-              <ul class="nav">
-                <li>shop</li>
-                <li>collection</li>
-                <li>showroom</li>
-              </ul>
-            </div>
-            <div class="greeting">
-              <strong>Have a nice day</strong>
-              12:00
-            </div>
-          </div>
-          <div class="right">
-            <div class="grid">
-              <!-- 여기에도 나중에 실제 조명 그리드 이미지 적용하면 됨 -->
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+    <section class="right">
+      <div class="grid">
+        <!-- 실제 조명 이미지 쓰고 싶으면 각 cell에 background-image 넣으면 됨 -->
+        <!-- 8 x 5 = 40칸 -->
+        <!-- 첫 줄 -->
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <!-- 둘째 줄 -->
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <!-- 셋째 줄 -->
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <!-- 넷째 줄 -->
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <!-- 다섯째 줄 -->
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+      </div>
+    </section>
+  </main>
 
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- 6:00–11:00 (100%) Lights On -->
-      <article class="frame frame-on">
-        <div class="frame-header">6:00–11:00 (100%) Lights On</div>
-        <div class="frame-body">
-          <div class="left">
-            <div>
-              <div class="wordmark">Diurnal</div>
-              <ul class="nav">
-                <li>shop</li>
-                <li>collection</li>
-                <li>showroom</li>
-              </ul>
-            </div>
-            <div class="greeting">
-              <strong>Good evening</strong>
-              18:00
-            </div>
-          </div>
-          <div class="right">
-            <div class="grid">
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- 12:00–5:00 (20%) Afterglow -->
-      <article class="frame frame-after">
-        <div class="frame-header">12:00–5:00 (20%) Afterglow</div>
-        <div class="frame-body">
-          <div class="left">
-            <div>
-              <div class="wordmark">Diurnal</div>
-              <ul class="nav">
-                <li>shop</li>
-                <li>collection</li>
-                <li>showroom</li>
-              </ul>
-            </div>
-            <div class="greeting">
-              <strong>Good night</strong>
-              00:00
-            </div>
-          </div>
-          <div class="right">
-            <div class="grid">
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-              <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-            </div>
-          </div>
-        </div>
-      </article>
-
-    </div>
+  <div class="note">
+    Uses your device’s local time (if you are in New York, this is New York time).
   </div>
+
+<script>
+  function pad(n){
+    return n < 10 ? "0"+n : ""+n;
+  }
+
+  function updateDiurnal(){
+    const now = new Date(); // 네 컴퓨터/폰의 현재 시간 (NY에 있으면 NY 시간)
+    const h = now.getHours();
+    const m = now.getMinutes();
+
+    const timeText = document.getElementById('timeText');
+    const greetText = document.getElementById('greetText');
+    const stateText = document.getElementById('stateText');
+    const stateName = document.getElementById('stateName');
+
+    timeText.textContent = pad(h) + ":" + pad(m);
+
+    // 상태 초기화
+    document.body.classList.remove('state-mid','state-off','state-on','state-after');
+
+    let greet, label, name, stateClass;
+
+    if (h >= 6 && h < 11) {
+      // 6–11AM Mid Bright (50%)
+      stateClass = 'state-mid';
+      greet = 'Good morning';
+      label = 'Mid Bright · 50% brightness';
+      name = 'Mid Bright 6AM–11AM';
+    } else if (h >= 12 && h < 17) {
+      // 12–5PM Lights Off (0%)
+      stateClass = 'state-off';
+      greet = 'Have a nice day';
+      label = 'Lights Off · 0% brightness';
+      name = 'Lights Off 12PM–5PM';
+    } else if (h >= 18 && h <= 23) {
+      // 6–11PM Lights On (100%)
+      stateClass = 'state-on';
+      greet = 'Good evening';
+      label = 'Lights On · 100% brightness';
+      name = 'Evening 6PM–11PM';
+    } else {
+      // 0–5AM Afterglow (20%)
+      stateClass = 'state-after';
+      greet = 'Good night';
+      label = 'Afterglow · 20% brightness';
+      name = 'Afterglow 12AM–5AM';
+    }
+
+    document.body.classList.add(stateClass);
+    greetText.textContent = greet;
+    stateText.textContent = label;
+    stateName.textContent = name;
+  }
+
+  // 처음 한 번 실행
+  updateDiurnal();
+  // 1분마다 현재 시간 기준으로 다시 업데이트
+  setInterval(updateDiurnal, 60000);
+</script>
 </body>
 </html>
