@@ -88,14 +88,32 @@
     transition:background 1.4s ease,
                opacity 1.4s ease,
                filter 1.4s ease;
-    animation:breathe 14s ease-in-out infinite;
+    animation:breathe 12s ease-in-out infinite;
   }
 
-  @keyframes breathe{
-    0%   { transform:translate(-50%,-50%) scale(1.00); }
-    50%  { transform:translate(-50%,-50%) scale(1.04); }
-    100% { transform:translate(-50%,-50%) scale(1.00); }
+  @keyframes breathe {
+  0% {
+    transform: translate(-50%, -50%) scale(1.00);
+    opacity: 0.42;
+    filter: blur(8px);
   }
+  40% {
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 0.50;
+    filter: blur(10px);
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1.03);
+    opacity: 0.46;
+    filter: blur(9px);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.00);
+    opacity: 0.42;
+    filter: blur(8px);
+  }
+}
+
 
   .content{
     position:relative;
