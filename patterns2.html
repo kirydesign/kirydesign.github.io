@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Text Wave Pattern</title>
+  <style>
+    body {
+      background: #161623;
+      color: #fefefe;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 24px;
+    }
+
+    h1 {
+      margin-bottom: 12px;
+      font-size: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .line {
+      display: inline-block;
+      margin: 4px 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      opacity: 0.9;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .line.even {
+      background: #ffb3e6;
+      color: #220818;
+    }
+
+    .line.odd {
+      background: #b3c4ff;
+      color: #080a22;
+    }
+
+    .line:hover {
+      transform: translateY(-4px);
+      opacity: 1;
+    }
+
+    p {
+      font-size: 12px;
+      opacity: 0.75;
+      margin-top: 12px;
+      max-width: 360px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Text Wave Pattern</h1>
+  <div id="container"></div>
+  <p>Alternating “hello” and “hi”, gradually increasing in size based on the index.</p>
+
+  <script>
+    const container = document.getElementById('container');
+    const count = 24;
+
+    for (let i = 0; i < count; i++) {
+      const span = document.createElement('span');
+      span.classList.add('line');
+
+      // ✅ 조건문: i가 짝수/홀수냐에 따라 텍스트 & 색 변경
+      if (i % 2 === 0) {
+        span.textContent = 'hello';
+        span.classList.add('even');
+      } else {
+        span.textContent = 'hi';
+        span.classList.add('odd');
+      }
+
+      // 폰트 크기 점점 키우기 (기본 12px에서 시작)
+      const size = 12 + i * 0.7;
+      span.style.fontSize = size + 'px';
+
+      container.appendChild(span);
+    }
+  </script>
+</body>
+</html>
