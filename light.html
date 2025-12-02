@@ -41,7 +41,9 @@
     left:50%;
     transform:translateX(-50%);
     display:flex;
+    flex-wrap:wrap;
     gap:8px;
+    justify-content:center;
     padding:8px 14px;
     border-radius:999px;
     background:rgba(0,0,0,0.7);
@@ -61,6 +63,7 @@
     opacity:0.6;
     cursor:pointer;
     transition:background .25s ease, opacity .25s ease, transform .2s ease;
+    white-space:nowrap;
   }
   .loc-btn:hover{ opacity:0.9; }
   .loc-btn.is-active{
@@ -69,12 +72,12 @@
     transform:translateY(-1px);
   }
 
-  /* 추상적 빛 원 (전구 X, 단순한 halo) */
+  /* 추상적인 빛 원 */
   .halo{
     position:absolute;
     left:50%;
     top:42%;
-    transform:translate(-50%,-50%);
+    transform:translate(-50%,-50%) scale(1);
     width:min(54vmin,420px);
     height:min(54vmin,420px);
     border-radius:50%;
@@ -88,32 +91,29 @@
     transition:background 1.4s ease,
                opacity 1.4s ease,
                filter 1.4s ease;
-    animation:breathe 12s ease-in-out infinite;
+    /* 숨쉬는 애니메이션 */
+    animation: breathe 9s ease-in-out infinite;
   }
 
+  /* 빛이 커졌다 작아졌다 + 살짝 밝기 변화 */
   @keyframes breathe {
-  0% {
-    transform: translate(-50%, -50%) scale(1.00);
-    opacity: 0.42;
-    filter: blur(8px);
+    0% {
+      transform: translate(-50%, -50%) scale(0.98);
+      filter: blur(8px);
+    }
+    40% {
+      transform: translate(-50%, -50%) scale(1.08);
+      filter: blur(10px);
+    }
+    70% {
+      transform: translate(-50%, -50%) scale(1.03);
+      filter: blur(9px);
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(0.98);
+      filter: blur(8px);
+    }
   }
-  40% {
-    transform: translate(-50%, -50%) scale(1.05);
-    opacity: 0.50;
-    filter: blur(10px);
-  }
-  70% {
-    transform: translate(-50%, -50%) scale(1.03);
-    opacity: 0.46;
-    filter: blur(9px);
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1.00);
-    opacity: 0.42;
-    filter: blur(8px);
-  }
-}
-
 
   .content{
     position:relative;
@@ -165,7 +165,7 @@
     opacity:0.6;
   }
 
-  /* ===== 시간대별 halo 스타일 ===== */
+  /* ===== 시간대별 halo 색감 ===== */
   body.state-deepnight .halo{
     background:
       radial-gradient(circle,
@@ -173,7 +173,6 @@
         rgba(110,145,220,0.5) 32%,
         transparent 70%);
     opacity:0.28;
-    filter:blur(12px);
   }
   body.state-dawn .halo{
     background:
@@ -182,7 +181,6 @@
         rgba(255,210,155,0.6) 30%,
         transparent 70%);
     opacity:0.42;
-    filter:blur(10px);
   }
   body.state-day .halo{
     background:
@@ -191,7 +189,6 @@
         rgba(230,230,210,0.45) 30%,
         transparent 70%);
     opacity:0.22;
-    filter:blur(14px);
   }
   body.state-sunset .halo{
     background:
@@ -200,7 +197,6 @@
         rgba(255,180,120,0.7) 32%,
         transparent 72%);
     opacity:0.58;
-    filter:blur(10px);
   }
   body.state-night .halo{
     background:
@@ -209,7 +205,30 @@
         rgba(255,200,145,0.68) 30%,
         transparent 72%);
     opacity:0.65;
-    filter:blur(8px);
+  }
+
+  @media (max-width:640px){
+    .layer{
+      border-radius:18px;
+      padding:72px 16px 28px;
+    }
+    .content{
+      padding-top:40px;
+    }
+    .locations{
+      top:12px;
+      padding:6px 10px;
+    }
+    .loc-btn{
+      font-size:10px;
+      letter-spacing:0.12em;
+      padding:4px 10px;
+    }
+    .halo{
+      top:40%;
+      width:min(58vmin,380px);
+      height:min(58vmin,380px);
+    }
   }
 </style>
 </head>
@@ -300,8 +319,8 @@
         label: `낮 · Daylight`,
         poem:
 `${whereK}의 ${hhmm}
-너무 밝아서, 조명은 잠시 잊혀집니다.
-<small>So bright in ${whereEn} that the lamp can afford to be forgotten.</small>`
+너무 밝아서, 빛은 잠시 잊혀집니다.
+<small>So bright in ${whereEn} that the light can afford to be forgotten.</small>`
       };
     }
     if(state === 'sunset'){
