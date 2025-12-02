@@ -49,6 +49,7 @@
     border-radius:999px;
     background:rgba(0,0,0,0.7);
     backdrop-filter:blur(14px);
+    z-index:10; /* 제일 위로 */
   }
 
   .loc-presets{
@@ -155,8 +156,8 @@
     align-items:center;
     justify-content:flex-end;
     padding:40px 24px 30px;
-    pointer-events:none;
     background:linear-gradient(to top, rgba(0,0,0,0.75), transparent 40%);
+    /* pointer-events 제거해서 폼에 영향 안 주게 */
   }
 
   .place{
@@ -288,7 +289,7 @@
       min-width:90px;
     }
     .loc-input button{
-      display:none; /* 엔터로만 설정 */
+      display:none; /* 모바일에서는 엔터로만 설정 */
     }
   }
 </style>
@@ -355,7 +356,6 @@
 
   const STATES = ['deepnight','dawn','day','sunset','night'];
 
-  // 지원하는 도시들 (시범용)
   const CITY_TIMEZONES = {
     'new york':        { tz:'America/New_York', label:'New York' },
     'nyc':             { tz:'America/New_York', label:'New York' },
