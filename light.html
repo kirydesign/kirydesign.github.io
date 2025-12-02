@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>시간의 빛 · Light of the Hour</title>
+<title>Light of the Hour · 세계의 시간, 하나의 빛</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
@@ -19,6 +19,7 @@
     justify-content:center;
     padding:24px;
     overflow:hidden;
+    transition:background 1s ease;
   }
 
   .layer{
@@ -32,6 +33,46 @@
       radial-gradient(circle at 50% 120%, rgba(0,0,0,0.9) 0%, #000 65%);
     box-shadow:0 40px 80px rgba(0,0,0,0.9);
     overflow:hidden;
+  }
+
+  /* 세계 도시 선택 */
+  .locations{
+    position:absolute;
+    top:16px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+    padding:8px 12px;
+    border-radius:999px;
+    background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(14px);
+  }
+
+  .loc-btn{
+    border:none;
+    outline:none;
+    padding:4px 10px;
+    border-radius:999px;
+    background:transparent;
+    color:#f5f4f2;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    opacity:0.6;
+    cursor:pointer;
+    transition:background 0.25s ease, opacity 0.25s ease, transform 0.2s ease;
+    white-space:nowrap;
+  }
+  .loc-btn:hover{
+    opacity:0.9;
+  }
+  .loc-btn.is-active{
+    opacity:1;
+    background:rgba(255,255,255,0.12);
+    transform:translateY(-1px);
   }
 
   /* 중앙의 빛 원 */
@@ -74,9 +115,17 @@
     flex-direction:column;
     align-items:center;
     justify-content:flex-end;
-    padding:32px 24px;
+    padding:40px 24px 30px;
     pointer-events:none;
     background:linear-gradient(to top, rgba(0,0,0,0.75), transparent 40%);
+  }
+
+  .place{
+    font-size:11px;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    opacity:0.75;
+    margin-bottom:8px;
   }
 
   .time{
@@ -97,9 +146,9 @@
 
   .poem{
     font-size:14px;
-    line-height:1.6;
+    line-height:1.7;
     text-align:center;
-    max-width:420px;
+    max-width:460px;
     opacity:0.9;
   }
 
@@ -110,7 +159,7 @@
     opacity:0.6;
   }
 
-  /* 상태별 빛의 표정 (body에 클래스 붙어서 바뀜) */
+  /* 상태별 빛의 표정 */
 
   /* 깊은 밤 · 0–4시 */
   body.state-deepnight .halo{
@@ -191,31 +240,79 @@
   @media (max-width:640px){
     .layer{ border-radius:18px; }
     .content{
-      padding:24px 18px;
+      padding:30px 18px 24px;
+    }
+    .locations{
+      top:12px;
+      padding:6px 10px;
+    }
+    .loc-btn{
+      font-size:10px;
+      letter-spacing:0.12em;
     }
   }
 </style>
 </head>
 <body>
   <div class="layer">
+    <!-- 세계 도시 선택 -->
+    <div class="locations">
+      <button class="loc-btn is-active"
+              data-tz="local"
+              data-label="Your device">
+        Your device
+      </button>
+      <button class="loc-btn"
+              data-tz="America/New_York"
+              data-label="New York">
+        New York
+      </button>
+      <button class="loc-btn"
+              data-tz="Europe/London"
+              data-label="London">
+        London
+      </button>
+      <button class="loc-btn"
+              data-tz="Asia/Seoul"
+              data-label="Seoul">
+        Seoul
+      </button>
+      <button class="loc-btn"
+              data-tz="America/Sao_Paulo"
+              data-label="São Paulo">
+        São&nbsp;Paulo
+      </button>
+      <button class="loc-btn"
+              data-tz="Australia/Sydney"
+              data-label="Sydney">
+        Sydney
+      </button>
+    </div>
+
     <div class="halo" aria-hidden="true"></div>
 
     <div class="content">
+      <div id="place" class="place">Your device · Local time</div>
       <div id="time" class="time">--:--:--</div>
       <div id="label" class="label">—</div>
       <div id="poem" class="poem">
-        지금 이 시간의 빛을 불러오는 중입니다.
-        <small>Fetching the light of this hour.</small>
+        지금 이 시간, 이 위치의 빛을 불러오는 중입니다.
+        <small>Fetching the light for this place and this hour.</small>
       </div>
     </div>
   </div>
 
 <script>
   const timeEl  = document.getElementById('time');
+  const placeEl = document.getElementById('place');
   const labelEl = document.getElementById('label');
   const poemEl  = document.getElementById('poem');
+  const locButtons = document.querySelectorAll('.loc-btn');
 
   const STATES = ['deepnight','dawn','day','sunset','night'];
+
+  let currentTZ = 'local';
+  let currentLabel = 'Your device';
 
   function pad(n){ return n < 10 ? '0' + n : '' + n; }
 
@@ -224,56 +321,84 @@
     if(hour >= 5 && hour < 9)   return 'dawn';      // 5–8
     if(hour >= 9 && hour < 16)  return 'day';       // 9–15
     if(hour >= 16 && hour < 20) return 'sunset';    // 16–19
-    return 'night';                                  // 20–23, 그리고 8–9 사이 등 애매한 시간은 의도적으로 밤/낮에 가까운 쪽으로 흡수
+    return 'night';                                  // 20–23
   }
 
-  function getTextFor(state, hour, minute){
+  function getTextFor(state, hour, minute, label){
     const hhmm = `${pad(hour)}:${pad(minute)}`;
+    const where = (currentTZ === 'local')
+      ? '여기'
+      : label;
 
     if(state === 'deepnight'){
       return {
-        label: '깊은 밤 · Deep Night',
-        poem: `${hhmm}\n빛은 가장 적은 말로 머물러 있습니다.\n` +
-              `<small>Light stays with the fewest words.</small>`
+        label: `깊은 밤 · Deep Night`,
+        poem:
+`${where}의 ${hhmm}
+빛은 가장 적은 말로 머물러 있습니다.
+<small>In ${label}, light stays with the fewest words.</small>`
       };
     }
     if(state === 'dawn'){
       return {
-        label: '새벽 · Dawn',
-        poem: `${hhmm}\n어둠과 아침 사이, 빛이 천천히 숨을 들이킵니다.\n` +
-              `<small>Between night and morning, light takes a slow breath in.</small>`
+        label: `새벽 · Dawn`,
+        poem:
+`${where}의 ${hhmm}
+어둠과 아침 사이, 빛이 천천히 숨을 들이킵니다.
+<small>Between night and morning in ${label}, light takes a slow breath in.</small>`
       };
     }
     if(state === 'day'){
       return {
-        label: '낮 · Daylight',
-        poem: `${hhmm}\n너무 밝아서, 조명은 잠시 잊혀집니다.\n` +
-              `<small>So bright that the lamp can afford to be forgotten.</small>`
+        label: `낮 · Daylight`,
+        poem:
+`${where}의 ${hhmm}
+너무 밝아서, 조명은 잠시 잊혀집니다.
+<small>So bright in ${label} that the lamp can afford to be forgotten.</small>`
       };
     }
     if(state === 'sunset'){
       return {
-        label: '저녁 · Golden Hour',
-        poem: `${hhmm}\n해가 물러나자, 빛은 제 목소리를 찾습니다.\n` +
-              `<small>As the sun retreats, the lamp finds its own voice.</small>`
+        label: `저녁 · Golden Hour`,
+        poem:
+`${where}의 ${hhmm}
+해가 물러나자, 빛은 제 목소리를 찾습니다.
+<small>As the sun retreats in ${label}, the lamp finds its own voice.</small>`
       };
     }
-    // night
     return {
-      label: '밤 · Night',
-      poem: `${hhmm}\n어둠이 짙어질수록, 빛은 더 또렷해집니다.\n` +
-            `<small>The darker it grows, the clearer the light becomes.</small>`
+      label: `밤 · Night`,
+      poem:
+`${where}의 ${hhmm}
+어둠이 짙어질수록, 빛은 더 또렷해집니다.
+<small>The darker it grows in ${label}, the clearer the light becomes.</small>`
     };
   }
 
+  function getNowForTZ(tz){
+    // tz === 'local'이면 그냥 현재 Date 사용
+    if(tz === 'local') return new Date();
+    // 해당 타임존의 로컬 문자열을 Date로 다시 파싱
+    const now = new Date();
+    const localeString = now.toLocaleString('en-US', { timeZone: tz });
+    return new Date(localeString);
+  }
+
   function updateScene(){
-    const now   = new Date();
+    const now = getNowForTZ(currentTZ);
     const hour  = now.getHours();
     const min   = now.getMinutes();
     const sec   = now.getSeconds();
 
     // 시간 표시
     timeEl.textContent = `${pad(hour)}:${pad(min)}:${pad(sec)}`;
+
+    // 장소 표시
+    if(currentTZ === 'local'){
+      placeEl.textContent = 'Your device · Local time';
+    }else{
+      placeEl.textContent = `${currentLabel} · Local time`;
+    }
 
     // 상태 결정
     const state = getState(hour);
@@ -283,12 +408,23 @@
     document.body.classList.add(`state-${state}`);
 
     // 텍스트 업데이트
-    const t = getTextFor(state, hour, min);
+    const t = getTextFor(state, hour, min, currentLabel);
     labelEl.textContent = t.label;
     poemEl.innerHTML    = t.poem;
   }
 
-  // 초기 실행 + 1초마다 시간/상태 업데이트
+  // 도시 선택 버튼 이벤트
+  locButtons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      locButtons.forEach(b=>b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      currentTZ = btn.dataset.tz || 'local';
+      currentLabel = btn.dataset.label || 'This place';
+      updateScene();
+    });
+  });
+
+  // 초기 실행 + 1초마다 업데이트
   updateScene();
   setInterval(updateScene, 1000);
 </script>
