@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>Light of the Hour · 세계의 시간, 하나의 빛</title>
+<title>Light of the Hour · 세계의 시간, 하나의 전구</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
@@ -17,16 +17,16 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:24px;
+    padding:16px;
     transition:background 1s ease;
-}
+  }
 
   .layer{
     position:relative;
     width:100%;
     max-width:960px;
-    aspect-ratio:16/9;
     border-radius:24px;
+    padding:80px 24px 40px;
     background:
       radial-gradient(circle at 50% -10%, rgba(255,255,255,0.02) 0%, transparent 50%),
       radial-gradient(circle at 50% 120%, rgba(0,0,0,0.9) 0%, #000 65%);
@@ -34,17 +34,17 @@
     overflow:hidden;
   }
 
-  /* 상단: 프리셋 버튼만 */
+  /* 상단 도시 버튼 */
   .locations{
     position:absolute;
-    top:14px;
+    top:18px;
     left:50%;
     transform:translateX(-50%);
     display:flex;
     flex-wrap:wrap;
-    gap:6px;
+    gap:8px;
     justify-content:center;
-    padding:8px 10px;
+    padding:8px 14px;
     border-radius:999px;
     background:rgba(0,0,0,0.7);
     backdrop-filter:blur(14px);
@@ -54,7 +54,7 @@
   .loc-btn{
     border:none;
     outline:none;
-    padding:4px 10px;
+    padding:4px 12px;
     border-radius:999px;
     background:transparent;
     color:#f5f4f2;
@@ -75,50 +75,97 @@
     transform:translateY(-1px);
   }
 
-  /* 중앙의 빛 원 */
-  .halo{
-  position:absolute;
-  left:50%;
-  top:60%; /* ← 빛을 아래로 내려서 잘림 방지 */
-  width:min(50vmin,420px); /* ← 살짝 작아져서 더 자연스러움 */
-  height:min(50vmin,420px);
-  transform:translate(-50%,-50%);
-  border-radius:50%;
-  background:
-    radial-gradient(circle at 50% 40%,
-      rgba(255,255,255,0.85) 0%,
-      rgba(255,240,210,0.75) 16%,
-      rgba(255,210,140,0.45) 32%,
-      transparent 70%);
-  opacity:0.0;
-  filter:blur(0px);
-  box-shadow:none;
-  transition:
-    background 1.4s ease,
-    opacity 1.4s ease,
-    filter 1.4s ease,
-    box-shadow 1.4s ease;
-  animation:breathe 14s ease-in-out infinite;
-}
-
-
-  @keyframes breathe {
-    0%   { transform:translate(-50%,-50%) scale(1.00); }
-    50%  { transform:translate(-50%,-50%) scale(1.04); }
-    100% { transform:translate(-50%,-50%) scale(1.00); }
+  /* 전구 전체 래퍼 */
+  .bulb-wrap{
+    position:absolute;
+    left:50%;
+    top:40%;
+    transform:translate(-50%,-50%);
+    width:min(44vmin,360px);
+    height:min(44vmin,360px);
+    pointer-events:none;
   }
 
-  /* 텍스트 레이어 */
-  .content{
+  /* 뒤쪽 glow */
+  .bulb-glow{
     position:absolute;
-    inset:0;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:flex-end;
-    padding:30px 20px 22px; 
-    background:linear-gradient(to top, rgba(0,0,0,0.75), transparent 40%);
-}
+    inset:-28%;
+    border-radius:50%;
+    background:
+      radial-gradient(circle,
+        rgba(255,240,210,0.75) 0%,
+        rgba(255,200,130,0.5) 35%,
+        transparent 72%);
+    filter:blur(22px);
+    opacity:0.3;
+    transition:background 1.4s ease, opacity 1.4s ease, filter 1.4s ease;
+    animation:breathe 14s ease-in-out infinite;
+  }
+
+  /* 유리 구체 */
+  .bulb-glass{
+    position:absolute;
+    inset:6%;
+    border-radius:50%;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(255,255,255,0.32), transparent 45%),
+      radial-gradient(circle at 70% 80%, rgba(0,0,0,0.45), transparent 55%),
+      radial-gradient(circle at 50% 55%, #27201b, #120d0a 70%);
+    box-shadow:
+      0 18px 40px rgba(0,0,0,0.7),
+      inset 0 0 18px rgba(0,0,0,0.8);
+    overflow:hidden;
+  }
+
+  /* 유리 안쪽 코어(빛) */
+  .bulb-core{
+    position:absolute;
+    left:50%;
+    top:52%;
+    width:56%;
+    height:56%;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:
+      radial-gradient(circle,
+        rgba(255,252,240,0.96) 0%,
+        rgba(255,232,180,0.88) 26%,
+        rgba(255,190,120,0.6) 45%,
+        rgba(40,24,12,0.0) 70%);
+    opacity:0.0;
+    filter:blur(2px);
+    transition:background 1.4s ease, opacity 1.4s ease, filter 1.4s ease;
+  }
+
+  /* 필라멘트 */
+  .bulb-filament{
+    position:absolute;
+    left:50%;
+    top:48%;
+    width:32%;
+    height:4%;
+    transform:translate(-50%,-50%);
+    border-radius:999px;
+    background:linear-gradient(to right,
+      rgba(140,90,40,0.0),
+      rgba(255,210,150,0.85),
+      rgba(140,90,40,0.0));
+    opacity:0.0;
+    transition:opacity 1.4s ease, filter 1.4s ease;
+    filter:blur(0.5px);
+  }
+
+  /* 텍스트 */
+  .content{
+    position:relative;
+    margin-top: min(40vmin,320px);
+    padding-top:42px;
+    padding-bottom:8px;
+    text-align:center;
+    background:linear-gradient(to bottom,
+      rgba(0,0,0,0.0),
+      rgba(0,0,0,0.55));
+  }
 
   .place{
     font-size:11px;
@@ -129,27 +176,26 @@
   }
 
   .time{
-    font-size:clamp(28px,4vw,40px);
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    margin-bottom:6px;
+    font-size:clamp(26px,3.8vw,34px);
+    letter-spacing:0.06em;
+    margin-bottom:8px;
     font-variant-numeric:tabular-nums;
   }
 
   .label{
-    font-size:12px;
-    letter-spacing:0.2em;
+    font-size:13px;
+    letter-spacing:0.18em;
     text-transform:uppercase;
-    opacity:0.75;
+    opacity:0.78;
     margin-bottom:18px;
   }
 
   .poem{
     font-size:14px;
     line-height:1.7;
-    text-align:center;
-    max-width:460px;
-    opacity:0.9;
+    max-width:520px;
+    margin:0 auto;
+    opacity:0.96;
     white-space:pre-line;
   }
 
@@ -160,97 +206,164 @@
     opacity:0.6;
   }
 
-  /* 상태별 빛의 표정 */
-
-  body.state-deepnight .halo{
-    opacity:0.28;
-    background:
-      radial-gradient(circle at 48% 42%,
-        rgba(180,205,255,0.75) 0%,
-        rgba(110,145,210,0.45) 22%,
-        rgba(40,70,120,0.25) 40%,
-        transparent 70%);
-    filter:blur(6px);
-    box-shadow:
-      0 0 40px rgba(90,140,220,0.45),
-      0 0 120px rgba(10,20,60,0.8);
+  @keyframes breathe{
+    0%   { transform:scale(1.00); }
+    50%  { transform:scale(1.04); }
+    100% { transform:scale(1.00); }
   }
 
-  body.state-dawn .halo{
-    opacity:0.36;
+  /* ===== 상태별 스타일 ===== */
+
+  /* 깊은 밤 · 0–4시 */
+  body.state-deepnight .bulb-glow{
     background:
-      radial-gradient(circle at 50% 38%,
-        rgba(255,245,230,0.9) 0%,
-        rgba(255,225,190,0.75) 20%,
-        rgba(255,190,140,0.45) 40%,
+      radial-gradient(circle,
+        rgba(190,210,255,0.78) 0%,
+        rgba(120,150,220,0.55) 32%,
         transparent 70%);
-    filter:blur(5px);
-    box-shadow:
-      0 0 40px rgba(255,210,160,0.5),
-      0 0 120px rgba(80,60,40,0.8);
+    opacity:0.32;
+    filter:blur(24px);
+  }
+  body.state-deepnight .bulb-core{
+    opacity:0.25;
+    background:
+      radial-gradient(circle,
+        rgba(230,240,255,0.95) 0%,
+        rgba(190,210,255,0.85) 26%,
+        rgba(90,120,210,0.55) 46%,
+        rgba(10,18,40,0.0) 70%);
+    filter:blur(3px);
+  }
+  body.state-deepnight .bulb-filament{
+    opacity:0.35;
   }
 
-  body.state-day .halo{
+  /* 새벽 · 5–8시 */
+  body.state-dawn .bulb-glow{
+    background:
+      radial-gradient(circle,
+        rgba(255,245,225,0.9) 0%,
+        rgba(255,220,185,0.72) 32%,
+        transparent 70%);
+    opacity:0.4;
+    filter:blur(22px);
+  }
+  body.state-dawn .bulb-core{
+    opacity:0.4;
+    background:
+      radial-gradient(circle,
+        rgba(255,252,240,0.96) 0%,
+        rgba(255,230,190,0.9) 26%,
+        rgba(255,190,135,0.6) 46%,
+        rgba(40,24,12,0.0) 70%);
+    filter:blur(3px);
+  }
+  body.state-dawn .bulb-filament{
+    opacity:0.45;
+  }
+
+  /* 낮 · 9–15시 */
+  body.state-day .bulb-glow{
+    background:
+      radial-gradient(circle,
+        rgba(255,255,250,0.7) 0%,
+        rgba(240,240,220,0.4) 32%,
+        transparent 60%);
+    opacity:0.18;
+    filter:blur(20px);
+  }
+  body.state-day .bulb-core{
     opacity:0.12;
     background:
-      radial-gradient(circle at 52% 38%,
-        rgba(255,255,240,0.85) 0%,
-        rgba(240,240,220,0.6) 18%,
-        rgba(220,220,200,0.3) 34%,
-        transparent 65%);
-    filter:blur(7px);
-    box-shadow:
-      0 0 26px rgba(255,255,230,0.32),
-      0 0 80px rgba(0,0,0,0.7);
-  }
-
-  body.state-sunset .halo{
-    opacity:0.52;
-    background:
-      radial-gradient(circle at 50% 40%,
-        rgba(255,245,230,0.9) 0%,
-        rgba(255,220,180,0.8) 20%,
-        rgba(255,170,110,0.55) 40%,
-        transparent 72%);
-    filter:blur(5px);
-    box-shadow:
-      0 0 50px rgba(255,210,150,0.9),
-      0 0 140px rgba(120,70,40,0.95);
-  }
-
-  body.state-night .halo{
-    opacity:0.46;
-    background:
-      radial-gradient(circle at 50% 40%,
-        rgba(255,240,220,0.95) 0%,
-        rgba(255,215,170,0.8) 22%,
-        rgba(255,180,120,0.55) 42%,
-        transparent 74%);
+      radial-gradient(circle,
+        rgba(255,255,245,0.9) 0%,
+        rgba(235,235,220,0.65) 28%,
+        rgba(210,210,190,0.35) 45%,
+        rgba(40,24,12,0.0) 70%);
     filter:blur(4px);
-    box-shadow:
-      0 0 60px rgba(255,215,160,0.95),
-      0 0 160px rgba(255,160,100,0.8);
+  }
+  body.state-day .bulb-filament{
+    opacity:0.18;
+  }
+
+  /* 저녁 · 16–19시 */
+  body.state-sunset .bulb-glow{
+    background:
+      radial-gradient(circle,
+        rgba(255,245,230,0.95) 0%,
+        rgba(255,215,175,0.8) 32%,
+        transparent 72%);
+    opacity:0.55;
+    filter:blur(22px);
+  }
+  body.state-sunset .bulb-core{
+    opacity:0.75;
+    background:
+      radial-gradient(circle,
+        rgba(255,252,240,0.97) 0%,
+        rgba(255,230,190,0.92) 26%,
+        rgba(255,188,120,0.7) 46%,
+        rgba(40,24,12,0.0) 72%);
+    filter:blur(2px);
+  }
+  body.state-sunset .bulb-filament{
+    opacity:0.85;
+    filter:blur(0.4px);
+  }
+
+  /* 밤 · 20–23시 */
+  body.state-night .bulb-glow{
+    background:
+      radial-gradient(circle,
+        rgba(255,242,220,0.95) 0%,
+        rgba(255,210,165,0.85) 30%,
+        transparent 74%);
+    opacity:0.6;
+    filter:blur(20px);
+  }
+  body.state-night .bulb-core{
+    opacity:0.9;
+    background:
+      radial-gradient(circle,
+        rgba(255,252,242,0.98) 0%,
+        rgba(255,230,190,0.94) 26%,
+        rgba(255,188,120,0.75) 46%,
+        rgba(40,24,12,0.0) 74%);
+    filter:blur(2px);
+  }
+  body.state-night .bulb-filament{
+    opacity:1;
+    filter:blur(0.3px);
   }
 
   @media (max-width:640px){
-    .layer{ border-radius:18px; }
+    .layer{
+      border-radius:18px;
+      padding:72px 16px 28px;
+    }
     .content{
-      padding:30px 18px 24px;
+      padding-top:36px;
     }
     .locations{
-      top:10px;
-      padding:6px 8px;
+      top:12px;
+      padding:6px 10px;
     }
     .loc-btn{
       font-size:10px;
       letter-spacing:0.12em;
+      padding:4px 10px;
+    }
+    .bulb-wrap{
+      top:38%;
+      width:min(52vmin,320px);
+      height:min(52vmin,320px);
     }
   }
 </style>
 </head>
 <body>
   <div class="layer">
-    <!-- 프리셋 도시 선택 -->
+    <!-- 도시 선택 -->
     <div class="locations">
       <button class="loc-btn is-active"
               data-tz="local"
@@ -279,8 +392,16 @@
       </button>
     </div>
 
-    <div class="halo" aria-hidden="true"></div>
+    <!-- 전구 -->
+    <div class="bulb-wrap" aria-hidden="true">
+      <div class="bulb-glow"></div>
+      <div class="bulb-glass">
+        <div class="bulb-core"></div>
+        <div class="bulb-filament"></div>
+      </div>
+    </div>
 
+    <!-- 텍스트 -->
     <div class="content">
       <div id="place" class="place">Your device · Local time</div>
       <div id="time" class="time">--:--:--</div>
@@ -316,7 +437,7 @@
 
   function getTextFor(state, hour, minute, label){
     const hhmm = `${pad(hour)}:${pad(minute)}`;
-    const whereK = (currentTZ === 'local') ? '여기' : label;
+    const whereK = (currentTZ === 'local') ? '여기' : `${label}`;
     const whereEn = (currentTZ === 'local') ? 'here' : label;
 
     if(state === 'deepnight'){
@@ -394,7 +515,7 @@
     poemEl.innerHTML    = t.poem;
   }
 
-  // 프리셋 버튼 클릭
+  // 도시 버튼 클릭
   locButtons.forEach(btn=>{
     btn.addEventListener('click', ()=>{
       locButtons.forEach(b=>b.classList.remove('is-active'));
