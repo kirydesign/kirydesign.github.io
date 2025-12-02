@@ -78,29 +78,30 @@
 
   /* 중앙의 빛 원 */
   .halo{
-    position:absolute;
-    left:50%;
-    top:50%;
-    width:min(55vmin,460px);
-    height:min(55vmin,460px);
-    transform:translate(-50%,-50%);
-    border-radius:50%;
-    background:
-      radial-gradient(circle at 50% 40%,
-        rgba(255,255,255,0.85) 0%,
-        rgba(255,240,210,0.75) 16%,
-        rgba(255,210,140,0.45) 32%,
-        transparent 70%);
-    opacity:0.0;
-    filter:blur(0px);
-    box-shadow:none;
-    transition:
-      background 1.4s ease,
-      opacity 1.4s ease,
-      filter 1.4s ease,
-      box-shadow 1.4s ease;
-    animation:breathe 14s ease-in-out infinite;
-  }
+  position:absolute;
+  left:50%;
+  top:60%; /* ← 빛을 아래로 내려서 잘림 방지 */
+  width:min(50vmin,420px); /* ← 살짝 작아져서 더 자연스러움 */
+  height:min(50vmin,420px);
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 40%,
+      rgba(255,255,255,0.85) 0%,
+      rgba(255,240,210,0.75) 16%,
+      rgba(255,210,140,0.45) 32%,
+      transparent 70%);
+  opacity:0.0;
+  filter:blur(0px);
+  box-shadow:none;
+  transition:
+    background 1.4s ease,
+    opacity 1.4s ease,
+    filter 1.4s ease,
+    box-shadow 1.4s ease;
+  animation:breathe 14s ease-in-out infinite;
+}
+
 
   @keyframes breathe {
     0%   { transform:translate(-50%,-50%) scale(1.00); }
