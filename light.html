@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>Light of the Hour · 세계의 시간, 하나의 전구</title>
+<title>Light of the Hour · 세계의 시간, 하나의 빛</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
@@ -41,9 +41,7 @@
     left:50%;
     transform:translateX(-50%);
     display:flex;
-    flex-wrap:wrap;
     gap:8px;
-    justify-content:center;
     padding:8px 14px;
     border-radius:999px;
     background:rgba(0,0,0,0.7);
@@ -53,7 +51,6 @@
 
   .loc-btn{
     border:none;
-    outline:none;
     padding:4px 12px;
     border-radius:999px;
     background:transparent;
@@ -63,104 +60,48 @@
     text-transform:uppercase;
     opacity:0.6;
     cursor:pointer;
-    transition:background 0.25s ease, opacity 0.25s ease, transform 0.2s ease;
-    white-space:nowrap;
+    transition:background .25s ease, opacity .25s ease, transform .2s ease;
   }
-  .loc-btn:hover{
-    opacity:0.9;
-  }
+  .loc-btn:hover{ opacity:0.9; }
   .loc-btn.is-active{
     opacity:1;
     background:rgba(255,255,255,0.12);
     transform:translateY(-1px);
   }
 
-  /* 전구 전체 래퍼 */
-  .bulb-wrap{
+  /* 추상적 빛 원 (전구 X, 단순한 halo) */
+  .halo{
     position:absolute;
     left:50%;
-    top:40%;
+    top:42%;
     transform:translate(-50%,-50%);
-    width:min(44vmin,360px);
-    height:min(44vmin,360px);
-    pointer-events:none;
-  }
-
-  /* 뒤쪽 glow */
-  .bulb-glow{
-    position:absolute;
-    inset:-28%;
+    width:min(54vmin,420px);
+    height:min(54vmin,420px);
     border-radius:50%;
     background:
       radial-gradient(circle,
-        rgba(255,240,210,0.75) 0%,
-        rgba(255,200,130,0.5) 35%,
-        transparent 72%);
-    filter:blur(22px);
-    opacity:0.3;
-    transition:background 1.4s ease, opacity 1.4s ease, filter 1.4s ease;
+        rgba(255,240,210,0.8) 0%,
+        rgba(255,200,130,0.45) 30%,
+        rgba(0,0,0,0.0) 70%);
+    opacity:0.4;
+    filter:blur(8px);
+    transition:background 1.4s ease,
+               opacity 1.4s ease,
+               filter 1.4s ease;
     animation:breathe 14s ease-in-out infinite;
   }
 
-  /* 유리 구체 */
-  .bulb-glass{
-    position:absolute;
-    inset:6%;
-    border-radius:50%;
-    background:
-      radial-gradient(circle at 30% 20%, rgba(255,255,255,0.32), transparent 45%),
-      radial-gradient(circle at 70% 80%, rgba(0,0,0,0.45), transparent 55%),
-      radial-gradient(circle at 50% 55%, #27201b, #120d0a 70%);
-    box-shadow:
-      0 18px 40px rgba(0,0,0,0.7),
-      inset 0 0 18px rgba(0,0,0,0.8);
-    overflow:hidden;
+  @keyframes breathe{
+    0%   { transform:translate(-50%,-50%) scale(1.00); }
+    50%  { transform:translate(-50%,-50%) scale(1.04); }
+    100% { transform:translate(-50%,-50%) scale(1.00); }
   }
 
-  /* 유리 안쪽 코어(빛) */
-  .bulb-core{
-    position:absolute;
-    left:50%;
-    top:52%;
-    width:56%;
-    height:56%;
-    transform:translate(-50%,-50%);
-    border-radius:50%;
-    background:
-      radial-gradient(circle,
-        rgba(255,252,240,0.96) 0%,
-        rgba(255,232,180,0.88) 26%,
-        rgba(255,190,120,0.6) 45%,
-        rgba(40,24,12,0.0) 70%);
-    opacity:0.0;
-    filter:blur(2px);
-    transition:background 1.4s ease, opacity 1.4s ease, filter 1.4s ease;
-  }
-
-  /* 필라멘트 */
-  .bulb-filament{
-    position:absolute;
-    left:50%;
-    top:48%;
-    width:32%;
-    height:4%;
-    transform:translate(-50%,-50%);
-    border-radius:999px;
-    background:linear-gradient(to right,
-      rgba(140,90,40,0.0),
-      rgba(255,210,150,0.85),
-      rgba(140,90,40,0.0));
-    opacity:0.0;
-    transition:opacity 1.4s ease, filter 1.4s ease;
-    filter:blur(0.5px);
-  }
-
-  /* 텍스트 */
   .content{
     position:relative;
-    margin-top: min(40vmin,320px);
-    padding-top:42px;
-    padding-bottom:8px;
+    margin-top:min(40vmin,320px);
+    padding-top:48px;
+    padding-bottom:24px;
     text-align:center;
     background:linear-gradient(to bottom,
       rgba(0,0,0,0.0),
@@ -206,200 +147,78 @@
     opacity:0.6;
   }
 
-  @keyframes breathe{
-    0%   { transform:scale(1.00); }
-    50%  { transform:scale(1.04); }
-    100% { transform:scale(1.00); }
-  }
-
-  /* ===== 상태별 스타일 ===== */
-
-  /* 깊은 밤 · 0–4시 */
-  body.state-deepnight .bulb-glow{
+  /* ===== 시간대별 halo 스타일 ===== */
+  body.state-deepnight .halo{
     background:
       radial-gradient(circle,
-        rgba(190,210,255,0.78) 0%,
-        rgba(120,150,220,0.55) 32%,
+        rgba(190,210,255,0.75) 0%,
+        rgba(110,145,220,0.5) 32%,
         transparent 70%);
-    opacity:0.32;
-    filter:blur(24px);
+    opacity:0.28;
+    filter:blur(12px);
   }
-  body.state-deepnight .bulb-core{
-    opacity:0.25;
+  body.state-dawn .halo{
     background:
       radial-gradient(circle,
-        rgba(230,240,255,0.95) 0%,
-        rgba(190,210,255,0.85) 26%,
-        rgba(90,120,210,0.55) 46%,
-        rgba(10,18,40,0.0) 70%);
-    filter:blur(3px);
-  }
-  body.state-deepnight .bulb-filament{
-    opacity:0.35;
-  }
-
-  /* 새벽 · 5–8시 */
-  body.state-dawn .bulb-glow{
-    background:
-      radial-gradient(circle,
-        rgba(255,245,225,0.9) 0%,
-        rgba(255,220,185,0.72) 32%,
+        rgba(255,245,225,0.85) 0%,
+        rgba(255,210,155,0.6) 30%,
         transparent 70%);
-    opacity:0.4;
-    filter:blur(22px);
+    opacity:0.42;
+    filter:blur(10px);
   }
-  body.state-dawn .bulb-core{
-    opacity:0.4;
+  body.state-day .halo{
     background:
       radial-gradient(circle,
-        rgba(255,252,240,0.96) 0%,
-        rgba(255,230,190,0.9) 26%,
-        rgba(255,190,135,0.6) 46%,
-        rgba(40,24,12,0.0) 70%);
-    filter:blur(3px);
+        rgba(255,255,250,0.75) 0%,
+        rgba(230,230,210,0.45) 30%,
+        transparent 70%);
+    opacity:0.22;
+    filter:blur(14px);
   }
-  body.state-dawn .bulb-filament{
-    opacity:0.45;
-  }
-
-  /* 낮 · 9–15시 */
-  body.state-day .bulb-glow{
+  body.state-sunset .halo{
     background:
       radial-gradient(circle,
-        rgba(255,255,250,0.7) 0%,
-        rgba(240,240,220,0.4) 32%,
-        transparent 60%);
-    opacity:0.18;
-    filter:blur(20px);
-  }
-  body.state-day .bulb-core{
-    opacity:0.12;
-    background:
-      radial-gradient(circle,
-        rgba(255,255,245,0.9) 0%,
-        rgba(235,235,220,0.65) 28%,
-        rgba(210,210,190,0.35) 45%,
-        rgba(40,24,12,0.0) 70%);
-    filter:blur(4px);
-  }
-  body.state-day .bulb-filament{
-    opacity:0.18;
-  }
-
-  /* 저녁 · 16–19시 */
-  body.state-sunset .bulb-glow{
-    background:
-      radial-gradient(circle,
-        rgba(255,245,230,0.95) 0%,
-        rgba(255,215,175,0.8) 32%,
+        rgba(255,235,205,0.9) 0%,
+        rgba(255,180,120,0.7) 32%,
         transparent 72%);
-    opacity:0.55;
-    filter:blur(22px);
+    opacity:0.58;
+    filter:blur(10px);
   }
-  body.state-sunset .bulb-core{
-    opacity:0.75;
+  body.state-night .halo{
     background:
       radial-gradient(circle,
-        rgba(255,252,240,0.97) 0%,
-        rgba(255,230,190,0.92) 26%,
-        rgba(255,188,120,0.7) 46%,
-        rgba(40,24,12,0.0) 72%);
-    filter:blur(2px);
-  }
-  body.state-sunset .bulb-filament{
-    opacity:0.85;
-    filter:blur(0.4px);
-  }
-
-  /* 밤 · 20–23시 */
-  body.state-night .bulb-glow{
-    background:
-      radial-gradient(circle,
-        rgba(255,242,220,0.95) 0%,
-        rgba(255,210,165,0.85) 30%,
-        transparent 74%);
-    opacity:0.6;
-    filter:blur(20px);
-  }
-  body.state-night .bulb-core{
-    opacity:0.9;
-    background:
-      radial-gradient(circle,
-        rgba(255,252,242,0.98) 0%,
-        rgba(255,230,190,0.94) 26%,
-        rgba(255,188,120,0.75) 46%,
-        rgba(40,24,12,0.0) 74%);
-    filter:blur(2px);
-  }
-  body.state-night .bulb-filament{
-    opacity:1;
-    filter:blur(0.3px);
-  }
-
-  @media (max-width:640px){
-    .layer{
-      border-radius:18px;
-      padding:72px 16px 28px;
-    }
-    .content{
-      padding-top:36px;
-    }
-    .locations{
-      top:12px;
-      padding:6px 10px;
-    }
-    .loc-btn{
-      font-size:10px;
-      letter-spacing:0.12em;
-      padding:4px 10px;
-    }
-    .bulb-wrap{
-      top:38%;
-      width:min(52vmin,320px);
-      height:min(52vmin,320px);
-    }
+        rgba(255,240,215,0.95) 0%,
+        rgba(255,200,145,0.68) 30%,
+        transparent 72%);
+    opacity:0.65;
+    filter:blur(8px);
   }
 </style>
 </head>
 <body>
   <div class="layer">
-    <!-- 도시 선택 -->
+
+    <!-- 도시 버튼 -->
     <div class="locations">
-      <button class="loc-btn is-active"
-              data-tz="local"
-              data-label="Your device">
+      <button class="loc-btn is-active" data-tz="local" data-label="Your device">
         Your device
       </button>
-      <button class="loc-btn"
-              data-tz="America/New_York"
-              data-label="New York">
+      <button class="loc-btn" data-tz="America/New_York" data-label="New York">
         New York
       </button>
-      <button class="loc-btn"
-              data-tz="Europe/London"
-              data-label="London">
+      <button class="loc-btn" data-tz="Europe/London" data-label="London">
         London
       </button>
-      <button class="loc-btn"
-              data-tz="Asia/Seoul"
-              data-label="Seoul">
+      <button class="loc-btn" data-tz="Asia/Seoul" data-label="Seoul">
         Seoul
       </button>
-      <button class="loc-btn"
-              data-tz="Australia/Sydney"
-              data-label="Sydney">
+      <button class="loc-btn" data-tz="Australia/Sydney" data-label="Sydney">
         Sydney
       </button>
     </div>
 
-    <!-- 전구 -->
-    <div class="bulb-wrap" aria-hidden="true">
-      <div class="bulb-glow"></div>
-      <div class="bulb-glass">
-        <div class="bulb-core"></div>
-        <div class="bulb-filament"></div>
-      </div>
-    </div>
+    <!-- 빛 원 -->
+    <div class="halo" aria-hidden="true"></div>
 
     <!-- 텍스트 -->
     <div class="content">
@@ -425,7 +244,7 @@
   let currentTZ = 'local';
   let currentLabel = 'Your device';
 
-  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+  const pad = n => n < 10 ? '0'+n : ''+n;
 
   function getState(hour){
     if(hour >= 0 && hour < 5)   return 'deepnight';
@@ -435,8 +254,8 @@
     return 'night';
   }
 
-  function getTextFor(state, hour, minute, label){
-    const hhmm = `${pad(hour)}:${pad(minute)}`;
+  function getTextFor(state, hour, min, label){
+    const hhmm = `${pad(hour)}:${pad(min)}`;
     const whereK = (currentTZ === 'local') ? '여기' : `${label}`;
     const whereEn = (currentTZ === 'local') ? 'here' : label;
 
@@ -488,47 +307,43 @@
   function getNowForTZ(tz){
     if(tz === 'local') return new Date();
     const now = new Date();
-    const localeString = now.toLocaleString('en-US', { timeZone: tz });
-    return new Date(localeString);
+    return new Date(now.toLocaleString('en-US',{timeZone:tz}));
   }
 
   function updateScene(){
     const now = getNowForTZ(currentTZ);
-    const hour  = now.getHours();
-    const min   = now.getMinutes();
-    const sec   = now.getSeconds();
+    const hour = now.getHours();
+    const min  = now.getMinutes();
+    const sec  = now.getSeconds();
 
     timeEl.textContent = `${pad(hour)}:${pad(min)}:${pad(sec)}`;
 
-    if(currentTZ === 'local'){
-      placeEl.textContent = 'Your device · Local time';
-    }else{
-      placeEl.textContent = `${currentLabel} · Local time`;
-    }
+    placeEl.textContent = (currentTZ === 'local')
+      ? 'Your device · Local time'
+      : `${currentLabel} · Local time`;
 
     const state = getState(hour);
-    STATES.forEach(s => document.body.classList.remove(`state-${s}`));
+    STATES.forEach(s=>document.body.classList.remove(`state-${s}`));
     document.body.classList.add(`state-${state}`);
 
     const t = getTextFor(state, hour, min, currentLabel);
     labelEl.textContent = t.label;
-    poemEl.innerHTML    = t.poem;
+    poemEl.innerHTML = t.poem;
   }
 
-  // 도시 버튼 클릭
+  // 버튼 이벤트
   locButtons.forEach(btn=>{
-    btn.addEventListener('click', ()=>{
+    btn.addEventListener('click',()=>{
       locButtons.forEach(b=>b.classList.remove('is-active'));
       btn.classList.add('is-active');
-      currentTZ = btn.dataset.tz || 'local';
-      currentLabel = btn.dataset.label || 'This place';
+      currentTZ = btn.dataset.tz;
+      currentLabel = btn.dataset.label;
       updateScene();
     });
   });
 
-  // 초기 실행 + 1초마다 업데이트
   updateScene();
-  setInterval(updateScene, 1000);
+  setInterval(updateScene,1000);
 </script>
 </body>
 </html>
