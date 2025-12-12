@@ -1,19 +1,26 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <title>Diurnal · New York</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <style>
   *{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --bg:#020307;
+    --fg:#f5f4f2;
+    --muted:rgba(245,244,242,0.62);
+    --soft:rgba(245,244,242,0.10);
+    --card:rgba(0,0,0,0.55);
+  }
 
   body{
     min-height:100vh;
-    background:#020307;
-    color:#f5f4f2;
+    background:var(--bg);
+    color:var(--fg);
     font-family: system-ui, -apple-system, BlinkMacSystemFont,
-      "SF Pro Text", "Noto Sans KR", sans-serif;
+      "SF Pro Text","Noto Sans KR", sans-serif;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -23,127 +30,210 @@
   .scene{
     position:relative;
     width:100%;
-    max-width:900px;
-    height:600px;
+    max-width:960px;
+    min-height:620px;
     border-radius:28px;
     overflow:hidden;
-    background:linear-gradient(to bottom, #05070c, #000);
+    background:
+      radial-gradient(circle at 50% -10%, rgba(255,255,255,0.03) 0%, transparent 55%),
+      radial-gradient(circle at 50% 120%, rgba(0,0,0,0.95) 0%, #000 65%);
+    box-shadow:0 40px 90px rgba(0,0,0,0.85);
   }
 
-  /* 🌕 전구(빛) */
-  .bulb{
+  /* header label (non-click, avoids “shop” vibe) */
+  .topline{
+    position:absolute;
+    top:18px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:10px;
+    align-items:center;
+    padding:10px 16px;
+    border-radius:999px;
+    background:rgba(0,0,0,0.65);
+    backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,0.08);
+    z-index:10;
+  }
+  .chip{
+    font-size:11px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--muted);
+    white-space:nowrap;
+  }
+  .chip strong{
+    color:var(--fg);
+    font-weight:600;
+    letter-spacing:0.22em;
+  }
+
+  /* the light (abstract halo) */
+  .halo{
     position:absolute;
     left:50%;
-    top:45%;
+    top:44%;
     transform:translate(-50%,-50%);
-    width:min(52vmin,420px);
-    height:min(52vmin,420px);
+    width:min(56vmin,460px);
+    height:min(56vmin,460px);
     border-radius:50%;
     background:
       radial-gradient(circle,
-        rgba(255,230,190,0.9) 0%,
-        rgba(255,190,120,0.6) 30%,
-        rgba(0,0,0,0) 70%);
-    opacity:0.4;
+        rgba(255,230,190,0.90) 0%,
+        rgba(255,190,120,0.55) 32%,
+        rgba(0,0,0,0) 72%);
+    opacity:0.40;
     filter:blur(10px);
-    animation: breathe 10s ease-in-out infinite;
-    transition:opacity 1.2s ease, background 1.2s ease;
+    animation:breathe 9.5s ease-in-out infinite;
+    transition:opacity 1.2s ease, filter 1.2s ease, background 1.2s ease;
   }
 
   @keyframes breathe{
-    0%   { transform:translate(-50%,-50%) scale(0.96); }
-    50%  { transform:translate(-50%,-50%) scale(1.08); }
-    100% { transform:translate(-50%,-50%) scale(0.96); }
+    0%   { transform:translate(-50%,-50%) scale(0.97); filter:blur(10px); }
+    45%  { transform:translate(-50%,-50%) scale(1.10); filter:blur(13px); }
+    75%  { transform:translate(-50%,-50%) scale(1.04); filter:blur(12px); }
+    100% { transform:translate(-50%,-50%) scale(0.97); filter:blur(10px); }
   }
 
-  /* 🌗 시간대별 조명 */
-  body.deepnight .bulb{
-    opacity:0.25;
-    background:radial-gradient(circle,
-      rgba(180,200,255,0.7),
-      rgba(80,100,200,0.3),
-      transparent 70%);
-  }
-
-  body.dawn .bulb{
-    opacity:0.45;
-    background:radial-gradient(circle,
-      rgba(255,220,180,0.9),
-      rgba(255,170,120,0.5),
-      transparent 70%);
-  }
-
-  body.day .bulb{
-    opacity:0.18;
-    background:radial-gradient(circle,
-      rgba(255,255,245,0.6),
-      rgba(230,230,210,0.3),
-      transparent 70%);
-  }
-
-  body.sunset .bulb{
-    opacity:0.65;
-    background:radial-gradient(circle,
-      rgba(255,170,120,0.9),
-      rgba(255,120,80,0.6),
-      transparent 72%);
-  }
-
-  body.night .bulb{
-    opacity:0.55;
-    background:radial-gradient(circle,
-      rgba(255,210,160,0.95),
-      rgba(255,170,120,0.55),
-      transparent 72%);
-  }
-
-  /* 🕰 텍스트 */
-  .text{
+  /* text block */
+  .content{
     position:absolute;
-    bottom:48px;
-    width:100%;
+    left:0; right:0;
+    bottom:86px;
     text-align:center;
     padding:0 24px;
   }
-
   .place{
     font-size:11px;
-    letter-spacing:0.2em;
-    opacity:0.7;
-    margin-bottom:8px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:10px;
   }
-
   .time{
-    font-size:36px;
+    font-size:clamp(42px,6vw,60px);
     letter-spacing:0.06em;
+    font-variant-numeric:tabular-nums;
     margin-bottom:14px;
   }
-
   .poem{
-    font-size:15px;
-    line-height:1.7;
-    max-width:520px;
+    max-width:640px;
     margin:0 auto;
-    opacity:0.9;
+    font-size:15px;
+    line-height:1.75;
+    color:rgba(245,244,242,0.92);
+    white-space:pre-line;
   }
-
   .poem small{
     display:block;
-    margin-top:6px;
+    margin-top:8px;
     font-size:12px;
-    opacity:0.6;
+    color:rgba(245,244,242,0.58);
+  }
+
+  /* footer credit (subtle) */
+  .footer{
+    position:absolute;
+    left:0; right:0;
+    bottom:22px;
+    display:flex;
+    justify-content:center;
+    padding:0 18px;
+  }
+  .credit{
+    display:inline-flex;
+    gap:8px;
+    align-items:center;
+    padding:10px 14px;
+    border-radius:999px;
+    background:rgba(0,0,0,0.45);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,0.07);
+    color:rgba(245,244,242,0.60);
+    font-size:11px;
+    letter-spacing:0.06em;
+  }
+  .credit a{
+    color:rgba(245,244,242,0.78);
+    text-decoration:none;
+    border-bottom:1px solid rgba(245,244,242,0.22);
+    padding-bottom:1px;
+  }
+  .credit a:hover{
+    color:rgba(245,244,242,0.95);
+    border-bottom-color:rgba(245,244,242,0.45);
+  }
+
+  /* time states (NY hour -> body class) */
+  body.deepnight .halo{
+    opacity:0.24;
+    background:radial-gradient(circle,
+      rgba(190,210,255,0.75) 0%,
+      rgba(105,135,220,0.45) 34%,
+      transparent 72%);
+  }
+  body.dawn .halo{
+    opacity:0.44;
+    background:radial-gradient(circle,
+      rgba(255,235,205,0.92) 0%,
+      rgba(255,185,130,0.55) 34%,
+      transparent 72%);
+  }
+  body.day .halo{
+    opacity:0.16;
+    background:radial-gradient(circle,
+      rgba(255,255,250,0.70) 0%,
+      rgba(230,230,215,0.32) 34%,
+      transparent 72%);
+  }
+  body.sunset .halo{
+    opacity:0.64;
+    background:radial-gradient(circle,
+      rgba(255,200,140,0.95) 0%,
+      rgba(255,135,90,0.65) 34%,
+      transparent 74%);
+  }
+  body.night .halo{
+    opacity:0.56;
+    background:radial-gradient(circle,
+      rgba(255,225,175,0.95) 0%,
+      rgba(255,175,125,0.55) 34%,
+      transparent 74%);
+  }
+
+  @media (max-width:640px){
+    body{ padding:16px; }
+    .scene{ min-height:560px; border-radius:22px; }
+    .content{ bottom:96px; }
+    .time{ letter-spacing:0.04em; }
+    .topline{ top:14px; padding:9px 14px; }
   }
 </style>
 </head>
 
 <body>
   <div class="scene">
-    <div class="bulb"></div>
+    <div class="topline" aria-label="Context">
+      <div class="chip"><strong>DIURNAL</strong></div>
+      <div class="chip">NEW YORK TIME</div>
+    </div>
 
-    <div class="text">
+    <div class="halo" aria-hidden="true"></div>
+
+    <div class="content">
       <div class="place">NEW YORK · LOCAL TIME</div>
       <div id="time" class="time">--:--:--</div>
       <div id="poem" class="poem"></div>
+    </div>
+
+    <div class="footer">
+      <div class="credit">
+        Inspired by the lighting language of
+        <a href="https://www.incommonwith.com/collections/all-lighting" target="_blank" rel="noopener noreferrer">
+          in common with
+        </a>
+      </div>
     </div>
   </div>
 
@@ -151,20 +241,45 @@
   const timeEl = document.getElementById("time");
   const poemEl = document.getElementById("poem");
 
+  // 1) Always New York time
   function getNYTime(){
     const now = new Date();
-    return new Date(
-      now.toLocaleString("en-US", { timeZone: "America/New_York" })
-    );
+    return new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
   }
 
+  // 2) Hour -> state (controls “brightness” via CSS)
   function getState(hour){
-    if(hour < 5) return "deepnight";
-    if(hour < 9) return "dawn";
+    if(hour < 5)  return "deepnight";
+    if(hour < 9)  return "dawn";
     if(hour < 16) return "day";
     if(hour < 20) return "sunset";
     return "night";
   }
+
+  // 3) State -> text (showroom attitude, not sales copy)
+  const POEMS = {
+    deepnight:
+`가장 낮은 자리에서, 빛은 아직 사라지지 않은 이름처럼 남아 있다.
+<small>At the lowest point of the day, light remains like a name that has not yet faded.</small>`,
+
+    dawn:
+`밤이 흘리고 간 자리에, 빛이 아주 조용한 속도로 스며든다.
+<small>Where the night has slipped away, light seeps in at a nearly silent speed.</small>`,
+
+    day:
+`너무 밝아서, 빛은 스스로를 드러낼 필요가 없다.
+<small>It is so bright that the light no longer needs to reveal itself.</small>`,
+
+    sunset:
+`저녁의 빛은 남은 온도를 천천히 접어 방 안에 내려놓는다.
+<small>Evening light folds whatever warmth remains and lays it gently inside the room.</small>`,
+
+    night:
+`어둠이 퍼질수록, 빛은 더 멀리서 돌아온다.
+<small>As darkness spreads, the light returns from farther away.</small>`
+  };
+
+  function pad2(n){ return String(n).padStart(2, "0"); }
 
   function update(){
     const now = getNYTime();
@@ -172,21 +287,12 @@
     const m = now.getMinutes();
     const s = now.getSeconds();
 
-    timeEl.textContent =
-      `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    timeEl.textContent = `${pad2(h)}:${pad2(m)}:${pad2(s)}`;
 
     const state = getState(h);
-    document.body.className = state;
+    document.body.className = state; // swaps CSS: brightness/tone
 
-    const poems = {
-      deepnight: `02:00 이후의 뉴욕은\n빛이 말을 아낀다.\n<small>After midnight, light in New York speaks quietly.</small>`,
-      dawn: `도시는 아직 잠들어 있고\n빛이 먼저 깨어난다.\n<small>Before the city wakes, light does.</small>`,
-      day: `너무 밝아서\n빛은 존재를 숨긴다.\n<small>In daylight, light forgets itself.</small>`,
-      sunset: `해가 물러나자\n빛은 자신의 색을 찾는다.\n<small>As the sun leaves, light finds its color.</small>`,
-      night: `어둠이 깊어질수록\n빛은 또렷해진다.\n<small>The darker it gets, the clearer the light becomes.</small>`
-    };
-
-    poemEl.innerHTML = poems[state];
+    poemEl.innerHTML = POEMS[state];
   }
 
   update();
