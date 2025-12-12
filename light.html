@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>Light of the Hour · 세계의 시간, 하나의 빛</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diurnal · New York</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -17,145 +17,114 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:16px;
-    transition:background 1s ease;
+    padding:24px;
   }
 
-  .layer{
+  .scene{
     position:relative;
     width:100%;
-    max-width:960px;
-    border-radius:24px;
-    padding:80px 24px 40px;
-    background:
-      radial-gradient(circle at 50% -10%, rgba(255,255,255,0.02) 0%, transparent 50%),
-      radial-gradient(circle at 50% 120%, rgba(0,0,0,0.9) 0%, #000 65%);
-    box-shadow:0 40px 80px rgba(0,0,0,0.9);
+    max-width:900px;
+    height:600px;
+    border-radius:28px;
     overflow:hidden;
+    background:linear-gradient(to bottom, #05070c, #000);
   }
 
-  /* 상단 도시 버튼 */
-  .locations{
-    position:absolute;
-    top:18px;
-    left:50%;
-    transform:translateX(-50%);
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    justify-content:center;
-    padding:8px 14px;
-    border-radius:999px;
-    background:rgba(0,0,0,0.7);
-    backdrop-filter:blur(14px);
-    z-index:10;
-  }
-
-  .loc-btn{
-    border:none;
-    padding:4px 12px;
-    border-radius:999px;
-    background:transparent;
-    color:#f5f4f2;
-    font-size:11px;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    opacity:0.6;
-    cursor:pointer;
-    transition:background .25s ease, opacity .25s ease, transform .2s ease;
-    white-space:nowrap;
-  }
-  .loc-btn:hover{ opacity:0.9; }
-  .loc-btn.is-active{
-    opacity:1;
-    background:rgba(255,255,255,0.12);
-    transform:translateY(-1px);
-  }
-
-  /* 추상적인 빛 원 */
-  .halo{
+  /* 🌕 전구(빛) */
+  .bulb{
     position:absolute;
     left:50%;
-    top:42%;
-    transform:translate(-50%,-50%) scale(1);
-    width:min(54vmin,420px);
-    height:min(54vmin,420px);
+    top:45%;
+    transform:translate(-50%,-50%);
+    width:min(52vmin,420px);
+    height:min(52vmin,420px);
     border-radius:50%;
     background:
       radial-gradient(circle,
-        rgba(255,240,210,0.8) 0%,
-        rgba(255,200,130,0.45) 30%,
-        rgba(0,0,0,0.0) 70%);
+        rgba(255,230,190,0.9) 0%,
+        rgba(255,190,120,0.6) 30%,
+        rgba(0,0,0,0) 70%);
     opacity:0.4;
-    filter:blur(8px);
-    transition:background 1.4s ease,
-               opacity 1.4s ease,
-               filter 1.4s ease;
-    /* 숨쉬는 애니메이션 */
-    animation: breathe 9s ease-in-out infinite;
+    filter:blur(10px);
+    animation: breathe 10s ease-in-out infinite;
+    transition:opacity 1.2s ease, background 1.2s ease;
   }
 
-  /* 빛이 커졌다 작아졌다 + 살짝 밝기 변화 */
-  @keyframes breathe {
-    0% {
-      transform: translate(-50%, -50%) scale(0.98);
-      filter: blur(8px);
-    }
-    40% {
-      transform: translate(-50%, -50%) scale(1.08);
-      filter: blur(10px);
-    }
-    70% {
-      transform: translate(-50%, -50%) scale(1.03);
-      filter: blur(9px);
-    }
-    100% {
-      transform: translate(-50%, -50%) scale(0.98);
-      filter: blur(8px);
-    }
+  @keyframes breathe{
+    0%   { transform:translate(-50%,-50%) scale(0.96); }
+    50%  { transform:translate(-50%,-50%) scale(1.08); }
+    100% { transform:translate(-50%,-50%) scale(0.96); }
   }
 
-  .content{
-    position:relative;
-    margin-top:min(40vmin,320px);
-    padding-top:48px;
-    padding-bottom:24px;
+  /* 🌗 시간대별 조명 */
+  body.deepnight .bulb{
+    opacity:0.25;
+    background:radial-gradient(circle,
+      rgba(180,200,255,0.7),
+      rgba(80,100,200,0.3),
+      transparent 70%);
+  }
+
+  body.dawn .bulb{
+    opacity:0.45;
+    background:radial-gradient(circle,
+      rgba(255,220,180,0.9),
+      rgba(255,170,120,0.5),
+      transparent 70%);
+  }
+
+  body.day .bulb{
+    opacity:0.18;
+    background:radial-gradient(circle,
+      rgba(255,255,245,0.6),
+      rgba(230,230,210,0.3),
+      transparent 70%);
+  }
+
+  body.sunset .bulb{
+    opacity:0.65;
+    background:radial-gradient(circle,
+      rgba(255,170,120,0.9),
+      rgba(255,120,80,0.6),
+      transparent 72%);
+  }
+
+  body.night .bulb{
+    opacity:0.55;
+    background:radial-gradient(circle,
+      rgba(255,210,160,0.95),
+      rgba(255,170,120,0.55),
+      transparent 72%);
+  }
+
+  /* 🕰 텍스트 */
+  .text{
+    position:absolute;
+    bottom:48px;
+    width:100%;
     text-align:center;
-    background:linear-gradient(to bottom,
-      rgba(0,0,0,0.0),
-      rgba(0,0,0,0.55));
+    padding:0 24px;
   }
 
   .place{
     font-size:11px;
     letter-spacing:0.2em;
-    text-transform:uppercase;
-    opacity:0.75;
+    opacity:0.7;
     margin-bottom:8px;
   }
 
   .time{
-    font-size:clamp(26px,3.8vw,34px);
+    font-size:36px;
     letter-spacing:0.06em;
-    margin-bottom:8px;
-    font-variant-numeric:tabular-nums;
-  }
-
-  .label{
-    font-size:13px;
-    letter-spacing:0.18em;
-    text-transform:uppercase;
-    opacity:0.78;
-    margin-bottom:18px;
+    margin-bottom:14px;
   }
 
   .poem{
-    font-size:14px;
+    font-size:15px;
     line-height:1.7;
     max-width:520px;
     margin:0 auto;
-    opacity:0.96;
-    white-space:pre-line;
+    opacity:0.9;
   }
 
   .poem small{
@@ -164,223 +133,64 @@
     font-size:12px;
     opacity:0.6;
   }
-
-  /* ===== 시간대별 halo 색감 ===== */
-  body.state-deepnight .halo{
-    background:
-      radial-gradient(circle,
-        rgba(190,210,255,0.75) 0%,
-        rgba(110,145,220,0.5) 32%,
-        transparent 70%);
-    opacity:0.28;
-  }
-  body.state-dawn .halo{
-    background:
-      radial-gradient(circle,
-        rgba(255,245,225,0.85) 0%,
-        rgba(255,210,155,0.6) 30%,
-        transparent 70%);
-    opacity:0.42;
-  }
-  body.state-day .halo{
-    background:
-      radial-gradient(circle,
-        rgba(255,255,250,0.75) 0%,
-        rgba(230,230,210,0.45) 30%,
-        transparent 70%);
-    opacity:0.22;
-  }
-  body.state-sunset .halo{
-    background:
-      radial-gradient(circle,
-        rgba(255,235,205,0.9) 0%,
-        rgba(255,180,120,0.7) 32%,
-        transparent 72%);
-    opacity:0.58;
-  }
-  body.state-night .halo{
-    background:
-      radial-gradient(circle,
-        rgba(255,240,215,0.95) 0%,
-        rgba(255,200,145,0.68) 30%,
-        transparent 72%);
-    opacity:0.65;
-  }
-
-  @media (max-width:640px){
-    .layer{
-      border-radius:18px;
-      padding:72px 16px 28px;
-    }
-    .content{
-      padding-top:40px;
-    }
-    .locations{
-      top:12px;
-      padding:6px 10px;
-    }
-    .loc-btn{
-      font-size:10px;
-      letter-spacing:0.12em;
-      padding:4px 10px;
-    }
-    .halo{
-      top:40%;
-      width:min(58vmin,380px);
-      height:min(58vmin,380px);
-    }
-  }
 </style>
 </head>
+
 <body>
-  <div class="layer">
+  <div class="scene">
+    <div class="bulb"></div>
 
-    <!-- 도시 버튼 -->
-    <div class="locations">
-      <button class="loc-btn is-active" data-tz="local" data-label="Your device">
-        Your device
-      </button>
-      <button class="loc-btn" data-tz="America/New_York" data-label="New York">
-        New York
-      </button>
-      <button class="loc-btn" data-tz="Europe/London" data-label="London">
-        London
-      </button>
-      <button class="loc-btn" data-tz="Asia/Seoul" data-label="Seoul">
-        Seoul
-      </button>
-      <button class="loc-btn" data-tz="Australia/Sydney" data-label="Sydney">
-        Sydney
-      </button>
-    </div>
-
-    <!-- 빛 원 -->
-    <div class="halo" aria-hidden="true"></div>
-
-    <!-- 텍스트 -->
-    <div class="content">
-      <div id="place" class="place">Your device · Local time</div>
+    <div class="text">
+      <div class="place">NEW YORK · LOCAL TIME</div>
       <div id="time" class="time">--:--:--</div>
-      <div id="label" class="label">—</div>
-      <div id="poem" class="poem">
-지금 이 시간, 이 위치의 빛을 불러오는 중입니다.
-<small>Fetching the light for this place and this hour.</small>
-      </div>
+      <div id="poem" class="poem"></div>
     </div>
   </div>
 
 <script>
-  const timeEl  = document.getElementById('time');
-  const placeEl = document.getElementById('place');
-  const labelEl = document.getElementById('label');
-  const poemEl  = document.getElementById('poem');
-  const locButtons = document.querySelectorAll('.loc-btn');
+  const timeEl = document.getElementById("time");
+  const poemEl = document.getElementById("poem");
 
-  const STATES = ['deepnight','dawn','day','sunset','night'];
-
-  let currentTZ = 'local';
-  let currentLabel = 'Your device';
-
-  const pad = n => n < 10 ? '0'+n : ''+n;
+  function getNYTime(){
+    const now = new Date();
+    return new Date(
+      now.toLocaleString("en-US", { timeZone: "America/New_York" })
+    );
+  }
 
   function getState(hour){
-    if(hour >= 0 && hour < 5)   return 'deepnight';
-    if(hour >= 5 && hour < 9)   return 'dawn';
-    if(hour >= 9 && hour < 16)  return 'day';
-    if(hour >= 16 && hour < 20) return 'sunset';
-    return 'night';
+    if(hour < 5) return "deepnight";
+    if(hour < 9) return "dawn";
+    if(hour < 16) return "day";
+    if(hour < 20) return "sunset";
+    return "night";
   }
 
-  function getTextFor(state, hour, min, label){
-    const hhmm = `${pad(hour)}:${pad(min)}`;
-    const whereK = (currentTZ === 'local') ? '여기' : `${label}`;
-    const whereEn = (currentTZ === 'local') ? 'here' : label;
+  function update(){
+    const now = getNYTime();
+    const h = now.getHours();
+    const m = now.getMinutes();
+    const s = now.getSeconds();
 
-    if(state === 'deepnight'){
-      return {
-        label: `깊은 밤 · Deep Night`,
-        poem:
-`${whereK}의 ${hhmm}
-빛은 가장 적은 말로 머물러 있습니다.
-<small>In ${whereEn}, light stays with the fewest words.</small>`
-      };
-    }
-    if(state === 'dawn'){
-      return {
-        label: `새벽 · Dawn`,
-        poem:
-`${whereK}의 ${hhmm}
-어둠과 아침 사이, 빛이 천천히 숨을 들이킵니다.
-<small>Between night and morning in ${whereEn}, light takes a slow breath in.</small>`
-      };
-    }
-    if(state === 'day'){
-      return {
-        label: `낮 · Daylight`,
-        poem:
-`${whereK}의 ${hhmm}
-너무 밝아서, 빛은 잠시 잊혀집니다.
-<small>So bright in ${whereEn} that the light can afford to be forgotten.</small>`
-      };
-    }
-    if(state === 'sunset'){
-      return {
-        label: `저녁 · Golden Hour`,
-        poem:
-`${whereK}의 ${hhmm}
-해가 물러나자, 빛은 제 목소리를 찾습니다.
-<small>As the sun retreats in ${whereEn}, the lamp finds its own voice.</small>`
-      };
-    }
-    return {
-      label: `밤 · Night`,
-      poem:
-`${whereK}의 ${hhmm}
-어둠이 짙어질수록, 빛은 더 또렷해집니다.
-<small>The darker it grows in ${whereEn}, the clearer the light becomes.</small>`
+    timeEl.textContent =
+      `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+
+    const state = getState(h);
+    document.body.className = state;
+
+    const poems = {
+      deepnight: `02:00 이후의 뉴욕은\n빛이 말을 아낀다.\n<small>After midnight, light in New York speaks quietly.</small>`,
+      dawn: `도시는 아직 잠들어 있고\n빛이 먼저 깨어난다.\n<small>Before the city wakes, light does.</small>`,
+      day: `너무 밝아서\n빛은 존재를 숨긴다.\n<small>In daylight, light forgets itself.</small>`,
+      sunset: `해가 물러나자\n빛은 자신의 색을 찾는다.\n<small>As the sun leaves, light finds its color.</small>`,
+      night: `어둠이 깊어질수록\n빛은 또렷해진다.\n<small>The darker it gets, the clearer the light becomes.</small>`
     };
+
+    poemEl.innerHTML = poems[state];
   }
 
-  function getNowForTZ(tz){
-    if(tz === 'local') return new Date();
-    const now = new Date();
-    return new Date(now.toLocaleString('en-US',{timeZone:tz}));
-  }
-
-  function updateScene(){
-    const now = getNowForTZ(currentTZ);
-    const hour = now.getHours();
-    const min  = now.getMinutes();
-    const sec  = now.getSeconds();
-
-    timeEl.textContent = `${pad(hour)}:${pad(min)}:${pad(sec)}`;
-
-    placeEl.textContent = (currentTZ === 'local')
-      ? 'Your device · Local time'
-      : `${currentLabel} · Local time`;
-
-    const state = getState(hour);
-    STATES.forEach(s=>document.body.classList.remove(`state-${s}`));
-    document.body.classList.add(`state-${state}`);
-
-    const t = getTextFor(state, hour, min, currentLabel);
-    labelEl.textContent = t.label;
-    poemEl.innerHTML = t.poem;
-  }
-
-  // 버튼 이벤트
-  locButtons.forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      locButtons.forEach(b=>b.classList.remove('is-active'));
-      btn.classList.add('is-active');
-      currentTZ = btn.dataset.tz;
-      currentLabel = btn.dataset.label;
-      updateScene();
-    });
-  });
-
-  updateScene();
-  setInterval(updateScene,1000);
+  update();
+  setInterval(update, 1000);
 </script>
 </body>
 </html>
