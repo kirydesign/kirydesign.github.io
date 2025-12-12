@@ -19,7 +19,7 @@
     min-height:100vh;
     background:var(--bg);
     color:var(--fg);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Text", sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -39,10 +39,10 @@
     box-shadow:0 40px 90px rgba(0,0,0,0.85);
   }
 
-  /* Title area (moved up, forced single line) */
+  /* Title */
   .topline{
     position:absolute;
-    top:18px;
+    top:10px; /* ⬆️ 더 위로 */
     left:50%;
     transform:translateX(-50%);
     z-index:20;
@@ -52,26 +52,23 @@
   }
 
   .topline .title{
-    font-family:"Inter", sans-serif;
-    font-size:clamp(42px, 6vw, 68px);
+    font-size:clamp(34px, 4.8vw, 54px); /* ⬅️ 줄임 */
     font-weight:800;
     letter-spacing:-0.02em;
-    color:rgba(245,244,242,0.96);
     line-height:1;
-    white-space:nowrap; /* keep on one line */
+    white-space:nowrap;
   }
 
   .topline .subtitle{
-    margin-top:10px;
-    font-family:"Inter", sans-serif;
-    font-size:clamp(16px, 2vw, 22px);
+    margin-top:8px;
+    font-size:clamp(14px, 1.8vw, 20px); /* ⬅️ 줄임 */
     font-weight:600;
     letter-spacing:0.26em;
     text-transform:uppercase;
     color:rgba(245,244,242,0.55);
   }
 
-  /* The light (abstract bulb halo) */
+  /* Light */
   .halo{
     position:absolute;
     left:50%;
@@ -98,7 +95,7 @@
     100% { transform:translate(-50%,-50%) scale(0.97); filter:blur(10px); }
   }
 
-  /* Time + poem */
+  /* Content */
   .content{
     position:absolute;
     left:0; right:0;
@@ -116,7 +113,7 @@
   }
 
   .time{
-    font-size:clamp(44px, 6.2vw, 64px);
+    font-size:clamp(42px, 6vw, 62px);
     letter-spacing:0.07em;
     font-variant-numeric:tabular-nums;
     margin-bottom:16px;
@@ -132,109 +129,46 @@
     font-style:italic;
   }
 
-  /* Subtle credit */
   .footer{
     position:absolute;
     left:0; right:0;
     bottom:22px;
     display:flex;
     justify-content:center;
-    padding:0 18px;
-  }
-  .credit{
-    display:inline-flex;
-    gap:8px;
-    align-items:center;
-    padding:10px 14px;
-    border-radius:999px;
-    background:rgba(0,0,0,0.45);
-    backdrop-filter:blur(12px);
-    border:1px solid rgba(255,255,255,0.07);
-    color:rgba(245,244,242,0.60);
-    font-size:11px;
-    letter-spacing:0.06em;
-  }
-  .credit a{
-    color:rgba(245,244,242,0.78);
-    text-decoration:none;
-    border-bottom:1px solid rgba(245,244,242,0.22);
-    padding-bottom:1px;
-  }
-  .credit a:hover{
-    color:rgba(245,244,242,0.95);
-    border-bottom-color:rgba(245,244,242,0.45);
   }
 
-  /* Time states (NY hour -> body class -> halo tone) */
-  body.deepnight .halo{
-    opacity:0.24;
-    background:radial-gradient(circle,
-      rgba(190,210,255,0.75) 0%,
-      rgba(105,135,220,0.45) 34%,
-      transparent 72%);
+  .credit{
+    font-size:11px;
+    color:rgba(245,244,242,0.55);
   }
-  body.dawn .halo{
-    opacity:0.44;
-    background:radial-gradient(circle,
-      rgba(255,235,205,0.92) 0%,
-      rgba(255,185,130,0.55) 34%,
-      transparent 72%);
-  }
-  body.day .halo{
-    opacity:0.16;
-    background:radial-gradient(circle,
-      rgba(255,255,250,0.70) 0%,
-      rgba(230,230,215,0.32) 34%,
-      transparent 72%);
-  }
-  body.sunset .halo{
-    opacity:0.64;
-    background:radial-gradient(circle,
-      rgba(255,200,140,0.95) 0%,
-      rgba(255,135,90,0.65) 34%,
-      transparent 74%);
-  }
-  body.night .halo{
-    opacity:0.56;
-    background:radial-gradient(circle,
-      rgba(255,225,175,0.95) 0%,
-      rgba(255,175,125,0.55) 34%,
-      transparent 74%);
-  }
+
+  body.deepnight .halo{ opacity:0.24; }
+  body.dawn .halo{ opacity:0.44; }
+  body.day .halo{ opacity:0.16; }
+  body.sunset .halo{ opacity:0.64; }
+  body.night .halo{ opacity:0.56; }
 
   @media (max-width:640px){
-    body{ padding:16px; }
-    .scene{ min-height:560px; border-radius:22px; }
-    .topline{ top:16px; }
-    .topline .title{ font-size:clamp(34px, 7vw, 52px); }
-    .content{ bottom:96px; }
-    .time{ letter-spacing:0.05em; }
+    .topline{ top:8px; }
+    .topline .title{ font-size:clamp(30px, 7vw, 46px); }
+    .topline .subtitle{ font-size:14px; }
   }
 </style>
 </head>
 
 <body>
   <div class="scene">
-    <div class="topline" aria-label="Title">
+    <div class="topline">
       <div class="title">In Common With</div>
-      <div class="subtitle">TIME ROOM</div>
+      <div class="subtitle">Time Room</div>
     </div>
 
-    <div class="halo" aria-hidden="true"></div>
+    <div class="halo"></div>
 
     <div class="content">
       <div class="context">NEW YORK 24H</div>
       <div id="time" class="time">--:--:--</div>
       <div id="poem" class="poem"></div>
-    </div>
-
-    <div class="footer">
-      <div class="credit">
-        Source reference:
-        <a href="https://www.incommonwith.com/collections/all-lighting" target="_blank" rel="noopener noreferrer">
-          incommonwith.com
-        </a>
-      </div>
     </div>
   </div>
 
@@ -243,64 +177,50 @@
   const poemEl = document.getElementById("poem");
 
   function getNYTime(){
-    const now = new Date();
-    return new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+    return new Date(
+      new Date().toLocaleString("en-US",{timeZone:"America/New_York"})
+    );
   }
 
-  function getState(hour){
-    if(hour < 5)  return "deepnight";
-    if(hour < 9)  return "dawn";
-    if(hour < 16) return "day";
-    if(hour < 20) return "sunset";
+  function getState(h){
+    if(h < 5) return "deepnight";
+    if(h < 9) return "dawn";
+    if(h < 16) return "day";
+    if(h < 20) return "sunset";
     return "night";
   }
 
-  const POEMS = {
-    deepnight:
-`At the lowest point of the day,
+  const POEMS={
+    deepnight:`At the lowest point of the day,
 light remains like a name
 that has not yet faded.`,
-
-    dawn:
-`Where the night slips away,
+    dawn:`Where the night slips away,
 light arrives
 at an almost silent speed.`,
-
-    day:
-`It is so bright
+    day:`It is so bright
 that light no longer needs
 to reveal itself.`,
-
-    sunset:
-`Evening light folds
+    sunset:`Evening light folds
 whatever warmth remains
 and lays it gently
 inside the room.`,
-
-    night:
-`As darkness spreads,
+    night:`As darkness spreads,
 the light returns
 from farther away.`
   };
 
-  function pad2(n){ return String(n).padStart(2, "0"); }
+  function pad(n){return String(n).padStart(2,"0");}
 
   function update(){
-    const now = getNYTime();
-    const h = now.getHours();
-    const m = now.getMinutes();
-    const s = now.getSeconds();
-
-    timeEl.textContent = `${pad2(h)}:${pad2(m)}:${pad2(s)}`;
-
-    const state = getState(h);
-    document.body.className = state;
-
-    poemEl.textContent = POEMS[state];
+    const t=getNYTime();
+    const h=t.getHours();
+    timeEl.textContent=`${pad(h)}:${pad(t.getMinutes())}:${pad(t.getSeconds())}`;
+    document.body.className=getState(h);
+    poemEl.textContent=POEMS[getState(h)];
   }
 
   update();
-  setInterval(update, 1000);
+  setInterval(update,1000);
 </script>
 </body>
 </html>
