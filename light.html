@@ -5,7 +5,6 @@
 <title>In Common With — Time Room</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<!-- Bold modern sans-serif close in tone to the reference logotype -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
@@ -40,13 +39,13 @@
     box-shadow:0 40px 90px rgba(0,0,0,0.85);
   }
 
-  /* Big title + bigger "TIME ROOM" */
+  /* Title area (moved up, forced single line) */
   .topline{
     position:absolute;
-    top:26px;
+    top:18px;
     left:50%;
     transform:translateX(-50%);
-    z-index:10;
+    z-index:20;
     text-align:center;
     padding:0 16px;
     pointer-events:none;
@@ -54,28 +53,29 @@
 
   .topline .title{
     font-family:"Inter", sans-serif;
-    font-size:clamp(44px, 6.8vw, 72px);
+    font-size:clamp(42px, 6vw, 68px);
     font-weight:800;
     letter-spacing:-0.02em;
     color:rgba(245,244,242,0.96);
-    line-height:1.05;
+    line-height:1;
+    white-space:nowrap; /* keep on one line */
   }
 
   .topline .subtitle{
-    margin-top:12px;
+    margin-top:10px;
     font-family:"Inter", sans-serif;
-    font-size:clamp(18px, 2.2vw, 28px); /* TIME ROOM bigger */
+    font-size:clamp(16px, 2vw, 22px);
     font-weight:600;
-    letter-spacing:0.22em;
+    letter-spacing:0.26em;
     text-transform:uppercase;
-    color:rgba(245,244,242,0.68);
+    color:rgba(245,244,242,0.55);
   }
 
   /* The light (abstract bulb halo) */
   .halo{
     position:absolute;
     left:50%;
-    top:46%;
+    top:50%;
     transform:translate(-50%,-50%);
     width:min(56vmin,460px);
     height:min(56vmin,460px);
@@ -122,7 +122,6 @@
     margin-bottom:16px;
   }
 
-  /* Poem italic */
   .poem{
     max-width:640px;
     margin:0 auto;
@@ -206,7 +205,8 @@
   @media (max-width:640px){
     body{ padding:16px; }
     .scene{ min-height:560px; border-radius:22px; }
-    .topline{ top:22px; }
+    .topline{ top:16px; }
+    .topline .title{ font-size:clamp(34px, 7vw, 52px); }
     .content{ bottom:96px; }
     .time{ letter-spacing:0.05em; }
   }
