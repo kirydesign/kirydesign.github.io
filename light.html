@@ -5,21 +5,22 @@
 <title>In Common With — Time Room</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+<!-- Serif title close-in-attitude to the original logotype (web-safe via Google Fonts) -->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+
 <style>
   *{box-sizing:border-box;margin:0;padding:0;}
   :root{
     --bg:#020307;
     --fg:#f5f4f2;
     --muted:rgba(245,244,242,0.62);
-    --soft:rgba(245,244,242,0.10);
   }
 
   body{
     min-height:100vh;
     background:var(--bg);
     color:var(--fg);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont,
-      "SF Pro Text","Noto Sans KR", sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -39,34 +40,39 @@
     box-shadow:0 40px 90px rgba(0,0,0,0.85);
   }
 
-  /* Top title (showroom label) */
+  /* Title (bigger, logotype-like) */
   .topline{
     position:absolute;
-    top:18px;
+    top:28px;
     left:50%;
     transform:translateX(-50%);
-    display:flex;
-    align-items:center;
-    padding:10px 16px;
-    border-radius:999px;
-    background:rgba(0,0,0,0.65);
-    backdrop-filter:blur(14px);
-    border:1px solid rgba(255,255,255,0.08);
     z-index:10;
+    text-align:center;
+    padding:0 16px;
+    pointer-events:none;
   }
   .topline .title{
+    font-family:"Cormorant Garamond", serif;
+    font-size:clamp(40px, 6.2vw, 62px);
+    font-weight:600;
+    letter-spacing:-0.02em;
+    color:rgba(245,244,242,0.95);
+    line-height:1;
+    text-transform:none;
+  }
+  .topline .subtitle{
+    margin-top:10px;
     font-size:11px;
-    letter-spacing:0.18em;
+    letter-spacing:0.26em;
     text-transform:uppercase;
-    color:rgba(245,244,242,0.78);
-    white-space:nowrap;
+    color:rgba(245,244,242,0.58);
   }
 
   /* The light (abstract bulb halo) */
   .halo{
     position:absolute;
     left:50%;
-    top:44%;
+    top:46%;
     transform:translate(-50%,-50%);
     width:min(56vmin,460px);
     height:min(56vmin,460px);
@@ -89,7 +95,7 @@
     100% { transform:translate(-50%,-50%) scale(0.97); filter:blur(10px); }
   }
 
-  /* Content (time + poem) */
+  /* Time + poem */
   .content{
     position:absolute;
     left:0; right:0;
@@ -98,20 +104,20 @@
     padding:0 24px;
   }
 
-  /* This is where "NEW YORK 24H" goes */
+  /* "NEW YORK 24H" label above the time */
   .context{
     font-size:11px;
-    letter-spacing:0.22em;
+    letter-spacing:0.24em;
     text-transform:uppercase;
     color:var(--muted);
-    margin-bottom:10px;
+    margin-bottom:12px;
   }
 
   .time{
-    font-size:clamp(42px,6vw,60px);
-    letter-spacing:0.06em;
+    font-size:clamp(44px, 6.2vw, 64px);
+    letter-spacing:0.07em;
     font-variant-numeric:tabular-nums;
-    margin-bottom:14px;
+    margin-bottom:16px;
   }
 
   /* Poem in italic */
@@ -120,12 +126,12 @@
     margin:0 auto;
     font-size:15px;
     line-height:1.75;
-    color:rgba(245,244,242,0.92);
+    color:rgba(245,244,242,0.90);
     white-space:pre-line;
     font-style:italic;
   }
 
-  /* Footer credit link (subtle) */
+  /* Subtle credit link */
   .footer{
     position:absolute;
     left:0; right:0;
@@ -199,25 +205,25 @@
     body{ padding:16px; }
     .scene{ min-height:560px; border-radius:22px; }
     .content{ bottom:96px; }
-    .time{ letter-spacing:0.04em; }
-    .topline{ top:14px; padding:9px 14px; }
+    .topline{ top:22px; }
+    .topline .title{ font-size:clamp(36px, 7vw, 54px); }
+    .time{ letter-spacing:0.05em; }
   }
 </style>
 </head>
 
 <body>
   <div class="scene">
-    <!-- Title changed -->
+    <!-- Big title + small subtitle -->
     <div class="topline" aria-label="Title">
-      <div class="title">In Common With — Time Room</div>
+      <div class="title">In Common With</div>
+      <div class="subtitle">TIME ROOM</div>
     </div>
 
     <div class="halo" aria-hidden="true"></div>
 
     <div class="content">
-      <!-- "New York, 24h" moved here -->
       <div class="context">NEW YORK 24H</div>
-
       <div id="time" class="time">--:--:--</div>
       <div id="poem" class="poem"></div>
     </div>
@@ -251,7 +257,7 @@
     return "night";
   }
 
-  // English-only, poetic, now italic via CSS
+  // English-only, poetic, italic via CSS
   const POEMS = {
     deepnight:
 `At the lowest point of the day,
@@ -291,9 +297,9 @@ from farther away.`
     timeEl.textContent = `${pad2(h)}:${pad2(m)}:${pad2(s)}`;
 
     const state = getState(h);
-    document.body.className = state; // updates halo tone/opacity
+    document.body.className = state;
 
-    poemEl.textContent = POEMS[state]; // plain text; italic comes from CSS
+    poemEl.textContent = POEMS[state];
   }
 
   update();
