@@ -5,6 +5,8 @@
 <title>Time Room</title>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
 <style>
 body{
   margin:0;
@@ -20,46 +22,62 @@ body{
 .scene{
   width:900px;
   height:600px;
-  position:relative;
+  border-radius:24px;
   overflow:hidden;
-  border-radius:20px;
-  background:#000;
+  position:relative;
+  background:linear-gradient(#0b0f1a,#000);
 }
 
-/* city buttons */
-.city-toggle{
+/* city */
+.city{
   position:absolute;
-  top:15px;
-  right:15px;
+  top:40px;
+  left:40px;
+  font-size:32px;
+  font-weight:600;
 }
 
-button{
-  margin-left:5px;
-  background:none;
-  border:1px solid #555;
-  color:#fff;
-  padding:6px 10px;
-  cursor:pointer;
-  opacity:0.6;
+/* time */
+.time{
+  position:absolute;
+  top:100px;
+  left:40px;
+  font-size:72px;
+  font-weight:800;
 }
 
-button.active{
-  opacity:1;
-  border-color:#fff;
+/* weather */
+.weather{
+  position:absolute;
+  top:190px;
+  left:40px;
+  font-size:20px;
+  opacity:0.7;
 }
 
 /* sun */
 .sun{
   position:absolute;
+  right:120px;
+  top:120px;
   width:180px;
   height:180px;
   border-radius:50%;
   background:radial-gradient(circle,#ffd27a,#ff8c3a,transparent);
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
   opacity:0;
-  transition:opacity 1s;
+}
+
+/* clouds */
+.cloud{
+  position:absolute;
+  right:80px;
+  top:150px;
+  width:220px;
+  height:120px;
+  background:rgba(255,255,255,0.15);
+  border-radius:60px;
+  filter:blur(10px);
+  opacity:0;
 }
 
 /* rain */
@@ -67,7 +85,6 @@ button.active{
   position:absolute;
   width:100%;
   height:100%;
-  pointer-events:none;
   display:none;
 }
 
@@ -84,34 +101,26 @@ button.active{
   100%{transform:translateY(600px);}
 }
 
-/* wind */
-.wind{
+/* toggle */
+.toggle{
   position:absolute;
-  width:100%;
-  height:100%;
-  pointer-events:none;
-  display:none;
+  bottom:20px;
+  left:40px;
 }
 
-.wind span{
-  position:absolute;
-  width:40px;
-  height:2px;
-  background:#aaa;
-  animation:wind 2s linear infinite;
+button{
+  margin-right:6px;
+  background:none;
+  border:1px solid #555;
+  color:#fff;
+  padding:6px 10px;
+  cursor:pointer;
+  opacity:0.6;
 }
 
-@keyframes wind{
-  0%{transform:translateX(-100px);}
-  100%{transform:translateX(1000px);}
-}
-
-.time{
-  position:absolute;
-  bottom:80px;
-  width:100%;
-  text-align:center;
-  font-size:48px;
+button.active{
+  opacity:1;
+  border-color:#fff;
 }
 </style>
 </head>
@@ -120,7 +129,15 @@ button.active{
 
 <div class="scene">
 
-<div class="city-toggle">
+<div id="city" class="city"></div>
+<div id="time" class="time"></div>
+<div id="weather" class="weather"></div>
+
+<div id="sun" class="sun"></div>
+<div id="cloud" class="cloud"></div>
+<div id="rain" class="rain"></div>
+
+<div class="toggle">
   <button onclick="setCity('NY')" class="active">NY</button>
   <button onclick="setCity('LA')">LA</button>
   <button onclick="setCity('PARIS')">PARIS</button>
@@ -129,35 +146,30 @@ button.active{
   <button onclick="setCity('INDIA')">INDIA</button>
 </div>
 
-<div id="sun" class="sun"></div>
-
-<div id="rain" class="rain"></div>
-<div id="wind" class="wind"></div>
-
-<div id="time" class="time"></div>
-
 </div>
 
 <script>
-const API_KEY = "YOUR_API_KEY_HERE";
+const API_KEY = "YOUR_API_KEY";
 
 let currentCity = "NY";
 
 const cities = {
-  NY: {name:"New York", tz:"America/New_York"},
-  LA: {name:"Los Angeles", tz:"America/Los_Angeles"},
-  PARIS: {name:"Paris", tz:"Europe/Paris"},
-  SEOUL: {name:"Seoul", tz:"Asia/Seoul"},
-  CHINA: {name:"Beijing", tz:"Asia/Shanghai"},
-  INDIA: {name:"Delhi", tz:"Asia/Kolkata"}
+  NY:{name:"New York", tz:"America/New_York"},
+  LA:{name:"Los Angeles", tz:"America/Los_Angeles"},
+  PARIS:{name:"Paris", tz:"Europe/Paris"},
+  SEOUL:{name:"Seoul", tz:"Asia/Seoul"},
+  CHINA:{name:"Beijing", tz:"Asia/Shanghai"},
+  INDIA:{name:"Delhi", tz:"Asia/Kolkata"}
 };
 
-const sun = document.getElementById("sun");
-const rain = document.getElementById("rain");
-const wind = document.getElementById("wind");
+const cityEl = document.getElementById("city");
 const timeEl = document.getElementById("time");
+const weatherEl = document.getElementById("weather");
 
-/* city switch */
+const sun = document.getElementById("sun");
+const cloud = document.getElementById("cloud");
+const rain = document.getElementById("rain");
+
 function setCity(city){
   currentCity = city;
 
@@ -174,64 +186,58 @@ function getTime(){
   );
 }
 
-/* sun logic */
-function getSunIntensity(h){
-  if(h<6 || h>18) return 0;
-  return 1 - Math.abs(h-12)/6;
-}
-
-/* weather fetch */
+/* weather */
 async function fetchWeather(){
-  const cityName = cities[currentCity].name;
+  const name = cities[currentCity].name;
 
   const res = await fetch(
-    `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}`
+    `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=${API_KEY}&units=metric`
   );
+
   const data = await res.json();
 
-  applyWeather(data.weather[0].main);
+  const temp = Math.round(data.main.temp);
+  const condition = data.weather[0].main;
+
+  cityEl.innerText = name;
+  weatherEl.innerText = `${condition} · ${temp}°`;
+
+  renderWeather(condition);
 }
 
-/* apply weather */
-function applyWeather(type){
+/* render */
+function renderWeather(type){
+  sun.style.opacity = 0;
+  cloud.style.opacity = 0;
   rain.style.display = "none";
-  wind.style.display = "none";
 
-  if(type.includes("Rain")){
+  if(type === "Clear"){
+    sun.style.opacity = 1;
+  }
+  else if(type === "Clouds"){
+    cloud.style.opacity = 1;
+  }
+  else if(type === "Rain"){
     rain.style.display = "block";
     rain.innerHTML="";
-    for(let i=0;i<60;i++){
+    for(let i=0;i<80;i++){
       let drop=document.createElement("span");
       drop.style.left=Math.random()*100+"%";
       drop.style.animationDuration=(0.5+Math.random())+"s";
       rain.appendChild(drop);
     }
   }
-
-  if(type.includes("Wind")){
-    wind.style.display="block";
-    wind.innerHTML="";
-    for(let i=0;i<20;i++){
-      let line=document.createElement("span");
-      line.style.top=Math.random()*100+"%";
-      wind.appendChild(line);
-    }
-  }
 }
 
-/* update loop */
+/* update */
 function update(){
   const t = getTime();
-  const h = t.getHours();
-
-  timeEl.innerText = t.toLocaleTimeString();
-
-  sun.style.opacity = getSunIntensity(h);
+  timeEl.innerText = t.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
 }
 
 fetchWeather();
 setInterval(update,1000);
-setInterval(fetchWeather,600000); // 10min refresh
+setInterval(fetchWeather,600000);
 </script>
 
 </body>
