@@ -37,7 +37,6 @@ body{
   box-shadow:0 40px 90px rgba(0,0,0,0.85);
 }
 
-/* subtitle */
 .topline{
   position:absolute;
   top:12px;
@@ -52,7 +51,6 @@ body{
   color:rgba(245,244,242,0.5);
 }
 
-/* city toggle */
 .city-toggle{
   position:absolute;
   top:20px;
@@ -76,7 +74,7 @@ body{
   border-color:rgba(255,255,255,0.6);
 }
 
-/* 🌞 SUN */
+/* ☀️ SUN */
 .sun{
   position:absolute;
   left:50%;
@@ -94,7 +92,38 @@ body{
   filter:blur(8px);
 }
 
-/* content */
+/* 🌧 rain */
+.rain{
+  position:absolute;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  display:none;
+}
+
+.rain div{
+  position:absolute;
+  width:2px;
+  height:18px;
+  background:rgba(180,220,255,0.7);
+  animation:rainFall linear infinite;
+}
+
+@keyframes rainFall{
+  to{ transform:translateY(700px); }
+}
+
+/* ☁️ cloud */
+.cloud{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(10px);
+  opacity:0;
+  pointer-events:none;
+}
+
 .content{
   position:absolute;
   bottom:86px;
@@ -113,16 +142,6 @@ body{
   font-size:clamp(42px,6vw,62px);
   letter-spacing:0.07em;
   margin-bottom:16px;
-}
-
-.poem{
-  max-width:640px;
-  margin:0 auto;
-  font-size:15px;
-  line-height:1.7;
-  color:rgba(245,244,242,0.9);
-  white-space:pre-line;
-  font-style:italic;
 }
 </style>
 </head>
@@ -144,19 +163,23 @@ body{
   </div>
 
   <div id="sun" class="sun"></div>
+  <div id="cloud" class="cloud"></div>
+  <div id="rain" class="rain"></div>
 
   <div class="content">
     <div class="context">NEW YORK 24H</div>
     <div id="time" class="time">--:--:--</div>
-    <div id="poem" class="poem"></div>
   </div>
 
 </div>
 
 <script>
+const API_KEY = "e90186db9f1f3b5c5ce6ec44d813d71";
+
 const timeEl = document.getElementById("time");
-const poemEl = document.getElementById("poem");
 const sunEl = document.getElementById("sun");
+const rainEl = document.getElementById("rain");
+const cloudEl = document.getElementById("cloud");
 
 let currentCity = "NY";
 
@@ -166,6 +189,14 @@ const TIMEZONES = {
   LA: "America/Los_Angeles",
   CHINA: "Asia/Shanghai",
   INDIA: "Asia/Kolkata"
+};
+
+const CITY_NAMES = {
+  NY: "New York",
+  SEOUL: "Seoul",
+  LA: "Los Angeles",
+  CHINA: "Beijing",
+  INDIA: "Delhi"
 };
 
 function setCity(city){
@@ -178,6 +209,7 @@ function setCity(city){
   document.querySelector(`button[onclick="setCity('${city}')"]`)
     .classList.add("active");
 
+  fetchWeather();
   update();
 }
 
@@ -189,14 +221,45 @@ function getTime(){
   );
 }
 
-/* ☀️ daylight intensity */
 function getSunIntensity(hour){
   if(hour < 6 || hour > 18) return 0;
+  return 1 - Math.abs(hour - 12)/6;
+}
 
-  const peak = 12;
-  const distance = Math.abs(hour - peak);
+async function fetchWeather(){
+  try{
+    const res = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${CITY_NAMES[currentCity]}&appid=${API_KEY}`
+    );
 
-  return 1 - (distance / 6);
+    const data = await res.json();
+    const type = data.weather[0].main;
+
+    applyWeather(type);
+
+  }catch(e){
+    console.log(e);
+  }
+}
+
+function applyWeather(type){
+  rainEl.style.display = "none";
+  cloudEl.style.opacity = 0;
+
+  if(type.includes("Rain") || type.includes("Drizzle")){
+    rainEl.style.display = "block";
+    rainEl.innerHTML="";
+    for(let i=0;i<80;i++){
+      const d=document.createElement("div");
+      d.style.left=Math.random()*100+"%";
+      d.style.animationDuration=(0.5+Math.random())+"s";
+      rainEl.appendChild(d);
+    }
+  }
+
+  if(type.includes("Cloud")){
+    cloudEl.style.opacity = 1;
+  }
 }
 
 function pad(n){return String(n).padStart(2,"0");}
@@ -208,8 +271,7 @@ function update(){
   timeEl.textContent =
     `${pad(h)}:${pad(t.getMinutes())}:${pad(t.getSeconds())}`;
 
-  const intensity = getSunIntensity(h);
-  sunEl.style.opacity = intensity;
+  sunEl.style.opacity = getSunIntensity(h);
 
   document.querySelector(".context").textContent =
     currentCity === "NY" ? "NEW YORK 24H" :
@@ -219,8 +281,11 @@ function update(){
     "INDIA 24H";
 }
 
+fetchWeather();
 update();
+
 setInterval(update,1000);
+setInterval(fetchWeather,600000);
 </script>
 
 </body>
