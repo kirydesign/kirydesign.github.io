@@ -5,63 +5,94 @@
 <title>Time Room</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#020307;
+  --fg:#f5f4f2;
+  --muted:rgba(245,244,242,0.62);
+}
+
 body{
-  margin:0;
-  background:#000;
-  color:#fff;
-  font-family:Inter, sans-serif;
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--fg);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
   display:flex;
-  justify-content:center;
   align-items:center;
-  height:100vh;
+  justify-content:center;
+  padding:24px;
 }
 
 .scene{
-  width:900px;
-  height:600px;
   position:relative;
+  width:100%;
+  max-width:960px;
+  min-height:620px;
+  border-radius:28px;
   overflow:hidden;
-  border-radius:20px;
   background:#000;
+  box-shadow:0 40px 90px rgba(0,0,0,0.85);
 }
 
-/* buttons */
+.topline{
+  position:absolute;
+  top:12px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:20;
+}
+
+.subtitle{
+  font-size:14px;
+  letter-spacing:0.26em;
+  color:rgba(245,244,242,0.5);
+}
+
 .city-toggle{
   position:absolute;
   top:20px;
   right:20px;
+  z-index:30;
 }
 
-button{
-  margin-left:5px;
+.city-toggle button{
   background:none;
-  border:1px solid #555;
-  color:#fff;
+  border:1px solid rgba(255,255,255,0.2);
+  color:var(--fg);
   padding:6px 10px;
+  margin-left:6px;
+  font-size:11px;
   cursor:pointer;
   opacity:0.6;
 }
 
-button.active{
+.city-toggle button.active{
   opacity:1;
-  border-color:#fff;
+  border-color:rgba(255,255,255,0.6);
 }
 
-/* sun */
+/* ☀️ SUN */
 .sun{
   position:absolute;
-  width:180px;
-  height:180px;
-  border-radius:50%;
-  background:radial-gradient(circle,#ffd27a,#ff8c3a,transparent);
-  top:50%;
   left:50%;
+  top:50%;
   transform:translate(-50%,-50%);
+  width:200px;
+  height:200px;
+  border-radius:50%;
+  background:radial-gradient(circle,
+    rgba(255,220,140,1) 0%,
+    rgba(255,170,80,0.6) 40%,
+    rgba(0,0,0,0) 70%);
   opacity:0;
+  transition:opacity 1s ease;
+  filter:blur(8px);
 }
 
-/* rain */
+/* 🌧 rain */
 .rain{
   position:absolute;
   width:100%;
@@ -74,31 +105,43 @@ button.active{
   position:absolute;
   width:2px;
   height:18px;
-  background:#8ecaff;
-  animation:rain 1s linear infinite;
+  background:rgba(180,220,255,0.7);
+  animation:rainFall linear infinite;
 }
 
-@keyframes rain{
+@keyframes rainFall{
   to{ transform:translateY(700px); }
 }
 
-/* cloud */
+/* ☁️ cloud */
 .cloud{
   position:absolute;
   width:100%;
   height:100%;
   background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(8px);
+  backdrop-filter:blur(10px);
   opacity:0;
+  pointer-events:none;
 }
 
-/* time */
-.time{
+.content{
   position:absolute;
-  bottom:80px;
+  bottom:86px;
   width:100%;
   text-align:center;
-  font-size:48px;
+}
+
+.context{
+  font-size:11px;
+  letter-spacing:0.24em;
+  color:var(--muted);
+  margin-bottom:12px;
+}
+
+.time{
+  font-size:clamp(42px,6vw,62px);
+  letter-spacing:0.07em;
+  margin-bottom:16px;
 }
 </style>
 </head>
@@ -107,127 +150,140 @@ button.active{
 
 <div class="scene">
 
-<div class="city-toggle">
-  <button onclick="setCity('NY')" class="active">NY</button>
-  <button onclick="setCity('SEOUL')">SEOUL</button>
-  <button onclick="setCity('LA')">LA</button>
-  <button onclick="setCity('CHINA')">CHINA</button>
-  <button onclick="setCity('INDIA')">INDIA</button>
-</div>
+  <div class="topline">
+    <div class="subtitle">Time Room</div>
+  </div>
 
-<div id="sun" class="sun"></div>
-<div id="cloud" class="cloud"></div>
-<div id="rain" class="rain"></div>
+  <div class="city-toggle">
+    <button onclick="setCity('NY')" class="active">NEW YORK</button>
+    <button onclick="setCity('SEOUL')">SEOUL</button>
+    <button onclick="setCity('LA')">LOS ANGELES</button>
+    <button onclick="setCity('CHINA')">CHINA</button>
+    <button onclick="setCity('INDIA')">INDIA</button>
+  </div>
 
-<div id="time" class="time"></div>
+  <div id="sun" class="sun"></div>
+  <div id="cloud" class="cloud"></div>
+  <div id="rain" class="rain"></div>
+
+  <div class="content">
+    <div class="context">NEW YORK 24H</div>
+    <div id="time" class="time">--:--:--</div>
+  </div>
 
 </div>
 
 <script>
 const API_KEY = "e90186db9f1f3b5c5ce6ec44d813d71";
 
-let currentCity = "SEOUL";
+const timeEl = document.getElementById("time");
+const sunEl = document.getElementById("sun");
+const rainEl = document.getElementById("rain");
+const cloudEl = document.getElementById("cloud");
 
-const cities = {
-  NY:{name:"New York", tz:"America/New_York"},
-  SEOUL:{name:"Seoul", tz:"Asia/Seoul"},
-  LA:{name:"Los Angeles", tz:"America/Los_Angeles"},
-  CHINA:{name:"Beijing", tz:"Asia/Shanghai"},
-  INDIA:{name:"Delhi", tz:"Asia/Kolkata"}
+let currentCity = "NY";
+
+const TIMEZONES = {
+  NY: "America/New_York",
+  SEOUL: "Asia/Seoul",
+  LA: "America/Los_Angeles",
+  CHINA: "Asia/Shanghai",
+  INDIA: "Asia/Kolkata"
 };
 
-const sun = document.getElementById("sun");
-const rain = document.getElementById("rain");
-const cloud = document.getElementById("cloud");
-const timeEl = document.getElementById("time");
+const CITY_NAMES = {
+  NY: "New York",
+  SEOUL: "Seoul",
+  LA: "Los Angeles",
+  CHINA: "Beijing",
+  INDIA: "Delhi"
+};
 
-/* city */
 function setCity(city){
   currentCity = city;
 
-  document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
-  event.target.classList.add("active");
+  document.querySelectorAll(".city-toggle button").forEach(btn=>{
+    btn.classList.remove("active");
+  });
+
+  document.querySelector(`button[onclick="setCity('${city}')"]`)
+    .classList.add("active");
 
   fetchWeather();
+  update();
 }
 
-/* time */
 function getTime(){
   return new Date(
-    new Date().toLocaleString("en-US",{timeZone:cities[currentCity].tz})
+    new Date().toLocaleString("en-US", {
+      timeZone: TIMEZONES[currentCity]
+    })
   );
 }
 
-/* sun */
-function getSunIntensity(h){
-  if(h<6 || h>18) return 0;
-  return 1 - Math.abs(h-12)/6;
+function getSunIntensity(hour){
+  if(hour < 6 || hour > 18) return 0;
+  return 1 - Math.abs(hour - 12)/6;
 }
 
-/* weather */
 async function fetchWeather(){
   try{
     const res = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${cities[currentCity].name}&appid=${API_KEY}&units=metric`
+      `https://api.openweathermap.org/data/2.5/weather?q=${CITY_NAMES[currentCity]}&appid=${API_KEY}`
     );
 
     const data = await res.json();
-
-    console.log("API RESPONSE:", data);
-
-    if(data.cod !== 200){
-      console.error("API ERROR:", data);
-      return;
-    }
-
     const type = data.weather[0].main;
-    console.log("WEATHER TYPE:", type);
 
     applyWeather(type);
 
   }catch(e){
-    console.error("FETCH ERROR:", e);
+    console.log(e);
   }
 }
 
-/* render */
 function applyWeather(type){
+  rainEl.style.display = "none";
+  cloudEl.style.opacity = 0;
 
-  rain.style.display = "none";
-  cloud.style.opacity = 0;
-
-  // 🔥 테스트용 (비 확인하려면 주석 해제)
-  // type = "Rain";
-
-  if(type === "Rain" || type === "Drizzle"){
-    rain.style.display = "block";
-    rain.innerHTML="";
-
-    for(let i=0;i<100;i++){
-      let d=document.createElement("div");
+  if(type.includes("Rain") || type.includes("Drizzle")){
+    rainEl.style.display = "block";
+    rainEl.innerHTML="";
+    for(let i=0;i<80;i++){
+      const d=document.createElement("div");
       d.style.left=Math.random()*100+"%";
-      d.style.top="-20px";
       d.style.animationDuration=(0.5+Math.random())+"s";
-      rain.appendChild(d);
+      rainEl.appendChild(d);
     }
   }
 
-  if(type === "Clouds"){
-    cloud.style.opacity = 1;
+  if(type.includes("Cloud")){
+    cloudEl.style.opacity = 1;
   }
 }
 
-/* update */
+function pad(n){return String(n).padStart(2,"0");}
+
 function update(){
   const t = getTime();
   const h = t.getHours();
 
-  timeEl.innerText = t.toLocaleTimeString();
+  timeEl.textContent =
+    `${pad(h)}:${pad(t.getMinutes())}:${pad(t.getSeconds())}`;
 
-  sun.style.opacity = getSunIntensity(h);
+  sunEl.style.opacity = getSunIntensity(h);
+
+  document.querySelector(".context").textContent =
+    currentCity === "NY" ? "NEW YORK 24H" :
+    currentCity === "SEOUL" ? "SEOUL 24H" :
+    currentCity === "LA" ? "LOS ANGELES 24H" :
+    currentCity === "CHINA" ? "CHINA 24H" :
+    "INDIA 24H";
 }
 
 fetchWeather();
+update();
+
 setInterval(update,1000);
 setInterval(fetchWeather,600000);
 </script>
