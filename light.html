@@ -138,6 +138,9 @@ body{
   <div class="city-toggle">
     <button onclick="setCity('NY')" class="active">NEW YORK</button>
     <button onclick="setCity('SEOUL')">SEOUL</button>
+    <button onclick="setCity('LA')">LOS ANGELES</button>
+    <button onclick="setCity('CHINA')">CHINA</button>
+    <button onclick="setCity('INDIA')">INDIA</button>
   </div>
 
   <div id="sun" class="sun"></div>
@@ -159,7 +162,10 @@ let currentCity = "NY";
 
 const TIMEZONES = {
   NY: "America/New_York",
-  SEOUL: "Asia/Seoul"
+  SEOUL: "Asia/Seoul",
+  LA: "America/Los_Angeles",
+  CHINA: "Asia/Shanghai",
+  INDIA: "Asia/Kolkata"
 };
 
 function setCity(city){
@@ -185,14 +191,11 @@ function getTime(){
 
 /* ☀️ daylight intensity */
 function getSunIntensity(hour){
-  // 6시 ~ 18시만 해 있음
   if(hour < 6 || hour > 18) return 0;
 
-  // 정오 기준 (12시 최대)
   const peak = 12;
   const distance = Math.abs(hour - peak);
 
-  // 0~1 normalize
   return 1 - (distance / 6);
 }
 
@@ -205,13 +208,15 @@ function update(){
   timeEl.textContent =
     `${pad(h)}:${pad(t.getMinutes())}:${pad(t.getSeconds())}`;
 
-  // ☀️ sun brightness
   const intensity = getSunIntensity(h);
   sunEl.style.opacity = intensity;
 
-  // context
   document.querySelector(".context").textContent =
-    currentCity === "NY" ? "NEW YORK 24H" : "SEOUL 24H";
+    currentCity === "NY" ? "NEW YORK 24H" :
+    currentCity === "SEOUL" ? "SEOUL 24H" :
+    currentCity === "LA" ? "LOS ANGELES 24H" :
+    currentCity === "CHINA" ? "CHINA 24H" :
+    "INDIA 24H";
 }
 
 update();
