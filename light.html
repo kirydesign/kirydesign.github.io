@@ -33,29 +33,23 @@ body{
   min-height:620px;
   border-radius:28px;
   overflow:hidden;
-  background:
-    radial-gradient(circle at 50% -10%, rgba(255,255,255,0.03) 0%, transparent 55%),
-    radial-gradient(circle at 50% 120%, rgba(0,0,0,0.95) 0%, #000 65%);
+  background:#000;
   box-shadow:0 40px 90px rgba(0,0,0,0.85);
 }
 
-/* subtitle only */
+/* subtitle */
 .topline{
   position:absolute;
   top:12px;
   left:50%;
   transform:translateX(-50%);
   z-index:20;
-  text-align:center;
-  pointer-events:none;
 }
 
 .subtitle{
   font-size:14px;
-  font-weight:600;
   letter-spacing:0.26em;
-  text-transform:uppercase;
-  color:rgba(245,244,242,0.55);
+  color:rgba(245,244,242,0.5);
 }
 
 /* city toggle */
@@ -73,7 +67,6 @@ body{
   padding:6px 10px;
   margin-left:6px;
   font-size:11px;
-  letter-spacing:0.12em;
   cursor:pointer;
   opacity:0.6;
 }
@@ -83,53 +76,42 @@ body{
   border-color:rgba(255,255,255,0.6);
 }
 
-/* light */
-.halo{
+/* 🌞 SUN */
+.sun{
   position:absolute;
   left:50%;
   top:50%;
   transform:translate(-50%,-50%);
-  width:min(56vmin,460px);
-  height:min(56vmin,460px);
+  width:200px;
+  height:200px;
   border-radius:50%;
-  background:
-    radial-gradient(circle,
-      rgba(255,230,190,0.90) 0%,
-      rgba(255,190,120,0.55) 32%,
-      rgba(0,0,0,0) 72%);
-  opacity:0.4;
-  filter:blur(10px);
-  animation:breathe 9.5s ease-in-out infinite;
-  transition:opacity 1.2s ease;
-}
-
-@keyframes breathe{
-  0%{transform:translate(-50%,-50%) scale(0.97);}
-  50%{transform:translate(-50%,-50%) scale(1.1);}
-  100%{transform:translate(-50%,-50%) scale(0.97);}
+  background:radial-gradient(circle,
+    rgba(255,220,140,1) 0%,
+    rgba(255,170,80,0.6) 40%,
+    rgba(0,0,0,0) 70%);
+  opacity:0;
+  transition:opacity 1s ease;
+  filter:blur(8px);
 }
 
 /* content */
 .content{
   position:absolute;
-  left:0; right:0;
   bottom:86px;
+  width:100%;
   text-align:center;
-  padding:0 24px;
 }
 
 .context{
   font-size:11px;
   letter-spacing:0.24em;
-  text-transform:uppercase;
   color:var(--muted);
   margin-bottom:12px;
 }
 
 .time{
-  font-size:clamp(42px, 6vw, 62px);
+  font-size:clamp(42px,6vw,62px);
   letter-spacing:0.07em;
-  font-variant-numeric:tabular-nums;
   margin-bottom:16px;
 }
 
@@ -137,19 +119,11 @@ body{
   max-width:640px;
   margin:0 auto;
   font-size:15px;
-  line-height:1.75;
-  color:rgba(245,244,242,0.90);
+  line-height:1.7;
+  color:rgba(245,244,242,0.9);
   white-space:pre-line;
   font-style:italic;
 }
-
-/* light states */
-body.deepnight .halo{ opacity:0.24; }
-body.dawn .halo{ opacity:0.44; }
-body.day .halo{ opacity:0.16; }
-body.sunset .halo{ opacity:0.64; }
-body.night .halo{ opacity:0.56; }
-
 </style>
 </head>
 
@@ -166,7 +140,7 @@ body.night .halo{ opacity:0.56; }
     <button onclick="setCity('SEOUL')">SEOUL</button>
   </div>
 
-  <div class="halo"></div>
+  <div id="sun" class="sun"></div>
 
   <div class="content">
     <div class="context">NEW YORK 24H</div>
@@ -179,6 +153,7 @@ body.night .halo{ opacity:0.56; }
 <script>
 const timeEl = document.getElementById("time");
 const poemEl = document.getElementById("poem");
+const sunEl = document.getElementById("sun");
 
 let currentCity = "NY";
 
@@ -208,32 +183,18 @@ function getTime(){
   );
 }
 
-function getState(h){
-  if(h < 5) return "deepnight";
-  if(h < 9) return "dawn";
-  if(h < 16) return "day";
-  if(h < 20) return "sunset";
-  return "night";
-}
+/* ☀️ daylight intensity */
+function getSunIntensity(hour){
+  // 6시 ~ 18시만 해 있음
+  if(hour < 6 || hour > 18) return 0;
 
-const POEMS={
-  deepnight:`At the lowest point of the day,
-light remains like a name
-that has not yet faded.`,
-  dawn:`Where the night slips away,
-light arrives
-at an almost silent speed.`,
-  day:`It is so bright
-that light no longer needs
-to reveal itself.`,
-  sunset:`Evening light folds
-whatever warmth remains
-and lays it gently
-inside the room.`,
-  night:`As darkness spreads,
-the light returns
-from farther away.`
-};
+  // 정오 기준 (12시 최대)
+  const peak = 12;
+  const distance = Math.abs(hour - peak);
+
+  // 0~1 normalize
+  return 1 - (distance / 6);
+}
 
 function pad(n){return String(n).padStart(2,"0");}
 
@@ -244,11 +205,11 @@ function update(){
   timeEl.textContent =
     `${pad(h)}:${pad(t.getMinutes())}:${pad(t.getSeconds())}`;
 
-  const state = getState(h);
+  // ☀️ sun brightness
+  const intensity = getSunIntensity(h);
+  sunEl.style.opacity = intensity;
 
-  document.body.className = state;
-  poemEl.textContent = POEMS[state];
-
+  // context
   document.querySelector(".context").textContent =
     currentCity === "NY" ? "NEW YORK 24H" : "SEOUL 24H";
 }
